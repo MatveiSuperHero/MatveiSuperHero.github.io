@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ProToolBox — Профессиональный набор онлайн инструментов</title>
-    <meta name="description" content="Комплексный набор инструментов для работы с данными, текстом и безопасностью.">
+    <title>FreeTools — Набор онлайн инструментов</title>
+    <meta name="description" content="Бесплатные инструменты для работы с текстом, данными и безопасностью.">
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
     <style>
@@ -36,15 +36,14 @@
         .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
         .stats div{background:#0f1115;padding:8px;border-radius:6px;text-align:center;flex:1}
         .stats b{display:block;color:var(--accent);font-size:1.1rem}
-        label.chk{display:inline-flex;gap:8px;align-items:center;width:auto;font-size:0.85rem;margin-bottom:5px}
-        canvas#qr-canvas{max-width:100%;height:auto;border:1px solid var(--border);border-radius:8px;background:#fff;padding:5px;margin:10px 0}
+        label.chk{display:inline-flex;gap:8px;align-items:center;font-size:0.85rem}
         .ad-container{margin:40px 0;min-height:90px;border:1px dashed #3a4152;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
     </style>
 </head>
 <body>
 <header>
-    <h1>⚡ ProToolBox</h1>
-    <p>Комплексный набор инструментов для работы с данными, текстом и безопасностью</p>
+    <h1>FreeTools</h1>
+    <p>Профессиональные инструменты для работы с данными в один клик</p>
 </header>
 
 <nav id="nav">
@@ -105,13 +104,6 @@
                 <div id="pwStrength" style="font-size:0.85rem;margin-top:5px"></div>
             </div>
             <div class="tool-card">
-                <h3>QR-код</h3>
-                <textarea id="qrin" placeholder="Ссылка или текст..."></textarea>
-                <button class="btn" onclick="makeQR()">Сгенерировать QR</button>
-                <canvas id="qr-canvas" width="256" height="256"></canvas>
-                <button class="btn secondary" onclick="downloadQR()">Скачать PNG</button>
-            </div>
-            <div class="tool-card">
                 <h3>Хеш SHA-256</h3>
                 <textarea id="hashin" placeholder="Текст для хеширования..."></textarea>
                 <button class="btn" onclick="makeHash()">Вычислить хеш</button>
@@ -141,6 +133,15 @@
                 <div class="out" id="b64out">—</div>
             </div>
             <div class="tool-card">
+                <h3>Data Converter (JSON ↔ CSV)</h3>
+                <textarea id="dataConv" placeholder="Введите JSON или CSV..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="convertData('jsonToCsv')">JSON ➔ CSV</button>
+                    <button class="btn" onclick="convertData('csvToJson')">CSV ➔ JSON</button>
+                </div>
+                <div class="out" id="dataConvOut">—</div>
+            </div>
+            <div class="tool-card">
                 <h3>Hex ⟷ Binary</h3>
                 <textarea id="hexBin" placeholder="Hex или Binary..."></textarea>
                 <div class="row">
@@ -153,7 +154,6 @@
     </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
     const $=id=>document.getElementById(id);
 
@@ -197,7 +197,7 @@
         if($('low').checked)s+='abcdefghijklmnopqrstuvwxyz';
         if($('num').checked)s+='0123456789';
         if($('spec').checked)s+='!@#$';
-        if(!s){$('pwout').textContent='Выберите хотя бы один набор символов';return;}
+        if(!s){$('pwout').textContent='Выберите параметры';return;}
         const len = parseInt($('pwrange').value);
         const a = new Uint32Array(len);
         crypto.getRandomValues(a);
@@ -216,31 +216,11 @@
         else str.textContent = "✅ Надежный пароль";
     }
 
-    function makeQR(){
-        const text = $('qrin').value;
-        if(!text){alert('Введите текст или ссылку');return;}
-        const canvas = $('qr-canvas');
-        if(typeof QRCode !== 'undefined'){
-            QRCode.toCanvas(canvas, text, {
-                width: 256,
-                margin: 2,
-                color: { dark: '#000000', light: '#ffffff' }
-            }).catch(err=>{
-                console.error(err);
-                $('qrin').textContent='Ошибка генерации';
-            });
-        } else {
-            alert('Библиотека QR-кодов еще не загружена. Пожалуйста, подождите несколько секунд.');
-        }
-    }
-
-    function downloadQR(){
-        const canvas = $('qr-canvas');
-        if(!canvas.toDataURL()){alert('Сначала сгенерируйте QR-код');return;}
-        const link = document.createElement('a');
-        link.download = 'qrcode.png';
-        link.href = canvas.toDataURL();
-        link.click();
+    function makeHash(){
+        const input = $('hashin').value;
+        if(!input) return;
+        const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(input));
+        $('hashout').textContent=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
     }
 
     // РАЗРАБОТЧИК
@@ -290,6 +270,35 @@
             const hex = bin.match(/.{1,4}/g).map(x=>parseInt(x,2).toString(16)).join('').toUpperCase();
             $('hexBinOut').textContent = hex;
         }catch(e){$('hexBinOut').textContent = 'Ошибка';}
+    }
+
+    function convertData(type){
+        const input = $('dataConv').value;
+        if(!input) return;
+        try{
+            if(type === 'jsonToCsv'){
+                const obj = JSON.parse(input);
+                const arr = Array.isArray(obj) ? obj : [obj];
+                const headers = Object.keys(arr[0]);
+                const csv = [headers.join(',')];
+                arr.forEach(row => {
+                    csv.push(headers.map(h => `"${row[h]}"`).join(','));
+                });
+                $('dataConvOut').textContent = csv.join('\n');
+            } else {
+                const lines = input.trim().split('\n');
+                const headers = lines[0].split(',');
+                const result = lines.slice(1).map(line => {
+                    const values = line.split(',');
+                    let obj = {};
+                    headers.forEach((h, i) => obj[h.trim()] = values[i]?.trim());
+                    return obj;
+                });
+                $('dataConvOut').textContent = JSON.stringify(result, null, 2);
+            }
+        } catch(e) {
+            $('dataConvOut').textContent = 'Ошибка: Неверный формат данных';
+        }
     }
 
     genPw();
