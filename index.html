@@ -3,125 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ToolBox — Бесплатные онлайн инструменты</title>
-    <meta name="description" content="Бесплатные онлайн-инструменты: генератор паролей, форматирователь JSON, счётчик слов, Base64, хеш SHA-256, генератор QR-кодов.">
+    <title>ProToolBox — Профессиональный набор онлайн инструментов</title>
+    <meta name="description" content="Комплексный набор инструментов для работы с текстом, данными и безопасностью.">
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
     <style>
-        :root{--bg:#0f1115;--card:#171a21;--accent:#4f8cff;--text:#e6e9ef;--muted:#8b93a5}
+        :root{--bg:#0f1115;--card:#171a21;--accent:#4f8cff;--text:#e6e9ef;--muted:#8b93a5;--border:#2a2f3a}
         *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
-        header{padding:40px 16px 20px;text-align:center}
-        h1{font-size:1.8rem;margin-bottom:8px}
-        header p{color:var(--muted);font-size:0.95rem}
-        nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;border-bottom:1px solid #2a2f3a;margin-bottom:30px}
-        nav button{background:var(--card);border:1px solid #2a2f3a;color:var(--text);padding:10px 16px;border-radius:8px;cursor:pointer;font-size:.9rem;transition: all 0.2s}
-        nav button:hover{border-color:var(--accent)}
-        nav button.active{background:var(--accent);border-color:var(--accent)}
-        main{max-width:860px;margin:0 auto;padding:0 16px 60px}
-        .tool{display:none;background:var(--card);border:1px solid #2a2f3a;border-radius:14px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
-        .tool.active{display:block}
-        .tool h2{font-size:1.25rem;margin-bottom:20px;color:var(--accent)}
-        label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 6px}
-        input,textarea,select{width:100%;background:#0f1115;border:1px solid #2a2f3a;color:var(--text);padding:12px;border-radius:8px;font-size:.95rem;outline:none}
-        input:focus,textarea:focus{border-color:var(--accent)}
-        textarea{min-height:150px;font-family:ui-monospace,monospace;resize:vertical}
-        .btn{background:var(--accent);border:0;color:#fff;padding:12px 20px;border-radius:8px;cursor:pointer;font-size:.95rem;margin-top:15px;font-weight:600}
+        body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        header{padding:50px 16px 30px;text-align:center}
+        h1{font-size:2.2rem;margin-bottom:10px;background:linear-gradient(90deg, #4f8cff, #9d72ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        header p{color:var(--muted);font-size:1rem}
+        nav{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:15px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+        nav button{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;transition: all 0.2s}
+        nav button:hover{border-color:var(--accent);background:rgba(79,140,255,0.1)}
+        nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+        main{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+        .section-title{margin:40px 0 20px;padding-bottom:10px;border-bottom:2px solid var(--border);font-size:1.5rem;color:var(--accent)}
+        .tool-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:20px;margin-bottom:40px}
+        .tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;transition: transform 0.2s}
+        .tool-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+        .tool-card h3{margin-bottom:15px;font-size:1.1rem}
+        label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 5px}
+        textarea,input,select{width:100%;background:#0f1115;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:8px;font-size:.9rem;margin-bottom:10px}
+        .btn{background:var(--accent);border:0;color:#fff;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;width:100%;margin-top:10px}
         .btn:hover{opacity:0.9}
         .btn.secondary{background:#2a2f3a}
-        .btn.secondary:hover{background:#3a4152}
-        .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:15px}
-        .out{background:#0f1115;border:1px dashed #2a2f3a;padding:15px;border-radius:8px;margin-top:15px;font-family:ui-monospace,monospace;word-break:break-all;min-height:42px;display:flex;align-items:center;justify-content:center;font-size:0.9rem}
-        .stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:15px}
-        .stats div{background:#0f1115;padding:12px;border-radius:8px;text-align:center;flex:1;min-width:100px}
-        .stats b{display:block;font-size:1.2rem;color:var(--accent)}
-        label.chk{display:inline-flex;gap:8px;align-items:center;width:auto;font-size:0.85rem}
-        canvas#qr-canvas{max-width:100%;height:auto;border:1px solid #2a2f3a;border-radius:8px;background:#fff;padding:5px;margin:10px 0}
-        .ad-container{margin:30px 0;min-height:90px}
+        .out{background:#0f1115;border:1px dashed var(--border);padding:12px;border-radius:8px;margin-top:10px;font-family:monospace;font-size:0.85rem;word-break:break-all;min-height:40px}
+        .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+        .stats div{background:#0f1115;padding:8px;border-radius:6px;text-align:center;flex:1}
+        .stats b{display:block;color:var(--accent);font-size:1.1rem}
+        canvas#qr-canvas{max-width:100%;height:auto;border:1px solid var(--border);border-radius:8px;background:#fff;margin:10px 0;padding:5px}
+        .ad-container{margin:40px 0;min-height:100px;border:1px dashed #3a4152;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
     </style>
 </head>
 <body>
 <header>
-    <h1>⚡ Быстрые инструменты</h1>
-    <p>Бесплатные онлайн-инструменты для разработчиков и пользователей</p>
+    <h1>⚡ ProToolBox</h1>
+    <p>Комплексный набор инструментов для работы с данными, текстом и безопасностью</p>
 </header>
 
 <nav id="nav">
-    <button class="active" data-t="pw">🔐 Пароли</button>
-    <button data-t="json">🧩 JSON</button>
-    <button data-t="text">📝 Счётчик текста</button>
-    <button data-t="b64">🔄 Base64</button>
-    <button data-t="hash">🛡 SHA-256</button>
-    <button data-t="qr">📷 QR-код</button>
+    <button class="active" data-t="text">📝 Текст</button>
+    <button data-t="security">🔐 Безопасность</button>
+    <button data-t="dev">💻 Разработчик</button>
 </nav>
 
 <main>
     <div id="yandex_rtb_R-A-20456192-1" class="ad-container"></div>
 
-    <section class="tool active" id="pw">
-        <h2>Генератор паролей</h2>
-        <label>Длина пароля:</label>
-        <input type="range" min="6" max="64" value="16" id="pwrange">
-        <div class="row">
-            <label class="chk"><input type="checkbox" id="up" checked> A-Z</label>
-            <label class="chk"><input type="checkbox" id="low" checked> a-z</label>
-            <label class="chk"><input type="checkbox" id="num" checked> 0-9</label>
-            <label class="chk"><input type="checkbox" id="spec" checked> !@#$</label>
+    <!-- СЕКЦИЯ ТЕКСТ -->
+    <div id="text" class="section-content">
+        <h2 class="section-title">Работа с текстом</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Счётчик слов</h3>
+                <textarea id="txtCount" placeholder="Введите текст для анализа..."></textarea>
+                <div class="stats">
+                    <div><b id="sChars">0</b>символов</div>
+                    <div><b id="sWords">0</b>слов</div>
+                    <div><b id="sSents">0</b>предл.</div>
+                </div>
+            </div>
+            <div class="tool-card">
+                <h3>Регистр и Очистка</h3>
+                <textarea id="txtCase" placeholder="Введите текст..."></textarea>
+                <div class="row">
+                    <button class="btn" style="width:auto" onclick="changeCase('up')">ВЕРХНИЙ</button>
+                    <button class="btn" style="width:auto" onclick="changeCase('low')">нижний</button>
+                    <button class="btn" style="width:auto" onclick="cleanSpaces()">Очистить</button>
+                </div>
+                <div class="out" id="txtCaseOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Инверсия текста</h3>
+                <textarea id="txtRev" placeholder="Введите текст..."></textarea>
+                <button class="btn" onclick="reverseText()">Перевернуть строку</button>
+                <div class="out" id="txtRevOut">—</div>
+            </div>
         </div>
-        <button class="btn" onclick="genPw()">Сгенерировать пароль</button>
-        <div class="out" id="pwout">—</div>
-        <button class="btn secondary" onclick="copyEl('pwout')">Копировать в буфер</button>
-    </section>
+    </div>
 
-    <section class="tool" id="json">
-        <h2>Форматирователь JSON</h2>
-        <textarea id="jsonin" placeholder='Вставьте JSON сюда...'></textarea>
-        <div class="row">
-            <button class="btn" onclick="fmtJson(true)">Красивый вид</button>
-            <button class="btn secondary" onclick="fmtJson(false)">Минифицировать</button>
+    <!-- СЕКЦИЯ БЕЗОПАСНОСТЬ -->
+    <div id="security" class="section-content" style="display:none">
+        <h2 class="section-title">Безопасность и Приватность</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Генератор паролей</h3>
+                <label>Длина:</label>
+                <input type="range" min="6" max="64" value="16" id="pwrange">
+                <div class="row">
+                    <label class="chk"><input type="checkbox" id="up" checked> A-Z</label>
+                    <label class="chk"><input type="checkbox" id="low" checked> a-z</label>
+                    <label class="chk"><input type="checkbox" id="num" checked> 0-9</label>
+                    <label class.chk"><input type="checkbox" id="spec" checked> !@#$</label>
+                </div>
+                <button class="btn" onclick="genPw()">Создать пароль</button>
+                <div class="out" id="pwout">—</div>
+                <div id="pwStrength" style="font-size:0.8rem;margin-top:5px"></div>
+            </div>
+            <div class="tool-card">
+                <h3>QR-Код</h3>
+                <textarea id="qrin" placeholder="Ссылка или текст..."></textarea>
+                <button class="btn" onclick="makeQR()">Сгенерировать</button>
+                <canvas id="qr-canvas" width="256" height="256"></canvas>
+                <button class="btn secondary" onclick="downloadQR()">Скачать PNG</button>
+            </div>
+            <div class="tool-card">
+                <h3>Хеш SHA-256</h3>
+                <textarea id="hashin" placeholder="Текст для хеширования..."></textarea>
+                <button class="btn" onclick="makeHash()">Вычислить хеш</button>
+                <div class="out" id="hashout">—</div>
+            </div>
         </div>
-        <div class="out" id="jsonout">—</div>
-    </section>
+    </div>
 
-    <section class="tool" id="text">
-        <h2>Счётчик слов и символов</h2>
-        <textarea id="textin" placeholder="Вставьте текст для анализа..."></textarea>
-        <div class="stats">
-            <div><b id="sChars">0</b>символов</div>
-            <div><b id="sCharsNoSp">0</b>без пробелов</div>
-            <div><b id="sWords">0</b>слов</div>
-            <div><b id="sSents">0</b>предложений</div>
-            <div><b id="sRead">0</b>мин чтения</div>
+    <!-- СЕКЦИЯ РАЗРАБОТЧИК -->
+    <div id="dev" class="section-content" style="display:none">
+        <h2 class="section-title">Инструменты разработчика</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>JSON Formatter</h3>
+                <textarea id="jsonin" placeholder='{"key":"value"}'></textarea>
+                <button class="btn" onclick="fmtJson(true)">Красивый</button>
+                <button class="btn secondary" onclick="fmtJson(false)">Минифицировать</button>
+                <div class="out" id="jsonout">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Base64 / URL</h3>
+                <textarea id="b64in" placeholder="Введите данные..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="b64enc()">Base64</button>
+                    <button class="btn" onclick="urlEncode()">URL Enc</button>
+                    <button class="btn" onclick="urlDecode()">URL Dec</button>
+                </div>
+                <div class="out" id="b64out">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Hex ⟷ Binary</h3>
+                <textarea id="hexBin" placeholder="Hex или Binary..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="hexToBin()">Hex ➔ Bin</button>
+                    <button class="btn" onclick="binToHex()">Bin ➔ Hex</button>
+                </div>
+                <div class="out" id="hexBinOut">—</div>
+            </div>
         </div>
-    </section>
-
-    <section class="tool" id="b64">
-        <h2>Base64: Кодирование / Декодирование</h2>
-        <textarea id="b64in" placeholder="Введите текст или Base64-строку..."></textarea>
-        <div class="row">
-            <button class="btn" onclick="b64enc()">→ Закодировать в Base64</button>
-            <button class="btn secondary" onclick="b64dec()">← Декодировать из Base64</button>
-        </div>
-        <div class="out" id="b64out">—</div>
-    </section>
-
-    <section class="tool" id="hash">
-        <h2>Хеш SHA-256</h2>
-        <textarea id="hashin" placeholder="Введите текст для хеширования..."></textarea>
-        <button class="btn" onclick="makeHash()">Сгенерировать хеш</button>
-        <div class="out" id="hashout">—</div>
-    </section>
-
-    <section class="tool" id="qr">
-        <h2>Генератор QR-кодов</h2>
-        <label>Введите текст или ссылку:</label>
-        <textarea id="qrin" placeholder="https://example.com"></textarea>
-        <button class="btn" onclick="makeQR()">Сгенерировать QR-код</button>
-        <div class="out" style="min-height: 220px; background: #171a21;">
-            <canvas id="qr-canvas" width="256" height="256"></canvas>
-        </div>
-        <button class="btn secondary" onclick="downloadQR()">Скачать QR-код</button>
-    </section>
+    </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
@@ -132,35 +160,92 @@
     document.getElementById('nav').addEventListener('click',e=>{
         if(e.target.tagName!=='BUTTON')return;
         document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.tool').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.section-content').forEach(s=>s.style.display='none');
         e.target.classList.add('active');
-        document.getElementById(e.target.dataset.t).classList.add('active');
+        document.getElementById(e.target.dataset.t).style.display='block';
     });
 
-    // Пароли
-    $('pwrange').oninput=e=>{ $('pwlen').textContent=e.target.value; genPw(); };
+    // ТЕКСТОВЫЕ ИНСТРУМЕНТЫ
+    $('txtCount').addEventListener('input',()=>{
+        const t=$('txtCount').value;
+        $('sChars').textContent=t.length;
+        $('sWords').textContent=(t.trim().match(/\S+/g)||[]).length;
+        $('sSents').textContent=(t.match(/[.!?…]+/g)||[]).length;
+    });
+
+    function changeCase(type){
+        const input = $('txtCase').value;
+        if(type === 'up') $('txtCaseOut').textContent = input.toUpperCase();
+        else $('txtCaseOut').textContent = input.toLowerCase();
+    }
+
+    function cleanSpaces(){
+        const input = $('txtCase').value;
+        $('txtCaseOut').textContent = input.replace(/\s+/g, ' ').trim();
+    }
+
+    function reverseText(){
+        const input = $('txtRev').value;
+        $('txtRevOut').textContent = input.split('').reverse().join('');
+    }
+
+    // БЕЗОПАСНОСТЬ
     function genPw(){
         let s='';
         if($('up').checked)s+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         if($('low').checked)s+='abcdefghijklmnopqrstuvwxyz';
         if($('num').checked)s+='0123456789';
         if($('spec').checked)s+='!@#$%^&*()-_=+';
-        if(!s){$('pwout').textContent='Выберите хотя бы один набор символов';return;}
+        if(!s){$('pwout').textContent='Выберите параметры';return;}
         const a=new Uint32Array(+$('pwrange').value); 
         crypto.getRandomValues(a);
-        $('pwout').textContent=[...a].map(n=>s[n%s.length]).join('');
+        const result = [...a].map(n=>s[n%s.length]).join('');
+        $('pwout').textContent=result;
+        
+        // Проверка сложности
+        let score = 0;
+        if(result.length > 12) score += 1;
+        if(/[A-Z]/.test(result)) score += 1;
+        if(/[0-9]/.test(result)) score += 1;
+        if(/[!@#$]/.test(result)) score += 1;
+        
+        const str = $('pwStrength');
+        if(score <= 1) str.textContent = "❌ Слабый пароль";
+        else if(score <= 3) str.textContent = "⚠️ Средний пароль";
+        else str.textContent = "✅ Надежный пароль";
     }
 
-    function copyEl(id){
-        const el=$(id);
-        if(el.textContent === '—') return;
-        navigator.clipboard.writeText(el.textContent);
-        const oldText = el.textContent;
-        el.textContent = 'Скопировано ✓';
-        setTimeout(()=>el.textContent=oldText, 1500);
+    function makeQR(){
+        const text = $('qrin').value;
+        if(!text){alert('Введите текст');return;}
+        const canvas = $('qr-canvas');
+        QRCode.toCanvas(canvas, text, {
+            width: 256,
+            margin: 2,
+            color: { dark: '#000000', light: '#ffffff' }
+        }).catch(err=>{
+            console.error(err);
+            $('qrin').textContent='Ошибка';
+        });
     }
 
-    // JSON
+    function downloadQR(){
+        const canvas = $('qr-canvas');
+        if(!canvas.toDataURL()){alert('Сгенерируйте QR сначала');return;}
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    async function makeHash(){
+        const input = $('hashin').value;
+        if(!input) return;
+        const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(input));
+        $('hashout').textContent=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    // РАЗРАБОТЧИК
     function fmtJson(pretty){
         try{
             const input = $('jsonin').value;
@@ -170,17 +255,6 @@
         }catch(e){$('jsonout').textContent='Ошибка: '+e.message;}
     }
 
-    // Счётчик
-    $('textin').addEventListener('input',()=>{
-        const t=$('textin').value;
-        $('sChars').textContent=t.length;
-        $('sCharsNoSp').textContent=t.replace(/\s/g,'').length;
-        $('sWords').textContent=(t.trim().match(/\S+/g)||[]).length;
-        $('sSents').textContent=(t.match(/[.!?…]+/g)||[]).length;
-        $('sRead').textContent=Math.max(1,Math.ceil((t.trim().match(/\S+/g)||[]).length/200));
-    });
-
-    // Base64
     function b64enc(){
         try{
             const input = $('b64in').value;
@@ -193,42 +267,33 @@
             const input = $('b64in').value.trim();
             if(!input) return;
             $('b64out').textContent=decodeURIComponent(escape(atob(input)));
-        }catch(e){$('b64out').textContent='Ошибка: Некорректная Base64 строка';}
+        }catch(e){$('b64out').textContent='Ошибка: Некорректный Base64';}
     }
 
-    // SHA-256
-    async function makeHash(){
-        const input = $('hashin').value;
-        if(!input) return;
-        const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(input));
-        $('hashout').textContent=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+    function urlEncode(){
+        $('b64out').textContent = encodeURIComponent($('b64in').value);
+    }
+    function urlDecode(){
+        try{
+            $('b64out').textContent = decodeURIComponent(escape($('b64in').value));
+        }catch(e){$('b64out').textContent = 'Ошибка декодирования';}
     }
 
-    // QR Code
-    function makeQR(){
-        const text = $('qrin').value;
-        if(!text){alert('Введите текст или ссылку');return;}
-        const canvas = $('qr-canvas');
-        QRCode.toCanvas(canvas, text, {
-            width: 256,
-            margin: 2,
-            color: { dark: '#000000', light: '#ffffff' }
-        }).catch(err=>{
-            console.error(err);
-            $('qrin').textContent='Ошибка генерации';
-        });
+    function hexToBin(){
+        try{
+            const hex = $('hexBin').value.replace(/\s/g,'');
+            const bin = hex.split('').map(x=>parseInt(x,16).toString(2).padStart(4,'0')).join('');
+            $('hexBinOut').textContent = bin;
+        }catch(e){$('hexBinOut').textContent = 'Ошибка';}
+    }
+    function binToHex(){
+        try{
+            const bin = $('hexBin').value.replace(/\s/g,'');
+            const hex = bin.match(/.{1,4}/g).map(x=>parseInt(x,2).toString(16)).join('').toUpperCase();
+            $('hexBinOut').textContent = hex;
+        }catch(e){$('hexBinOut').textContent = 'Ошибка';}
     }
 
-    function downloadQR(){
-        const canvas = $('qr-canvas');
-        if(!canvas.toDataURL()){alert('Сначала сгенерируйте QR-код');return;}
-        const link = document.createElement('a');
-        link.download = 'qrcode.png';
-        link.href = canvas.toDataURL();
-        link.click();
-    }
-
-    // Инициализация
     genPw();
 </script>
 </body>
