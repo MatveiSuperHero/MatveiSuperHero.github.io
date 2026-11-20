@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ToolBox — Бесплатные онлайн инструменты</title>
+    <!-- Место для верификации Яндекса (вставьте meta-тег от РСЯ сюда, если потребуется) -->
+<meta name="description" content="Бесплатные онлайн-инструменты: генератор паролей, форматирователь JSON, счётчик слов, Base64, хеш SHA-256. Без регистрации.">
+<!-- Yandex.RTB загрузчик -->
+<script>window.yaContextCb=window.yaContextCb||[]</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--accent:#4f8cff;--text:#e6e9ef;--muted:#8b93a5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+header{padding:32px 16px 8px;text-align:center}
+h1{font-size:1.6rem}
+header p{color:var(--muted);margin-top:6px}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:16px}
+nav button{background:var(--card);border:1px solid #2a2f3a;color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:.9rem}
+nav button.active{background:var(--accent);border-color:var(--accent)}
+main{max-width:860px;margin:0 auto;padding:0 16px 40px}
+.tool{display:none;background:var(--card);border:1px solid #2a2f3a;border-radius:12px;padding:20px}
+.tool.active{display:block}
+.tool h2{font-size:1.15rem;margin-bottom:12px}
+label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+input,textarea,select{width:100%;background:#0f1115;border:1px solid #2a2f3a;color:var(--text);padding:10px;border-radius:8px;font-size:.95rem}
+textarea{min-height:140px;font-family:ui-monospace,monospace;resize:vertical}
+.btn{background:var(--accent);border:0;color:#fff;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:.95rem;margin-top:12px}
+.btn.secondary{background:#2a2f3a}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.out{background:#0f1115;border:1px dashed #2a2f3a;padding:10px;border-radius:8px;margin-top:12px;font-family:ui-monospace,monospace;word-break:break-all;min-height:42px}
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+.stats div{background:#0f1115;padding:10px 14px;border-radius:8px;text-align:center}
+.stats b{display:block;font-size:1.2rem;color:var(--accent)}
+label.chk{display:inline-flex;gap:6px;align-items:center;width:auto}
+.ad{background:#1d2230;border:1px dashed #3a4152;color:var(--muted);text-align:center;padding:14px;border-radius:8px;margin:18px 0;font-size:.85rem}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+<h1>⚡ Быстрые инструменты</h1>
+<p>Бесплатно, без регистрации, прямо в браузере</p>
+</header>
+
+<nav id="nav">
+<button class="active" data-t="pw">🔐 Пароли</button>
+<button data-t="json">🧩 JSON</button>
+<button data-t="text">📝 Счётчик текста</button>
+<button data-t="b64">🔄 Base64</button>
+<button data-t="hash">🛡 SHA-256</button>
+</nav>
+
+<main>
+<!-- ===== РЕКЛАМНЫЕ СЛОТЫ ЯНДЕКСА ===== -->
+<!-- Верхний блок РСЯ -->
+<div id="yandex_rtb_R-A-20456192-1"></div>
+<script>
+window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    "blockId": "R-A-20456192-1",
+    "renderTo": "yandex_rtb_R-A-20456192-1"
+  })
+})
+</script>
+
+<section class="tool active" id="pw">
+<h2>Генератор паролей</h2>
+<label>Длина: <span id="pwlen">16</span></label>
+<input type="range" min="6" max="64" value="16" id="pwrange">
+<div class="row" style="margin-top:10px">
+<label class="chk"><input type="checkbox" id="up" checked> A-Z</label>
+<label class="chk"><input type="checkbox" id="low" checked> a-z</label>
+<label class="chk"><input type="checkbox" id="num" checked> 0-9</label>
+<label class="chk"><input type="checkbox" id="spec" checked> !@#$</label>
+</div>
+<button class="btn" onclick="genPw()">Сгенерировать</button>
+<div class="out" id="pwout">—</div>
+<button class="btn secondary" onclick="copyEl('pwout')">Копировать</button>
+</section>
+
+<section class="tool" id="json">
+<h2>Форматирователь JSON</h2>
+<textarea id="jsonin" placeholder='{"name":"test","items":[1,2,3]}'></textarea>
+<div class="row">
+<button class="btn" onclick="fmtJson(true)">Красивый</button>
+<button class="btn secondary" onclick="fmtJson(false)">Минифицировать</button>
+</div>
+<div class="out" id="jsonout">—</div>
+</section>
+
+<section class="tool" id="text">
+<h2>Счётчик слов и символов</h2>
+<textarea id="textin" placeholder="Вставьте текст..."></textarea>
+<div class="stats">
+<div><b id="sChars">0</b>символов</div>
+<div><b id="sCharsNoSp">0</b>без пробелов</div>
+<div><b id="sWords">0</b>слов</div>
+<div><b id="sSents">0</b>предложений</div>
+<div><b id="sRead">0</b>мин чтения</div>
+</div>
+</section>
+
+<section class="tool" id="b64">
+<h2>Base64: кодирование и декодирование</h2>
+<textarea id="b64in" placeholder="Текст или Base64-строка..."></textarea>
+<div class="row">
+<button class="btn" onclick="b64enc()">→ Закодировать</button>
+<button class="btn secondary" onclick="b64dec()">← Декодировать</button>
+</div>
+<div class="out" id="b64out">—</div>
+</section>
+
+<section class="tool" id="hash">
+<h2>Хеш SHA-256</h2>
+<textarea id="hashin" placeholder="Введите текст..."></textarea>
+<button class="btn" onclick="makeHash()">Хешировать</button>
+<div class="out" id="hashout">—</div>
+</section>
+
+<!-- Партнёрский блок: замените ссылки на свои affiliate-ссылки -->
+<div class="ad" id="ad-aff">🤝 Рекомендуем: <a href="#" rel="sponsored nofollow">ваша партнёрская ссылка</a></div>
+</main>
+
+<footer>© 2026 Быстрые инструменты · Все операции выполняются локально в браузере</footer>
+
+<script>
+// Навигация
+document.getElementById('nav').addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON')return;
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tool').forEach(t=>t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(e.target.dataset.t).classList.add('active');
+});
+
+// Пароли
+const $=id=>document.getElementById(id);
+$('pwrange').oninput=e=>{ $('pwlen').textContent=e.target.value; genPw(); };
+function genPw(){
+  let s='';
+  if($('up').checked)s+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if($('low').checked)s+='abcdefghijklmnopqrstuvwxyz';
+  if($('num').checked)s+='0123456789';
+  if($('spec').checked)s+='!@#$%^&*()-_=+';
+  if(!s){$('pwout').textContent='Выберите хотя бы один набор';return;}
+  const a=new Uint32Array(+$('pwrange').value); crypto.getRandomValues(a);
+  $('pwout').textContent=[...a].map(n=>s[n%s.length]).join('');
+}
+function copyEl(id){
+  navigator.clipboard.writeText($(id).textContent);
+  const el=$(id),t=el.textContent; el.textContent='Скопировано ✓';
+  setTimeout(()=>el.textContent=t,1200);
+}
+
+// JSON
+function fmtJson(pretty){
+  try{
+    const o=JSON.parse($('jsonin').value);
+    $('jsonout').textContent=JSON.stringify(o,null,pretty?2:0);
+  }catch(e){$('jsonout').textContent='Ошибка: '+e.message;}
+}
+
+// Счётчик
+$('textin').addEventListener('input',()=>{
+  const t=$('textin').value;
+  $('sChars').textContent=t.length;
+  $('sCharsNoSp').textContent=t.replace(/\s/g,'').length;
+  $('sWords').textContent=(t.trim().match(/\S+/g)||[]).length;
+  $('sSents').textContent=(t.match(/[.!?…]+/g)||[]).length;
+  $('sRead').textContent=Math.max(1,Math.ceil((t.trim().match(/\S+/g)||[]).length/200));
+});
+
+// Base64
+function b64enc(){
+  try{$('b64out').textContent=btoa(unescape(encodeURIComponent($('b64in').value)));}
+  catch(e){$('b64out').textContent='Ошибка: '+e.message;}
+}
+function b64dec(){
+  try{$('b64out').textContent=decodeURIComponent(escape(atob($('b64in').value.trim())));}
+  catch(e){$('b64out').textContent='Ошибка: неверный Base64';}
+}
+
+// SHA-256
+async function makeHash(){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode($('hashin').value));
+  $('hashout').textContent=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+genPw();
+</script>
+</body>
+</html>
