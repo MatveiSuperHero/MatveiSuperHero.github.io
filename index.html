@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ProToolBox — Профессиональный набор онлайн инструментов</title>
-    <meta name="description" content="Комплексный набор инструментов для работы с текстом, данными и безопасностью.">
+    <meta name="description" content="Комплексный набор инструментов для работы с данными, текстом и безопасностью.">
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
     <style>
@@ -21,20 +21,24 @@
         main{max-width:900px;margin:0 auto;padding:20px 16px 60px}
         .section-title{margin:40px 0 20px;padding-bottom:10px;border-bottom:2px solid var(--border);font-size:1.5rem;color:var(--accent)}
         .tool-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:20px;margin-bottom:40px}
-        .tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;transition: transform 0.2s}
+        .tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition: transform 0.2s}
         .tool-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-        .tool-card h3{margin-bottom:15px;font-size:1.1rem}
+        .tool-card h3{margin-bottom:20px;font-size:1.2rem}
         label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 5px}
-        textarea,input,select{width:100%;background:#0f1115;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:8px;font-size:.9rem;margin-bottom:10px}
-        .btn{background:var(--accent);border:0;color:#fff;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;width:100%;margin-top:10px}
+        input,textarea,select{width:100%;background:#0f1115;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:8px;font-size:.9rem;outline:none}
+        input:focus,textarea:focus{border-color:var(--accent)}
+        textarea{min-height:120px;font-family:ui-monospace,monospace;resize:vertical}
+        .btn{background:var(--accent);border:0;color:#fff;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;width:100%;margin-top:15px}
         .btn:hover{opacity:0.9}
         .btn.secondary{background:#2a2f3a}
-        .out{background:#0f1115;border:1px dashed var(--border);padding:12px;border-radius:8px;margin-top:10px;font-family:monospace;font-size:0.85rem;word-break:break-all;min-height:40px}
-        .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+        .btn.secondary:hover{background:#3a4152}
+        .out{background:#0f1115;border:1px dashed var(--border);padding:12px;border-radius:8px;margin-top:15px;font-family:monospace;font-size:0.85rem;word-break:break-all;min-height:42px;display:flex;align-items:center;justify-content:center}
+        .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
         .stats div{background:#0f1115;padding:8px;border-radius:6px;text-align:center;flex:1}
         .stats b{display:block;color:var(--accent);font-size:1.1rem}
-        canvas#qr-canvas{max-width:100%;height:auto;border:1px solid var(--border);border-radius:8px;background:#fff;margin:10px 0;padding:5px}
-        .ad-container{margin:40px 0;min-height:100px;border:1px dashed #3a4152;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+        label.chk{display:inline-flex;gap:8px;align-items:center;width:auto;font-size:0.85rem;margin-bottom:5px}
+        canvas#qr-canvas{max-width:100%;height:auto;border:1px solid var(--border);border-radius:8px;background:#fff;padding:5px;margin:10px 0}
+        .ad-container{margin:40px 0;min-height:90px;border:1px dashed #3a4152;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
     </style>
 </head>
 <body>
@@ -52,7 +56,6 @@
 <main>
     <div id="yandex_rtb_R-A-20456192-1" class="ad-container"></div>
 
-    <!-- СЕКЦИЯ ТЕКСТ -->
     <div id="text" class="section-content">
         <h2 class="section-title">Работа с текстом</h2>
         <div class="tool-grid">
@@ -84,7 +87,6 @@
         </div>
     </div>
 
-    <!-- СЕКЦИЯ БЕЗОПАСНОСТЬ -->
     <div id="security" class="section-content" style="display:none">
         <h2 class="section-title">Безопасность и Приватность</h2>
         <div class="tool-grid">
@@ -93,19 +95,19 @@
                 <label>Длина:</label>
                 <input type="range" min="6" max="64" value="16" id="pwrange">
                 <div class="row">
-                    <label class="chk"><input type="checkbox" id="up" checked> A-Z</label>
-                    <label class="chk"><input type="checkbox" id="low" checked> a-z</label>
-                    <label class="chk"><input type="checkbox" id="num" checked> 0-9</label>
+                    <label class.chk"><input type="checkbox" id="up" checked> A-Z</label>
+                    <label class.chk"><input type="checkbox" id="low" checked> a-z</label>
+                    <label class.chk"><input type="checkbox" id="num" checked> 0-9</label>
                     <label class.chk"><input type="checkbox" id="spec" checked> !@#$</label>
                 </div>
                 <button class="btn" onclick="genPw()">Создать пароль</button>
                 <div class="out" id="pwout">—</div>
-                <div id="pwStrength" style="font-size:0.8rem;margin-top:5px"></div>
+                <div id="pwStrength" style="font-size:0.85rem;margin-top:5px"></div>
             </div>
             <div class="tool-card">
-                <h3>QR-Код</h3>
+                <h3>QR-код</h3>
                 <textarea id="qrin" placeholder="Ссылка или текст..."></textarea>
-                <button class="btn" onclick="makeQR()">Сгенерировать</button>
+                <button class="btn" onclick="makeQR()">Сгенерировать QR</button>
                 <canvas id="qr-canvas" width="256" height="256"></canvas>
                 <button class="btn secondary" onclick="downloadQR()">Скачать PNG</button>
             </div>
@@ -118,7 +120,6 @@
         </div>
     </div>
 
-    <!-- СЕКЦИЯ РАЗРАБОТЧИК -->
     <div id="dev" class="section-content" style="display:none">
         <h2 class="section-title">Инструменты разработчика</h2>
         <div class="tool-grid">
@@ -195,14 +196,14 @@
         if($('up').checked)s+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         if($('low').checked)s+='abcdefghijklmnopqrstuvwxyz';
         if($('num').checked)s+='0123456789';
-        if($('spec').checked)s+='!@#$%^&*()-_=+';
-        if(!s){$('pwout').textContent='Выберите параметры';return;}
-        const a=new Uint32Array(+$('pwrange').value); 
+        if($('spec').checked)s+='!@#$';
+        if(!s){$('pwout').textContent='Выберите хотя бы один набор символов';return;}
+        const len = parseInt($('pwrange').value);
+        const a = new Uint32Array(len);
         crypto.getRandomValues(a);
-        const result = [...a].map(n=>s[n%s.length]).join('');
-        $('pwout').textContent=result;
+        const result = Array.from(a).map(n => s[n % s.length]).join('');
+        $('pwout').textContent = result;
         
-        // Проверка сложности
         let score = 0;
         if(result.length > 12) score += 1;
         if(/[A-Z]/.test(result)) score += 1;
@@ -217,32 +218,29 @@
 
     function makeQR(){
         const text = $('qrin').value;
-        if(!text){alert('Введите текст');return;}
+        if(!text){alert('Введите текст или ссылку');return;}
         const canvas = $('qr-canvas');
-        QRCode.toCanvas(canvas, text, {
-            width: 256,
-            margin: 2,
-            color: { dark: '#000000', light: '#ffffff' }
-        }).catch(err=>{
-            console.error(err);
-            $('qrin').textContent='Ошибка';
-        });
+        if(typeof QRCode !== 'undefined'){
+            QRCode.toCanvas(canvas, text, {
+                width: 256,
+                margin: 2,
+                color: { dark: '#000000', light: '#ffffff' }
+            }).catch(err=>{
+                console.error(err);
+                $('qrin').textContent='Ошибка генерации';
+            });
+        } else {
+            alert('Библиотека QR-кодов еще не загружена. Пожалуйста, подождите несколько секунд.');
+        }
     }
 
     function downloadQR(){
         const canvas = $('qr-canvas');
-        if(!canvas.toDataURL()){alert('Сгенерируйте QR сначала');return;}
+        if(!canvas.toDataURL()){alert('Сначала сгенерируйте QR-код');return;}
         const link = document.createElement('a');
         link.download = 'qrcode.png';
         link.href = canvas.toDataURL();
         link.click();
-    }
-
-    async function makeHash(){
-        const input = $('hashin').value;
-        if(!input) return;
-        const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(input));
-        $('hashout').textContent=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
     }
 
     // РАЗРАБОТЧИК
@@ -267,7 +265,7 @@
             const input = $('b64in').value.trim();
             if(!input) return;
             $('b64out').textContent=decodeURIComponent(escape(atob(input)));
-        }catch(e){$('b64out').textContent='Ошибка: Некорректный Base64';}
+        }catch(e){$('b64out').textContent='Ошибка: Некорректная Base64 строка';}
     }
 
     function urlEncode(){
