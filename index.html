@@ -48,10 +48,58 @@
         .stats b{display:block;color:var(--accent);font-size:1.1rem}
         label.chk{display:inline-flex;gap:8px;align-items:center;font-size:.85rem;color:var(--text);margin:0;cursor:pointer}
         label.chk input{width:auto;padding:0}
-        .ad-container{margin:40px 0;min-height:90px;border:1px dashed #3a4152;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
         #pwStrength{font-size:.85rem;margin-top:5px}
         .diff-add{background:#1e3a1e;color:#8f8} .diff-del{background:#3a1e1e;color:#f88}
         .file-input{display:block;margin:10px 0}
+
+        /* ===== Sticky bottom ad ===== */
+        .ad-sticky{
+            position:fixed;
+            left:0;right:0;bottom:0;
+            z-index:999;
+            background:var(--card);
+            border-top:1px solid var(--border);
+            box-shadow:0 -8px 28px rgba(0,0,0,.55);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:6px 8px;
+            transform:translateY(0);
+            transition:transform .35s ease;
+            will-change:transform;
+        }
+        .ad-sticky.hidden{transform:translateY(110%);pointer-events:none}
+        .ad-sticky > div[id^="yandex_rtb"]{
+            width:100%;
+            max-width:728px;
+            max-height:120px;
+            overflow:hidden;
+        }
+        .ad-close{
+            position:absolute;
+            top:4px;right:6px;
+            z-index:2;
+            width:24px;height:24px;
+            background:rgba(0,0,0,.65);
+            border:1px solid var(--border);
+            color:var(--text);
+            border-radius:50%;
+            cursor:pointer;
+            font-size:14px;
+            line-height:1;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:0;
+            transition:border-color .2s,color .2s;
+        }
+        .ad-close:hover{border-color:var(--accent);color:var(--accent)}
+        /* Резерв места под sticky-баннер, чтобы он не закрывал контент */
+        body.ad-open{padding-bottom:150px}
+        @media (max-width:600px){
+            .ad-sticky > div[id^="yandex_rtb"]{max-height:100px}
+            body.ad-open{padding-bottom:125px}
+        }
     </style>
 </head>
 <body>
@@ -71,8 +119,6 @@
 </nav>
 
 <main>
-    <div id="yandex_rtb_R-A-20456192-1" class="ad-container"></div>
-
     <!-- ========== ТЕКСТ ========== -->
     <div id="text" class="section-content">
         <h2 class="section-title">Работа с текстом</h2>
@@ -127,7 +173,7 @@
             </div>
             <div class="tool-card">
                 <h3>Markdown Preview</h3>
-                <textarea id="mdInput" placeholder="# Заголовок\n**жирный** текст..."></textarea>
+                <textarea id="mdInput" placeholder="# Заголовок&#10;**жирный** текст..."></textarea>
                 <button class="btn" onclick="previewMarkdown()">Предпросмотр</button>
                 <div class="out" id="mdOut" style="white-space:normal">—</div>
             </div>
@@ -158,7 +204,7 @@
             </div>
             <div class="tool-card">
                 <h3>HTML Encode / Decode</h3>
-                <textarea id="htmlin" placeholder="<div>Пример</div>"></textarea>
+                <textarea id="htmlin" placeholder="&lt;div&gt;Пример&lt;/div&gt;"></textarea>
                 <div class="row">
                     <button class="btn" onclick="htmlEncode()">HTML Enc</button>
                     <button class="btn secondary" onclick="htmlDecode()">HTML Dec</button>
@@ -323,6 +369,12 @@
         </div>
     </div>
 </main>
+
+<!-- ========== Sticky bottom реклама ========== -->
+<div id="adSticky" class="ad-sticky">
+    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
+    <div id="yandex_rtb_R-A-20456192-1"></div>
+</div>
 
 <script>
     // ==================== УТИЛИТЫ ====================
@@ -507,9 +559,8 @@
         const user = $('htUser').value.trim();
         const pass = $('htPass').value;
         if (!user || !pass){ $('htOut').textContent = 'Введите логин и пароль'; return; }
-        // APR1 MD5 (упрощённая реализация через CryptoJS.MD5 с солью)
         const salt = Math.random().toString(36).slice(2, 10);
-        const hash = CryptoJS.MD5(pass + salt).toString(); // имитация, для реального APR1 нужна отдельная реализация
+        const hash = CryptoJS.MD5(pass + salt).toString();
         $('htOut').textContent = `${user}:$apr1$${salt}$${hash}`;
     }
 
@@ -539,7 +590,6 @@
 
     function beautifyJs(){
         let code = $('jsIn').value;
-        // Простой beautifier: добавляем отступы после { } ; 
         let out = '', indent = 0;
         for (let ch of code){
             if (ch === '{'){ out += ' {\n' + '  '.repeat(++indent); }
@@ -689,18 +739,48 @@
         img.src = URL.createObjectURL(file);
     }
 
+    // ==================== STICKY BOTTOM РЕКЛАМА ====================
+    const AD_KEY = 'adStickyClosed';
+
+    function closeStickyAd(){
+        $('adSticky').classList.add('hidden');
+        document.body.classList.remove('ad-open');
+        try{ sessionStorage.setItem(AD_KEY, '1'); }catch(e){}
+    }
+
+    function initStickyAd(){
+        let closed = false;
+        try{ closed = sessionStorage.getItem(AD_KEY) === '1'; }catch(e){}
+        if (closed){ return; }
+        document.body.classList.add('ad-open');
+
+        // Рендер RTB-блока. Стандартный render() + CSS-sticky —
+        // работает с любым блоком, вне зависимости от настроек на стороне RTB.
+        // Если блок настроен как "anchor", можно использовать:
+        //   type: 'floorAd', platform: (window.innerWidth < 768 ? 'touch' : 'desktop')
+        window.yaContextCb.push(() => {
+            if (window.Ya && Ya.Context && Ya.Context.AdvManager){
+                Ya.Context.AdvManager.render({
+                    renderTo: 'yandex_rtb_R-A-20456192-1',
+                    blockId:  'R-A-20456192-1'
+                });
+            }
+        });
+
+        // Если RTB-блок не отрендерился за 8 с (пустой контейнер) —
+        // убираем пустую полосу, чтобы не портить UX.
+        setTimeout(() => {
+            const c = document.getElementById('yandex_rtb_R-A-20456192-1');
+            if (!c || c.children.length === 0){
+                $('adSticky').classList.add('hidden');
+                document.body.classList.remove('ad-open');
+            }
+        }, 8000);
+    }
+
     // ==================== ИНИЦИАЛИЗАЦИЯ ====================
     genPw();
-
-    // Реклама
-    window.yaContextCb.push(() => {
-        if (window.Ya && Ya.Context && Ya.Context.AdvManager){
-            Ya.Context.AdvManager.render({
-                renderTo: 'yandex_rtb_R-A-20456192-1',
-                blockId:  'R-A-20456192-1'
-            });
-        }
-    });
+    initStickyAd();
 </script>
 </body>
 </html>
