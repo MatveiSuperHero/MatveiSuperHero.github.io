@@ -8,10 +8,16 @@
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
 
+    <!-- Существующие библиотеки -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Новые библиотеки для инструментов из IT-Tools -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql-formatter/15.1.4/sql-formatter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fast-xml-parser/4.3.2/fxparser.min.js"></script>
 
     <style>
         :root{--bg:#0f1115;--card:#171a21;--accent:#4f8cff;--text:#e6e9ef;--muted:#8b93a5;--border:#2a2f3a}
@@ -50,60 +56,18 @@
         #pwStrength{font-size:.85rem;margin-top:5px}
         .diff-add{background:#1e3a1e;color:#8f8} .diff-del{background:#3a1e1e;color:#f88}
         .file-input{display:block;margin:10px 0}
-
-        /* ===== Sticky bottom ad ===== */
-        .ad-sticky{
-            position:fixed;left:0;right:0;bottom:0;z-index:999;
-            background:var(--card);border-top:1px solid var(--border);
-            box-shadow:0 -8px 28px rgba(0,0,0,.55);
-            display:flex;justify-content:center;align-items:center;
-            padding:6px 8px;transform:translateY(0);
-            transition:transform .35s ease;will-change:transform;
-        }
+        .ad-sticky{position:fixed;left:0;right:0;bottom:0;z-index:999;background:var(--card);border-top:1px solid var(--border);box-shadow:0 -8px 28px rgba(0,0,0,.55);display:flex;justify-content:center;align-items:center;padding:6px 8px;transform:translateY(0);transition:transform .35s ease;will-change:transform}
         .ad-sticky.hidden{transform:translateY(110%);pointer-events:none}
         .ad-sticky > div[id^="yandex_rtb"]{width:100%;max-width:728px;max-height:120px;overflow:hidden}
-        .ad-close{
-            position:absolute;top:4px;right:6px;z-index:2;
-            width:24px;height:24px;background:rgba(0,0,0,.65);
-            border:1px solid var(--border);color:var(--text);
-            border-radius:50%;cursor:pointer;font-size:14px;line-height:1;
-            display:flex;align-items:center;justify-content:center;
-            padding:0;transition:border-color .2s,color .2s;
-        }
+        .ad-close{position:absolute;top:4px;right:6px;z-index:2;width:24px;height:24px;background:rgba(0,0,0,.65);border:1px solid var(--border);color:var(--text);border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color .2s,color .2s}
         .ad-close:hover{border-color:var(--accent);color:var(--accent)}
         body.ad-open{padding-bottom:150px}
-        @media (max-width:600px){
-            .ad-sticky > div[id^="yandex_rtb"]{max-height:100px}
-            body.ad-open{padding-bottom:125px}
-        }
-
-        /* ===== Inline ad (блок 2) ===== */
-        .ad-inline{
-            position:relative;
-            margin:30px auto 20px;
-            max-width:728px;
-            min-height:90px;
-            background:var(--card);
-            border:1px solid var(--border);
-            border-radius:12px;
-            padding:14px 12px 12px;
-            overflow:hidden;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-        }
-        .ad-inline::before{
-            content:'Реклама';
-            position:absolute;
-            top:4px;right:10px;
-            font-size:10px;
-            color:var(--muted);
-            opacity:.6;
-            text-transform:uppercase;
-            letter-spacing:.5px;
-        }
+        @media (max-width:600px){.ad-sticky > div[id^="yandex_rtb"]{max-height:100px}body.ad-open{padding-bottom:125px}}
+        .ad-inline{position:relative;margin:30px auto 20px;max-width:728px;min-height:90px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px 12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+        .ad-inline::before{content:'Реклама';position:absolute;top:4px;right:10px;font-size:10px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
         .ad-inline > div[id^="yandex_rtb"]{width:100%;min-height:90px}
         .ad-inline.hidden{display:none}
+        #qrcode canvas, #qrcode img{max-width:100%;height:auto}
     </style>
 </head>
 <body>
@@ -117,6 +81,10 @@
     <button data-t="encoding">🔤 Кодирование</button>
     <button data-t="security">🔐 Хеши и пароли</button>
     <button data-t="dev">💻 Разработчик</button>
+    <button data-t="converters">🔄 Конвертеры</button>
+    <button data-t="web">🌐 Веб</button>
+    <button data-t="network">📡 Сеть</button>
+    <button data-t="math">🧮 Математика</button>
     <button data-t="compression">🗜️ Сжатие</button>
     <button data-t="pdf">📄 PDF</button>
     <button data-t="images">🖼️ Изображения</button>
@@ -267,6 +235,18 @@
                 <button class="btn" onclick="makeHtpasswd()">Создать запись</button>
                 <div class="out" id="htOut">—</div>
             </div>
+            <div class="tool-card">
+                <h3>Генератор UUID v4</h3>
+                <button class="btn" onclick="genUuid()">Сгенерировать UUID</button>
+                <div class="out" id="uuidOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Lorem Ipsum Generator</h3>
+                <label>Абзацев:</label>
+                <input type="number" id="loremCount" value="3" min="1" max="20">
+                <button class="btn" onclick="genLorem()">Сгенерировать</button>
+                <div class="out" id="loremOut">—</div>
+            </div>
         </div>
     </div>
 
@@ -306,516 +286,54 @@
                 </div>
                 <div class="out" id="dataConvOut">—</div>
             </div>
-        </div>
-    </div>
-
-    <!-- ========== СЖАТИЕ ========== -->
-    <div id="compression" class="section-content" style="display:none">
-        <h2 class="section-title">Compression & Archives</h2>
-        <div class="tool-grid">
             <div class="tool-card">
-                <h3>Создать ZIP</h3>
-                <input type="file" id="zipFiles" multiple class="file-input">
-                <button class="btn" onclick="createZip()">Скачать ZIP</button>
-                <div class="out" id="zipOut">—</div>
+                <h3>SQL Formatter</h3>
+                <textarea id="sqlIn" placeholder="SELECT * FROM users WHERE id = 1;"></textarea>
+                <button class="btn" onclick="fmtSql()">Форматировать</button>
+                <div class="out" id="sqlOut">—</div>
             </div>
             <div class="tool-card">
-                <h3>Распаковать ZIP</h3>
-                <input type="file" id="unzipFile" accept=".zip" class="file-input">
-                <button class="btn" onclick="unzipFile()">Показать содержимое</button>
-                <div class="out" id="unzipOut">—</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== PDF ========== -->
-    <div id="pdf" class="section-content" style="display:none">
-        <h2 class="section-title">PDF & Documents</h2>
-        <div class="tool-grid">
-            <div class="tool-card">
-                <h3>Создать PDF из изображений</h3>
-                <input type="file" id="pdfImages" accept="image/*" multiple class="file-input">
-                <button class="btn" onclick="imagesToPdf()">Скачать PDF</button>
-                <div class="out" id="pdfOut">—</div>
+                <h3>XML Formatter</h3>
+                <textarea id="xmlIn" placeholder="<root><item>1</item></root>"></textarea>
+                <button class="btn" onclick="fmtXml()">Форматировать</button>
+                <div class="out" id="xmlOut">—</div>
             </div>
             <div class="tool-card">
-                <h3>Объединить PDF</h3>
-                <input type="file" id="mergePdfs" accept=".pdf" multiple class="file-input">
-                <button class="btn" onclick="mergePdfs()">Объединить</button>
-                <div class="out" id="mergeOut">—</div>
+                <h3>YAML ⇄ JSON</h3>
+                <textarea id="yamlIn" placeholder="key: value&#10;list:&#10;  - item1&#10;  - item2"></textarea>
+                <div class="row">
+                    <button class="btn" onclick="yamlToJson()">YAML ➔ JSON</button>
+                    <button class="btn secondary" onclick="jsonToYaml()">JSON ➔ YAML</button>
+                </div>
+                <div class="out" id="yamlOut">—</div>
             </div>
         </div>
     </div>
 
-    <!-- ========== ИЗОБРАЖЕНИЯ ========== -->
-    <div id="images" class="section-content" style="display:none">
-        <h2 class="section-title">Images & Media</h2>
+    <!-- ========== КОНВЕРТЕРЫ ========== -->
+    <div id="converters" class="section-content" style="display:none">
+        <h2 class="section-title">Converters</h2>
         <div class="tool-grid">
             <div class="tool-card">
-                <h3>Конвертер изображений (JPG/PNG/WebP)</h3>
-                <input type="file" id="imgConvertFile" accept="image/*" class="file-input">
-                <select id="imgFormat">
-                    <option value="image/jpeg">JPEG</option>
-                    <option value="image/png">PNG</option>
-                    <option value="image/webp">WebP</option>
+                <h3>Конвертер цветов (HEX ↔ RGB)</h3>
+                <input id="colorHex" placeholder="#4f8cff">
+                <button class="btn" onclick="hexToRgb()">HEX ➔ RGB</button>
+                <div class="out" id="colorOut">—</div>
+                <div id="colorPreview" style="height:40px;border-radius:8px;margin-top:10px;border:1px solid var(--border)"></div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер единиц (длина)</h3>
+                <input id="unitLengthIn" type="number" value="1" placeholder="Значение">
+                <select id="unitLengthFrom">
+                    <option value="m">Метры</option>
+                    <option value="km">Километры</option>
+                    <option value="cm">Сантиметры</option>
+                    <option value="mm">Миллиметры</option>
+                    <option value="in">Дюймы</option>
+                    <option value="ft">Футы</option>
+                    <option value="mi">Мили</option>
                 </select>
-                <button class="btn" onclick="convertImage()">Конвертировать и скачать</button>
-                <div class="out" id="imgConvertOut">—</div>
-            </div>
-            <div class="tool-card">
-                <h3>Сжатие изображения</h3>
-                <input type="file" id="imgCompressFile" accept="image/*" class="file-input">
-                <label>Качество: <span id="qualityLabel">0.8</span></label>
-                <input type="range" id="imgQuality" min="0.1" max="1" step="0.1" value="0.8">
-                <button class="btn" onclick="compressImage()">Скачать сжатое</button>
-                <div class="out" id="imgCompressOut">—</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== Inline реклама (блок 2) ========== -->
-    <div id="adInline" class="ad-inline">
-        <div id="yandex_rtb_R-A-20456192-2"></div>
-    </div>
-</main>
-
-<!-- ========== Sticky bottom реклама (блок 1) ========== -->
-<div id="adSticky" class="ad-sticky">
-    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
-    <div id="yandex_rtb_R-A-20456192-1"></div>
-</div>
-
-<script>
-    // ==================== УТИЛИТЫ ====================
-    const $ = id => document.getElementById(id);
-
-    document.getElementById('nav').addEventListener('click', e => {
-        if (e.target.tagName !== 'BUTTON') return;
-        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none');
-        e.target.classList.add('active');
-        const id = e.target.dataset.t;
-        if (id) document.getElementById(id).style.display = 'block';
-    });
-
-    // ==================== ТЕКСТ ====================
-    $('txtCount').addEventListener('input', () => {
-        const t = $('txtCount').value;
-        $('sChars').textContent = t.length;
-        $('sWords').textContent = (t.trim().match(/\S+/g) || []).length;
-        $('sSents').textContent = (t.match(/[.!?…]+/g) || []).length;
-    });
-
-    function changeCase(type){
-        const input = $('txtCase').value;
-        $('txtCaseOut').textContent = type === 'up' ? input.toUpperCase() : input.toLowerCase();
-    }
-    function cleanSpaces(){
-        $('txtCaseOut').textContent = $('txtCase').value.replace(/\s+/g, ' ').trim();
-    }
-    function reverseText(){
-        $('txtRevOut').textContent = [...$('txtRev').value].reverse().join('');
-    }
-    function sortLines(){
-        const lines = $('lineInput').value.split('\n').filter(l => l.trim());
-        $('lineOut').textContent = lines.sort((a,b) => a.localeCompare(b)).join('\n');
-    }
-    function dedupLines(){
-        const lines = $('lineInput').value.split('\n').filter(l => l.trim());
-        $('lineOut').textContent = [...new Set(lines)].join('\n');
-    }
-    function reverseLines(){
-        const lines = $('lineInput').value.split('\n').filter(l => l.trim());
-        $('lineOut').textContent = lines.reverse().join('\n');
-    }
-    function makeSlug(){
-        const s = $('slugInput').value.trim().toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/[\s_]+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
-        $('slugOut').textContent = s || '—';
-    }
-    function runDiff(){
-        const a = $('diff1').value.split('\n');
-        const b = $('diff2').value.split('\n');
-        let html = '';
-        const max = Math.max(a.length, b.length);
-        for (let i = 0; i < max; i++){
-            const la = a[i], lb = b[i];
-            if (la === lb) html += (la || '') + '\n';
-            else {
-                if (la !== undefined) html += `<span class="diff-del">- ${escapeHtml(la)}</span>\n`;
-                if (lb !== undefined) html += `<span class="diff-add">+ ${escapeHtml(lb)}</span>\n`;
-            }
-        }
-        $('diffOut').innerHTML = html || 'Нет различий';
-    }
-    function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-    function previewMarkdown(){
-        if (typeof marked === 'undefined'){ $('mdOut').textContent = 'Библиотека Markdown не загружена'; return; }
-        $('mdOut').innerHTML = marked.parse($('mdInput').value);
-    }
-
-    // ==================== КОДИРОВАНИЕ ====================
-    function b64enc(){
-        try{
-            const bytes = new TextEncoder().encode($('b64in').value);
-            let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
-            $('b64out').textContent = btoa(bin);
-        }catch(e){ $('b64out').textContent = 'Ошибка: ' + e.message; }
-    }
-    function b64dec(){
-        try{
-            const bin = atob($('b64in').value.trim());
-            const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-            $('b64out').textContent = new TextDecoder().decode(bytes);
-        }catch(e){ $('b64out').textContent = 'Ошибка: некорректная Base64 строка'; }
-    }
-    function urlEncode(){ $('urlout').textContent = encodeURIComponent($('urlin').value); }
-    function urlDecode(){
-        try{ $('urlout').textContent = decodeURIComponent($('urlin').value); }
-        catch(e){ $('urlout').textContent = 'Ошибка декодирования'; }
-    }
-    function htmlEncode(){
-        $('htmlout').textContent = $('htmlin').value
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    }
-    function htmlDecode(){
-        const txt = document.createElement('textarea');
-        txt.innerHTML = $('htmlin').value;
-        $('htmlout').textContent = txt.value;
-    }
-    function fmtJson(pretty){
-        try{
-            const o = JSON.parse($('jsonin').value);
-            $('jsonout').textContent = JSON.stringify(o, null, pretty ? 2 : 0);
-        }catch(e){ $('jsonout').textContent = 'Ошибка: ' + e.message; }
-    }
-    function hexToBin(){
-        const hex = $('hexBin').value.replace(/\s+/g,'');
-        if (!/^[0-9a-f]+$/i.test(hex)){ $('hexBinOut').textContent = 'Ошибка: не hex'; return; }
-        $('hexBinOut').textContent = [...hex].map(c => parseInt(c,16).toString(2).padStart(4,'0')).join('');
-    }
-    function binToHex(){
-        let bin = $('hexBin').value.replace(/\s+/g,'');
-        if (!/^[01]+$/.test(bin)){ $('hexBinOut').textContent = 'Ошибка: не binary'; return; }
-        if (bin.length % 4) bin = bin.padStart(Math.ceil(bin.length/4)*4,'0');
-        $('hexBinOut').textContent = bin.match(/.{4}/g).map(x => parseInt(x,2).toString(16)).join('').toUpperCase();
-    }
-
-    // ==================== ХЕШИ И ПАРОЛИ ====================
-    $('pwrange').addEventListener('input', () => $('pwLenLabel').textContent = $('pwrange').value);
-
-    function genPw(){
-        let charset = '';
-        if ($('pwUp').checked) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if ($('pwLow').checked) charset += 'abcdefghijklmnopqrstuvwxyz';
-        if ($('pwNum').checked) charset += '0123456789';
-        if ($('pwSpec').checked) charset += '!@#$%^&*()-_=+[]{};:,.<>?';
-        if (!charset){ $('pwout').textContent = 'Выберите параметры'; return; }
-        const len = parseInt($('pwrange').value, 10);
-        const result = randString(len, charset);
-        $('pwout').textContent = result;
-        let score = 0;
-        if (result.length > 12) score++;
-        if (/[A-Z]/.test(result)) score++;
-        if (/[a-z]/.test(result)) score++;
-        if (/[0-9]/.test(result)) score++;
-        if (/[^A-Za-z0-9]/.test(result)) score++;
-        const str = $('pwStrength');
-        if (score <= 2) str.textContent = '❌ Слабый';
-        else if (score <= 4) str.textContent = '⚠️ Средний';
-        else str.textContent = '✅ Надёжный';
-    }
-    function randString(len, charset){
-        const max = 0xFFFFFFFF, limit = max - (max % charset.length), out = [];
-        const buf = new Uint32Array(1);
-        while (out.length < len){
-            crypto.getRandomValues(buf);
-            if (buf[0] < limit) out.push(charset[buf[0] % charset.length]);
-        }
-        return out.join('');
-    }
-    function makeAllHashes(){
-        const text = $('hashin').value;
-        if (!text){ $('hashout').textContent = 'Введите текст'; return; }
-        const out = [];
-        out.push('MD5:    ' + CryptoJS.MD5(text).toString());
-        out.push('SHA1:   ' + CryptoJS.SHA1(text).toString());
-        out.push('SHA256: ' + CryptoJS.SHA256(text).toString());
-        out.push('SHA512: ' + CryptoJS.SHA512(text).toString());
-        out.push('CRC32:  ' + crc32(text).toString(16).padStart(8, '0').toUpperCase());
-        $('hashout').textContent = out.join('\n');
-    }
-    function crc32(str){
-        let crc = 0xFFFFFFFF;
-        for (let i = 0; i < str.length; i++){
-            crc ^= str.charCodeAt(i);
-            for (let j = 0; j < 8; j++) crc = (crc >>> 1) ^ (crc & 1 ? 0xEDB88320 : 0);
-        }
-        return (crc ^ 0xFFFFFFFF) >>> 0;
-    }
-    function makeHtpasswd(){
-        const user = $('htUser').value.trim();
-        const pass = $('htPass').value;
-        if (!user || !pass){ $('htOut').textContent = 'Введите логин и пароль'; return; }
-        const salt = Math.random().toString(36).slice(2, 10);
-        const hash = CryptoJS.MD5(pass + salt).toString();
-        $('htOut').textContent = `${user}:$apr1$${salt}$${hash}`;
-    }
-
-    // ==================== РАЗРАБОТЧИК ====================
-    function decodeJwt(){
-        try{
-            const token = $('jwtIn').value.trim();
-            const parts = token.split('.');
-            if (parts.length !== 3) throw new Error('JWT должен состоять из 3 частей');
-            const header = JSON.parse(atob(parts[0].replace(/-/g,'+').replace(/_/g,'/')));
-            const payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
-            $('jwtOut').textContent = 'Header:\n' + JSON.stringify(header, null, 2) + '\n\nPayload:\n' + JSON.stringify(payload, null, 2);
-        }catch(e){ $('jwtOut').textContent = 'Ошибка: ' + e.message; }
-    }
-    function testRegex(){
-        try{
-            const pattern = $('regexPattern').value;
-            const flags = $('regexFlags').value;
-            const text = $('regexText').value;
-            const re = new RegExp(pattern, flags);
-            const matches = [...text.matchAll(re)];
-            if (!matches.length){ $('regexOut').textContent = 'Совпадений нет'; return; }
-            $('regexOut').textContent = matches.map((m, i) => `#${i+1}: "${m[0]}" (позиция ${m.index})`).join('\n');
-        }catch(e){ $('regexOut').textContent = 'Ошибка: ' + e.message; }
-    }
-    function beautifyJs(){
-        let code = $('jsIn').value;
-        let out = '', indent = 0;
-        for (let ch of code){
-            if (ch === '{'){ out += ' {\n' + '  '.repeat(++indent); }
-            else if (ch === '}'){ out += '\n' + '  '.repeat(--indent) + '}'; }
-            else if (ch === ';'){ out += ';\n' + '  '.repeat(indent); }
-            else out += ch;
-        }
-        $('jsOut').textContent = out.replace(/\n\s*\n/g, '\n').trim();
-    }
-    function minifyJs(){
-        let code = $('jsIn').value;
-        code = code.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
-        code = code.replace(/\s+/g, ' ').replace(/\s*([{};:,=+\-*/<>!&|?])\s*/g, '$1');
-        $('jsOut').textContent = code.trim();
-    }
-    function convertData(type){
-        const input = $('dataConv').value;
-        if (!input){ $('dataConvOut').textContent = '—'; return; }
-        try{
-            if (type === 'jsonToCsv'){
-                const obj = JSON.parse(input);
-                const arr = Array.isArray(obj) ? obj : [obj];
-                const headers = Object.keys(arr[0]);
-                const lines = [headers.join(',')];
-                arr.forEach(row => lines.push(headers.map(h => `"${String(row[h]).replace(/"/g,'""')}"`).join(',')));
-                $('dataConvOut').textContent = lines.join('\n');
-            } else {
-                const lines = input.trim().split('\n');
-                const headers = lines[0].split(',');
-                const result = lines.slice(1).map(line => {
-                    const values = line.split(',');
-                    const obj = {};
-                    headers.forEach((h, i) => obj[h.trim()] = values[i]?.trim().replace(/^"|"$/g,'') || '');
-                    return obj;
-                });
-                $('dataConvOut').textContent = JSON.stringify(result, null, 2);
-            }
-        }catch(e){ $('dataConvOut').textContent = 'Ошибка: ' + e.message; }
-    }
-
-    // ==================== СЖАТИЕ ====================
-    async function createZip(){
-        const files = $('zipFiles').files;
-        if (!files.length){ $('zipOut').textContent = 'Выберите файлы'; return; }
-        const zip = new JSZip();
-        for (let f of files){ zip.file(f.name, await f.arrayBuffer()); }
-        const blob = await zip.generateAsync({type:'blob'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'archive.zip';
-        a.click();
-        $('zipOut').textContent = `ZIP создан (${files.length} файлов)`;
-    }
-    async function unzipFile(){
-        const file = $('unzipFile').files[0];
-        if (!file){ $('unzipOut').textContent = 'Выберите ZIP-файл'; return; }
-        const zip = await JSZip.loadAsync(file);
-        $('unzipOut').textContent = 'Содержимое:\n' + Object.keys(zip.files).join('\n');
-    }
-
-    // ==================== PDF ====================
-    async function imagesToPdf(){
-        const files = $('pdfImages').files;
-        if (!files.length){ $('pdfOut').textContent = 'Выберите изображения'; return; }
-        const { PDFDocument } = PDFLib;
-        const pdfDoc = await PDFDocument.create();
-        for (let f of files){
-            const imgBytes = await f.arrayBuffer();
-            let img;
-            if (f.type === 'image/png') img = await pdfDoc.embedPng(imgBytes);
-            else img = await pdfDoc.embedJpg(imgBytes);
-            const page = pdfDoc.addPage([img.width, img.height]);
-            page.drawImage(img, { x:0, y:0, width: img.width, height: img.height });
-        }
-        const pdfBytes = await pdfDoc.save();
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([pdfBytes], {type:'application/pdf'}));
-        a.download = 'images.pdf';
-        a.click();
-        $('pdfOut').textContent = 'PDF создан';
-    }
-    async function mergePdfs(){
-        const files = $('mergePdfs').files;
-        if (files.length < 2){ $('mergeOut').textContent = 'Выберите минимум 2 PDF'; return; }
-        const { PDFDocument } = PDFLib;
-        const merged = await PDFDocument.create();
-        for (let f of files){
-            const bytes = await f.arrayBuffer();
-            const doc = await PDFDocument.load(bytes);
-            const pages = await merged.copyPages(doc, doc.getPageIndices());
-            pages.forEach(p => merged.addPage(p));
-        }
-        const mergedBytes = await merged.save();
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([mergedBytes], {type:'application/pdf'}));
-        a.download = 'merged.pdf';
-        a.click();
-        $('mergeOut').textContent = 'PDF объединён';
-    }
-
-    // ==================== ИЗОБРАЖЕНИЯ ====================
-    function convertImage(){
-        const file = $('imgConvertFile').files[0];
-        if (!file){ $('imgConvertOut').textContent = 'Выберите изображение'; return; }
-        const format = $('imgFormat').value;
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width; canvas.height = img.height;
-            canvas.getContext('2d').drawImage(img, 0, 0);
-            canvas.toBlob(blob => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'converted.' + format.split('/')[1];
-                a.click();
-                $('imgConvertOut').textContent = 'Готово';
-            }, format);
-        };
-        img.src = URL.createObjectURL(file);
-    }
-    $('imgQuality').addEventListener('input', () => $('qualityLabel').textContent = $('imgQuality').value);
-
-    function compressImage(){
-        const file = $('imgCompressFile').files[0];
-        if (!file){ $('imgCompressOut').textContent = 'Выберите изображение'; return; }
-        const quality = parseFloat($('imgQuality').value);
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width; canvas.height = img.height;
-            canvas.getContext('2d').drawImage(img, 0, 0);
-            canvas.toBlob(blob => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'compressed.jpg';
-                a.click();
-                $('imgCompressOut').textContent = `Сжато (качество ${quality})`;
-            }, 'image/jpeg', quality);
-        };
-        img.src = URL.createObjectURL(file);
-    }
-
-    // ==================== STICKY BOTTOM РЕКЛАМА (блок 1) ====================
-    const AD_KEY = 'adStickyClosed';
-
-    function closeStickyAd(){
-        $('adSticky').classList.add('hidden');
-        document.body.classList.remove('ad-open');
-        try{ sessionStorage.setItem(AD_KEY, '1'); }catch(e){}
-    }
-
-    function initStickyAd(){
-        let closed = false;
-        try{ closed = sessionStorage.getItem(AD_KEY) === '1'; }catch(e){}
-        if (closed){ return; }
-        document.body.classList.add('ad-open');
-
-        window.yaContextCb.push(() => {
-            if (window.Ya && Ya.Context && Ya.Context.AdvManager){
-                Ya.Context.AdvManager.render({
-                    renderTo: 'yandex_rtb_R-A-20456192-1',
-                    blockId:  'R-A-20456192-1'
-                });
-            }
-        });
-
-        setTimeout(() => {
-            const c = document.getElementById('yandex_rtb_R-A-20456192-1');
-            if (!c || c.children.length === 0){
-                $('adSticky').classList.add('hidden');
-                document.body.classList.remove('ad-open');
-            }
-        }, 8000);
-    }
-
-    // ==================== INLINE РЕКЛАМА (блок 2) ====================
-    // Ленивый рендер: блок грузится только когда пользователь доскроллит до него.
-    // Это и по UX мягче (баннер не «прыгает» на старте), и по метрикам лучше —
-    // показ засчитывается именно когда баннер реально в поле зрения.
-    function initInlineAd(){
-        const wrapper = document.getElementById('adInline');
-        const container = document.getElementById('yandex_rtb_R-A-20456192-2');
-        if (!wrapper || !container) return;
-
-        let rendered = false;
-
-        const render = () => {
-            if (rendered) return;
-            rendered = true;
-            window.yaContextCb.push(() => {
-                if (window.Ya && Ya.Context && Ya.Context.AdvManager){
-                    Ya.Context.AdvManager.render({
-                        renderTo: 'yandex_rtb_R-A-20456192-2',
-                        blockId:  'R-A-20456192-2'
-                    });
-                    // если реклама не заполнилась — прячем пустую карточку
-                    setTimeout(() => {
-                        if (container.children.length === 0){
-                            wrapper.classList.add('hidden');
-                        }
-                    }, 6000);
-                } else {
-                    wrapper.classList.add('hidden');
-                }
-            });
-        };
-
-        if ('IntersectionObserver' in window){
-            const io = new IntersectionObserver(entries => {
-                entries.forEach(e => {
-                    if (e.isIntersecting){
-                        io.disconnect();
-                        render();
-                    }
-                });
-            }, { rootMargin: '200px 0px' });
-            io.observe(wrapper);
-        } else {
-            render(); // фолбэк для старых браузеров
-        }
-    }
-
-    // ==================== ИНИЦИАЛИЗАЦИЯ ====================
-    genPw();
-    initStickyAd();
-    initInlineAd();
-</script>
-</body>
-</html>
+                <select id="unitLengthTo" style="margin-top:10px">
+                    <option value="m">Метры</option>
+                    <option value="km">Километры</option>
+                    <option value="cm">Сантиметр
