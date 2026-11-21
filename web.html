@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Веб-инструменты и генератор QR-кодов — FreeTools</title>
+    <meta name="description" content="Генератор QR и WiFi QR-кодов, коды ответов HTTP, MIME-типы и экранирование строк.">
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="mobile-topbar">
+    <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">☰</button>
+    <div class="mobile-title-wrap">
+        <span class="mobile-brand">FreeTools</span>
+        <span class="mobile-cat-name">🌐 Веб</span>
+    </div>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <h1>FreeTools</h1>
+        <p>Онлайн-инструменты в один клик</p>
+    </div>
+
+    <div class="sidebar-search">
+        <input type="text" id="toolSearch" placeholder="Поиск в этом разделе..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Очистить поиск">×</button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-group">
+            <div class="nav-group-title">Текст</div>
+            <a class="nav-item" href="index.html">
+                <span class="nav-item-label">📝 Текст</span>
+                <span class="nav-badge">23</span>
+            </a>
+            <a class="nav-item" href="encoding.html">
+                <span class="nav-item-label">🔤 Кодирование</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Безопасность</div>
+            <a class="nav-item" href="security.html">
+                <span class="nav-item-label">🔐 Хеши и пароли</span>
+                <span class="nav-badge">7</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Разработка</div>
+            <a class="nav-item" href="dev.html">
+                <span class="nav-item-label">💻 Разработчик</span>
+                <span class="nav-badge">20</span>
+            </a>
+            <a class="nav-item active" href="web.html">
+                <span class="nav-item-label">🌐 Веб</span>
+                <span class="nav-badge">5</span>
+            </a>
+            <a class="nav-item" href="network.html">
+                <span class="nav-item-label">📡 Сеть</span>
+                <span class="nav-badge">4</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Конвертеры</div>
+            <a class="nav-item" href="converters.html">
+                <span class="nav-item-label">🔄 Конвертеры</span>
+                <span class="nav-badge">19</span>
+            </a>
+            <a class="nav-item" href="math.html">
+                <span class="nav-item-label">📐 Математика</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="calc.html">
+                <span class="nav-item-label">🧮 Калькуляторы</span>
+                <span class="nav-badge">16</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Маркетинг</div>
+            <a class="nav-item" href="seo.html">
+                <span class="nav-item-label">🔎 SEO</span>
+                <span class="nav-badge">13</span>
+            </a>
+            <a class="nav-item" href="finance.html">
+                <span class="nav-item-label">💰 Финансы</span>
+                <span class="nav-badge">6</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Время</div>
+            <a class="nav-item" href="datetime.html">
+                <span class="nav-item-label">📅 Дата и время</span>
+                <span class="nav-badge">8</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Медиа</div>
+            <a class="nav-item" href="compression.html">
+                <span class="nav-item-label">🗜️ Сжатие</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="pdf.html">
+                <span class="nav-item-label">📄 PDF</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="images.html">
+                <span class="nav-item-label">🖼️ Изображения</span>
+                <span class="nav-badge">2</span>
+            </a>
+        </div>
+    </nav>
+
+    <div id="adLeftWrap" class="sidebar-ad">
+        <div id="yandex_rtb_R-A-20456192-3"></div>
+    </div>
+</aside>
+
+<aside id="adRightWrap" class="ad-right-rail">
+    <div id="yandex_rtb_R-A-20456192-4"></div>
+</aside>
+
+<div class="app-content">
+<main>
+    <div class="search-status" id="searchStatus">
+        <span>Найдено в разделе: <b id="searchCount">0</b></span>
+        <button class="btn secondary" style="width:auto;margin:0;padding:6px 12px;font-size:.82rem" onclick="resetSearch()">Сбросить</button>
+    </div>
+
+<h2 class="section-title">Web</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Генератор QR-кода</h3>
+                <input id="qrText" placeholder="Текст или URL...">
+                <button class="btn" onclick="genQr()">Сгенерировать</button>
+                <div id="qrcode" style="margin-top:15px;display:flex;justify-content:center"></div>
+                <div class="out" id="qrOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>WiFi QR-код</h3>
+                <input id="wifiSsid" placeholder="SSID (имя сети)">
+                <input id="wifiPass" placeholder="Пароль" style="margin-top:8px">
+                <select id="wifiEnc" style="margin-top:8px">
+                    <option value="WPA">WPA/WPA2</option>
+                    <option value="WEP">WEP</option>
+                    <option value="nopass">Без пароля</option>
+                </select>
+                <button class="btn" onclick="genWifiQr()">Сгенерировать</button>
+                <div id="wifiQr" style="margin-top:15px;display:flex;justify-content:center"></div>
+                <div class="out" id="wifiQrOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>HTTP Status Codes</h3>
+                <input id="httpCode" placeholder="Введите код (например, 404)">
+                <button class="btn" onclick="lookupHttp()">Найти</button>
+                <div class="out" id="httpOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Escape / Unescape String</h3>
+                <textarea id="escapeIn" placeholder="Текст..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="escapeStr()">Escape</button>
+                    <button class="btn secondary" onclick="unescapeStr()">Unescape</button>
+                </div>
+                <div class="out" id="escapeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>MIME Types Lookup</h3>
+                <input id="mimeIn" placeholder=".jpg или image/png">
+                <button class="btn" onclick="lookupMime()">Найти</button>
+                <div class="out" id="mimeOut">—</div>
+            </div>
+        </div>
+    
+
+    <div id="adInlineWrap" class="ad-inline">
+        <div id="yandex_rtb_R-A-20456192-2"></div>
+    </div>
+</main>
+</div>
+
+<div id="adStickyWrap" class="ad-sticky">
+    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
+    <div id="yandex_rtb_R-A-20456192-1"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

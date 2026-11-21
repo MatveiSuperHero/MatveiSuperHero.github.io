@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Онлайн-калькуляторы на все случаи жизни — FreeTools</title>
+    <meta name="description" content="Калькулятор процентов, кредита, ИМТ (BMI), возраста, площади, объёма и сложных процентов.">
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="mobile-topbar">
+    <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">☰</button>
+    <div class="mobile-title-wrap">
+        <span class="mobile-brand">FreeTools</span>
+        <span class="mobile-cat-name">🧮 Калькуляторы</span>
+    </div>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <h1>FreeTools</h1>
+        <p>Онлайн-инструменты в один клик</p>
+    </div>
+
+    <div class="sidebar-search">
+        <input type="text" id="toolSearch" placeholder="Поиск в этом разделе..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Очистить поиск">×</button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-group">
+            <div class="nav-group-title">Текст</div>
+            <a class="nav-item" href="index.html">
+                <span class="nav-item-label">📝 Текст</span>
+                <span class="nav-badge">23</span>
+            </a>
+            <a class="nav-item" href="encoding.html">
+                <span class="nav-item-label">🔤 Кодирование</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Безопасность</div>
+            <a class="nav-item" href="security.html">
+                <span class="nav-item-label">🔐 Хеши и пароли</span>
+                <span class="nav-badge">7</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Разработка</div>
+            <a class="nav-item" href="dev.html">
+                <span class="nav-item-label">💻 Разработчик</span>
+                <span class="nav-badge">20</span>
+            </a>
+            <a class="nav-item" href="web.html">
+                <span class="nav-item-label">🌐 Веб</span>
+                <span class="nav-badge">5</span>
+            </a>
+            <a class="nav-item" href="network.html">
+                <span class="nav-item-label">📡 Сеть</span>
+                <span class="nav-badge">4</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Конвертеры</div>
+            <a class="nav-item" href="converters.html">
+                <span class="nav-item-label">🔄 Конвертеры</span>
+                <span class="nav-badge">19</span>
+            </a>
+            <a class="nav-item" href="math.html">
+                <span class="nav-item-label">📐 Математика</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item active" href="calc.html">
+                <span class="nav-item-label">🧮 Калькуляторы</span>
+                <span class="nav-badge">16</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Маркетинг</div>
+            <a class="nav-item" href="seo.html">
+                <span class="nav-item-label">🔎 SEO</span>
+                <span class="nav-badge">13</span>
+            </a>
+            <a class="nav-item" href="finance.html">
+                <span class="nav-item-label">💰 Финансы</span>
+                <span class="nav-badge">6</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Время</div>
+            <a class="nav-item" href="datetime.html">
+                <span class="nav-item-label">📅 Дата и время</span>
+                <span class="nav-badge">8</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Медиа</div>
+            <a class="nav-item" href="compression.html">
+                <span class="nav-item-label">🗜️ Сжатие</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="pdf.html">
+                <span class="nav-item-label">📄 PDF</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="images.html">
+                <span class="nav-item-label">🖼️ Изображения</span>
+                <span class="nav-badge">2</span>
+            </a>
+        </div>
+    </nav>
+
+    <div id="adLeftWrap" class="sidebar-ad">
+        <div id="yandex_rtb_R-A-20456192-3"></div>
+    </div>
+</aside>
+
+<aside id="adRightWrap" class="ad-right-rail">
+    <div id="yandex_rtb_R-A-20456192-4"></div>
+</aside>
+
+<div class="app-content">
+<main>
+    <div class="search-status" id="searchStatus">
+        <span>Найдено в разделе: <b id="searchCount">0</b></span>
+        <button class="btn secondary" style="width:auto;margin:0;padding:6px 12px;font-size:.82rem" onclick="resetSearch()">Сбросить</button>
+    </div>
+
+<h2 class="section-title">Калькуляторы</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Калькулятор процентов</h3>
+                <input id="percentA" type="number" placeholder="Число A">
+                <input id="percentB" type="number" placeholder="Процент B (%)" style="margin-top:8px">
+                <button class="btn" onclick="calcPercent()">Сколько составляет B% от A</button>
+                <div class="out" id="percentOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор кредита</h3>
+                <input id="loanAmount" type="number" placeholder="Сумма кредита">
+                <input id="loanRate" type="number" step="0.1" placeholder="Годовая ставка (%)" style="margin-top:8px">
+                <input id="loanTerm" type="number" placeholder="Срок (мес.)" style="margin-top:8px">
+                <button class="btn" onclick="calcLoan()">Рассчитать</button>
+                <div class="out" id="loanOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>BMI Калькулятор</h3>
+                <input id="bmiWeight" type="number" placeholder="Вес (кг)">
+                <input id="bmiHeight" type="number" placeholder="Рост (см)" style="margin-top:8px">
+                <button class="btn" onclick="calcBmi()">Рассчитать</button>
+                <div class="out" id="bmiOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор возраста</h3>
+                <input id="ageBirth" type="date">
+                <button class="btn" onclick="calcAge()">Рассчитать</button>
+                <div class="out" id="ageOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор площади</h3>
+                <input id="areaCalcW" type="number" placeholder="Ширина">
+                <input id="areaCalcH" type="number" placeholder="Высота" style="margin-top:8px">
+                <button class="btn" onclick="calcArea()">Рассчитать</button>
+                <div class="out" id="areaCalcOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор объёма</h3>
+                <input id="volCalcL" type="number" placeholder="Длина">
+                <input id="volCalcW" type="number" placeholder="Ширина" style="margin-top:8px">
+                <input id="volCalcH" type="number" placeholder="Высота" style="margin-top:8px">
+                <button class="btn" onclick="calcVolume()">Рассчитать</button>
+                <div class="out" id="volCalcOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Среднее число</h3>
+                <input id="avgIn" placeholder="Числа через запятую...">
+                <button class="btn" onclick="calcAverage()">Рассчитать</button>
+                <div class="out" id="avgOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сумма чисел</h3>
+                <input id="sumIn" placeholder="Числа через запятую...">
+                <button class="btn" onclick="calcSum()">Рассчитать</button>
+                <div class="out" id="sumOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Пропорция</h3>
+                <input id="ratioA" type="number" placeholder="A">
+                <input id="ratioB" type="number" placeholder="B" style="margin-top:8px">
+                <input id="ratioC" type="number" placeholder="C" style="margin-top:8px">
+                <button class="btn" onclick="calcRatio()">Найти D (A:B = C:D)</button>
+                <div class="out" id="ratioOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Дроби</h3>
+                <input id="fracA" placeholder="Числитель 1">
+                <input id="fracB" placeholder="Знаменатель 1" style="margin-top:8px">
+                <input id="fracC" placeholder="Числитель 2" style="margin-top:8px">
+                <input id="fracD" placeholder="Знаменатель 2" style="margin-top:8px">
+                <button class="btn" onclick="calcFraction()">Сложить</button>
+                <div class="out" id="fracOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>НОД и НОК</h3>
+                <input id="gcdA" type="number" placeholder="Число A">
+                <input id="gcdB" type="number" placeholder="Число B" style="margin-top:8px">
+                <button class="btn" onclick="calcGcdLcm()">Рассчитать</button>
+                <div class="out" id="gcdOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Степень и корень</h3>
+                <input id="powerBase" type="number" placeholder="Число">
+                <input id="powerExp" type="number" placeholder="Степень" style="margin-top:8px">
+                <div class="row">
+                    <button class="btn" onclick="calcPower()">Степень</button>
+                    <button class="btn secondary" onclick="calcRoot()">Корень</button>
+                </div>
+                <div class="out" id="powerOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор чаевых</h3>
+                <input id="tipBill" type="number" placeholder="Сумма счёта">
+                <input id="tipPercent" type="number" placeholder="Чаевые (%)" style="margin-top:8px">
+                <button class="btn" onclick="calcTip()">Рассчитать</button>
+                <div class="out" id="tipOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Разделить счёт</h3>
+                <input id="splitTotal" type="number" placeholder="Общая сумма">
+                <input id="splitPeople" type="number" placeholder="Количество человек" style="margin-top:8px">
+                <button class="btn" onclick="calcSplit()">Рассчитать</button>
+                <div class="out" id="splitOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сложные проценты</h3>
+                <input id="compoundPrincipal" type="number" placeholder="Начальная сумма">
+                <input id="compoundRate" type="number" step="0.1" placeholder="Ставка (%)" style="margin-top:8px">
+                <input id="compoundYears" type="number" placeholder="Лет" style="margin-top:8px">
+                <button class="btn" onclick="calcCompound()">Рассчитать</button>
+                <div class="out" id="compoundOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Простые проценты</h3>
+                <input id="simplePrincipal" type="number" placeholder="Сумма">
+                <input id="simpleRate" type="number" step="0.1" placeholder="Ставка (%)" style="margin-top:8px">
+                <input id="simpleYears" type="number" placeholder="Лет" style="margin-top:8px">
+                <button class="btn" onclick="calcSimpleInterest()">Рассчитать</button>
+                <div class="out" id="simpleInterestOut">—</div>
+            </div>
+        </div>
+    
+
+    <div id="adInlineWrap" class="ad-inline">
+        <div id="yandex_rtb_R-A-20456192-2"></div>
+    </div>
+</main>
+</div>
+
+<div id="adStickyWrap" class="ad-sticky">
+    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
+    <div id="yandex_rtb_R-A-20456192-1"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

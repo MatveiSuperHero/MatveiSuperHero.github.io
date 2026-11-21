@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Инструменты для разработчиков — FreeTools</title>
+    <meta name="description" content="JWT Decoder, Regex Tester, SQL/XML/JS форматтеры, YAML/JSON, UUID и CSS-генераторы.">
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/sql-formatter/15.1.4/sql-formatter.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="mobile-topbar">
+    <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">☰</button>
+    <div class="mobile-title-wrap">
+        <span class="mobile-brand">FreeTools</span>
+        <span class="mobile-cat-name">💻 Разработчик</span>
+    </div>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <h1>FreeTools</h1>
+        <p>Онлайн-инструменты в один клик</p>
+    </div>
+
+    <div class="sidebar-search">
+        <input type="text" id="toolSearch" placeholder="Поиск в этом разделе..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Очистить поиск">×</button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-group">
+            <div class="nav-group-title">Текст</div>
+            <a class="nav-item" href="index.html">
+                <span class="nav-item-label">📝 Текст</span>
+                <span class="nav-badge">23</span>
+            </a>
+            <a class="nav-item" href="encoding.html">
+                <span class="nav-item-label">🔤 Кодирование</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Безопасность</div>
+            <a class="nav-item" href="security.html">
+                <span class="nav-item-label">🔐 Хеши и пароли</span>
+                <span class="nav-badge">7</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Разработка</div>
+            <a class="nav-item active" href="dev.html">
+                <span class="nav-item-label">💻 Разработчик</span>
+                <span class="nav-badge">20</span>
+            </a>
+            <a class="nav-item" href="web.html">
+                <span class="nav-item-label">🌐 Веб</span>
+                <span class="nav-badge">5</span>
+            </a>
+            <a class="nav-item" href="network.html">
+                <span class="nav-item-label">📡 Сеть</span>
+                <span class="nav-badge">4</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Конвертеры</div>
+            <a class="nav-item" href="converters.html">
+                <span class="nav-item-label">🔄 Конвертеры</span>
+                <span class="nav-badge">19</span>
+            </a>
+            <a class="nav-item" href="math.html">
+                <span class="nav-item-label">📐 Математика</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="calc.html">
+                <span class="nav-item-label">🧮 Калькуляторы</span>
+                <span class="nav-badge">16</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Маркетинг</div>
+            <a class="nav-item" href="seo.html">
+                <span class="nav-item-label">🔎 SEO</span>
+                <span class="nav-badge">13</span>
+            </a>
+            <a class="nav-item" href="finance.html">
+                <span class="nav-item-label">💰 Финансы</span>
+                <span class="nav-badge">6</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Время</div>
+            <a class="nav-item" href="datetime.html">
+                <span class="nav-item-label">📅 Дата и время</span>
+                <span class="nav-badge">8</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Медиа</div>
+            <a class="nav-item" href="compression.html">
+                <span class="nav-item-label">🗜️ Сжатие</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="pdf.html">
+                <span class="nav-item-label">📄 PDF</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="images.html">
+                <span class="nav-item-label">🖼️ Изображения</span>
+                <span class="nav-badge">2</span>
+            </a>
+        </div>
+    </nav>
+
+    <div id="adLeftWrap" class="sidebar-ad">
+        <div id="yandex_rtb_R-A-20456192-3"></div>
+    </div>
+</aside>
+
+<aside id="adRightWrap" class="ad-right-rail">
+    <div id="yandex_rtb_R-A-20456192-4"></div>
+</aside>
+
+<div class="app-content">
+<main>
+    <div class="search-status" id="searchStatus">
+        <span>Найдено в разделе: <b id="searchCount">0</b></span>
+        <button class="btn secondary" style="width:auto;margin:0;padding:6px 12px;font-size:.82rem" onclick="resetSearch()">Сбросить</button>
+    </div>
+
+<h2 class="section-title">Developer Utilities</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>JWT Decoder</h3>
+                <textarea id="jwtIn" placeholder="Вставьте JWT токен..."></textarea>
+                <button class="btn" onclick="decodeJwt()">Декодировать</button>
+                <div class="out" id="jwtOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Regex Tester</h3>
+                <input id="regexPattern" placeholder="Регулярное выражение (без / /)">
+                <input id="regexFlags" placeholder="Флаги (g, i, m...)" value="g" style="margin-top:10px">
+                <textarea id="regexText" placeholder="Текст для проверки..." style="margin-top:10px"></textarea>
+                <button class="btn" onclick="testRegex()">Проверить</button>
+                <div class="out" id="regexOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>JavaScript Beautify / Minify</h3>
+                <textarea id="jsIn" placeholder="Код JavaScript..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="beautifyJs()">Beautify</button>
+                    <button class="btn secondary" onclick="minifyJs()">Minify</button>
+                </div>
+                <div class="out" id="jsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>CSV ⇄ JSON</h3>
+                <textarea id="dataConv" placeholder="JSON или CSV..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="convertData('jsonToCsv')">JSON ➔ CSV</button>
+                    <button class="btn secondary" onclick="convertData('csvToJson')">CSV ➔ JSON</button>
+                </div>
+                <div class="out" id="dataConvOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>SQL Formatter</h3>
+                <textarea id="sqlIn" placeholder="SELECT * FROM users WHERE id = 1;"></textarea>
+                <button class="btn" onclick="fmtSql()">Форматировать</button>
+                <div class="out" id="sqlOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>XML Formatter</h3>
+                <textarea id="xmlIn" placeholder="&lt;root&gt;&lt;item&gt;1&lt;/item&gt;&lt;/root&gt;"></textarea>
+                <button class="btn" onclick="fmtXml()">Форматировать</button>
+                <div class="out" id="xmlOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>YAML ⇄ JSON</h3>
+                <textarea id="yamlIn" placeholder="key: value
+list:
+  - item1
+  - item2"></textarea>
+                <div class="row">
+                    <button class="btn" onclick="yamlToJson()">YAML ➔ JSON</button>
+                    <button class="btn secondary" onclick="jsonToYaml()">JSON ➔ YAML</button>
+                </div>
+                <div class="out" id="yamlOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>List Converter</h3>
+                <textarea id="listIn" placeholder="Строки, CSV или JSON-массив..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="listToJson()">➔ JSON</button>
+                    <button class="btn secondary" onclick="listToCsv()">➔ CSV</button>
+                    <button class="btn secondary" onclick="listToLines()">➔ Lines</button>
+                </div>
+                <div class="out" id="listOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>JSON Validator</h3>
+                <textarea id="jsonValidateIn" placeholder='{"key":"value"}'></textarea>
+                <button class="btn" onclick="validateJson()">Проверить</button>
+                <div class="out" id="jsonValidateOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>UUID Generator</h3>
+                <button class="btn" onclick="genUuid()">Сгенерировать UUID</button>
+                <div class="out" id="uuidOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>HEX → RGB</h3>
+                <input id="hexRgbIn" placeholder="#4f8cff">
+                <button class="btn" onclick="hexToRgb()">Конвертировать</button>
+                <div class="out" id="hexRgbOut">—</div>
+                <div id="hexRgbPreview" style="height:40px;border-radius:8px;margin-top:10px;border:1px solid var(--border)"></div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер систем счисления</h3>
+                <input id="baseConvertIn" placeholder="Число...">
+                <select id="baseConvertFrom" style="margin-top:8px">
+                    <option value="2">Binary (2)</option>
+                    <option value="8">Octal (8)</option>
+                    <option value="10">Decimal (10)</option>
+                    <option value="16">Hex (16)</option>
+                </select>
+                <select id="baseConvertTo" style="margin-top:8px">
+                    <option value="2">Binary (2)</option>
+                    <option value="8">Octal (8)</option>
+                    <option value="10">Decimal (10)</option>
+                    <option value="16">Hex (16)</option>
+                </select>
+                <button class="btn" onclick="convertBase()">Конвертировать</button>
+                <div class="out" id="baseConvertOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>URL Parser</h3>
+                <input id="urlParseIn" placeholder="https://example.com/path?query=1">
+                <button class="btn" onclick="parseUrl()">Разобрать</button>
+                <div class="out" id="urlParseOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Query String Parser</h3>
+                <input id="queryStringIn" placeholder="?a=1&amp;b=2">
+                <button class="btn" onclick="parseQueryString()">Разобрать</button>
+                <div class="out" id="queryStringOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Cron Generator</h3>
+                <input id="cronMinDev" placeholder="Минуты" value="*">
+                <input id="cronHourDev" placeholder="Часы" value="*" style="margin-top:8px">
+                <input id="cronDayDev" placeholder="День" value="*" style="margin-top:8px">
+                <input id="cronMonthDev" placeholder="Месяц" value="*" style="margin-top:8px">
+                <input id="cronDowDev" placeholder="День недели" value="*" style="margin-top:8px">
+                <button class="btn" onclick="genCronDev()">Сгенерировать</button>
+                <div class="out" id="cronDevOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Color Contrast Checker</h3>
+                <input id="contrastFg" placeholder="#ffffff">
+                <input id="contrastBg" placeholder="#000000" style="margin-top:8px">
+                <button class="btn" onclick="checkContrast()">Проверить</button>
+                <div class="out" id="contrastOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Text to JSON</h3>
+                <textarea id="textToJsonIn" placeholder="Ключ: значение..."></textarea>
+                <button class="btn" onclick="textToJson()">Конвертировать</button>
+                <div class="out" id="textToJsonOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>HTML Table Generator</h3>
+                <textarea id="htmlTableIn" placeholder="Строки и столбцы через запятую..."></textarea>
+                <button class="btn" onclick="genHtmlTable()">Сгенерировать</button>
+                <div class="out" id="htmlTableOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>CSS Box Shadow</h3>
+                <input id="shadowX" placeholder="X" value="0">
+                <input id="shadowY" placeholder="Y" value="4" style="margin-top:8px">
+                <input id="shadowBlur" placeholder="Blur" value="8" style="margin-top:8px">
+                <input id="shadowColor" placeholder="Color" value="rgba(0,0,0,0.3)" style="margin-top:8px">
+                <button class="btn" onclick="genBoxShadow()">Сгенерировать</button>
+                <div class="out" id="boxShadowOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>CSS Gradient</h3>
+                <input id="gradientColor1" placeholder="Цвет 1" value="#4f8cff">
+                <input id="gradientColor2" placeholder="Цвет 2" value="#9d72ff" style="margin-top:8px">
+                <select id="gradientDir" style="margin-top:8px">
+                    <option value="to right">→</option>
+                    <option value="to bottom">↓</option>
+                    <option value="to bottom right">↘</option>
+                </select>
+                <button class="btn" onclick="genGradient()">Сгенерировать</button>
+                <div class="out" id="gradientOut">—</div>
+            </div>
+        </div>
+    
+
+    <div id="adInlineWrap" class="ad-inline">
+        <div id="yandex_rtb_R-A-20456192-2"></div>
+    </div>
+</main>
+</div>
+
+<div id="adStickyWrap" class="ad-sticky">
+    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
+    <div id="yandex_rtb_R-A-20456192-1"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

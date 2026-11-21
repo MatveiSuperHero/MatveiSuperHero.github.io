@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Конвертер единиц измерения и величин — FreeTools</title>
+    <meta name="description" content="Перевод длины, веса, температуры, площади, объёма, скорости, данных и римских цифр.">
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="mobile-topbar">
+    <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">☰</button>
+    <div class="mobile-title-wrap">
+        <span class="mobile-brand">FreeTools</span>
+        <span class="mobile-cat-name">🔄 Конвертеры</span>
+    </div>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <h1>FreeTools</h1>
+        <p>Онлайн-инструменты в один клик</p>
+    </div>
+
+    <div class="sidebar-search">
+        <input type="text" id="toolSearch" placeholder="Поиск в этом разделе..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Очистить поиск">×</button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-group">
+            <div class="nav-group-title">Текст</div>
+            <a class="nav-item" href="index.html">
+                <span class="nav-item-label">📝 Текст</span>
+                <span class="nav-badge">23</span>
+            </a>
+            <a class="nav-item" href="encoding.html">
+                <span class="nav-item-label">🔤 Кодирование</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Безопасность</div>
+            <a class="nav-item" href="security.html">
+                <span class="nav-item-label">🔐 Хеши и пароли</span>
+                <span class="nav-badge">7</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Разработка</div>
+            <a class="nav-item" href="dev.html">
+                <span class="nav-item-label">💻 Разработчик</span>
+                <span class="nav-badge">20</span>
+            </a>
+            <a class="nav-item" href="web.html">
+                <span class="nav-item-label">🌐 Веб</span>
+                <span class="nav-badge">5</span>
+            </a>
+            <a class="nav-item" href="network.html">
+                <span class="nav-item-label">📡 Сеть</span>
+                <span class="nav-badge">4</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Конвертеры</div>
+            <a class="nav-item active" href="converters.html">
+                <span class="nav-item-label">🔄 Конвертеры</span>
+                <span class="nav-badge">19</span>
+            </a>
+            <a class="nav-item" href="math.html">
+                <span class="nav-item-label">📐 Математика</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="calc.html">
+                <span class="nav-item-label">🧮 Калькуляторы</span>
+                <span class="nav-badge">16</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Маркетинг</div>
+            <a class="nav-item" href="seo.html">
+                <span class="nav-item-label">🔎 SEO</span>
+                <span class="nav-badge">13</span>
+            </a>
+            <a class="nav-item" href="finance.html">
+                <span class="nav-item-label">💰 Финансы</span>
+                <span class="nav-badge">6</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Время</div>
+            <a class="nav-item" href="datetime.html">
+                <span class="nav-item-label">📅 Дата и время</span>
+                <span class="nav-badge">8</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Медиа</div>
+            <a class="nav-item" href="compression.html">
+                <span class="nav-item-label">🗜️ Сжатие</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="pdf.html">
+                <span class="nav-item-label">📄 PDF</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="images.html">
+                <span class="nav-item-label">🖼️ Изображения</span>
+                <span class="nav-badge">2</span>
+            </a>
+        </div>
+    </nav>
+
+    <div id="adLeftWrap" class="sidebar-ad">
+        <div id="yandex_rtb_R-A-20456192-3"></div>
+    </div>
+</aside>
+
+<aside id="adRightWrap" class="ad-right-rail">
+    <div id="yandex_rtb_R-A-20456192-4"></div>
+</aside>
+
+<div class="app-content">
+<main>
+    <div class="search-status" id="searchStatus">
+        <span>Найдено в разделе: <b id="searchCount">0</b></span>
+        <button class="btn secondary" style="width:auto;margin:0;padding:6px 12px;font-size:.82rem" onclick="resetSearch()">Сбросить</button>
+    </div>
+
+<h2 class="section-title">Converters</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Конвертер цветов (HEX ↔ RGB)</h3>
+                <input id="colorHex" placeholder="#4f8cff">
+                <button class="btn" onclick="hexToRgb()">HEX ➔ RGB</button>
+                <div class="out" id="colorOut">—</div>
+                <div id="colorPreview" style="height:40px;border-radius:8px;margin-top:10px;border:1px solid var(--border)"></div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер единиц (длина)</h3>
+                <input id="unitLengthIn" type="number" value="1">
+                <select id="unitLengthFrom" style="margin-top:8px">
+                    <option value="m">Метры</option>
+                    <option value="km">Километры</option>
+                    <option value="cm">Сантиметры</option>
+                    <option value="mm">Миллиметры</option>
+                    <option value="in">Дюймы</option>
+                    <option value="ft">Футы</option>
+                    <option value="mi">Мили</option>
+                </select>
+                <select id="unitLengthTo" style="margin-top:8px">
+                    <option value="m">Метры</option>
+                    <option value="km">Километры</option>
+                    <option value="cm">Сантиметры</option>
+                    <option value="mm">Миллиметры</option>
+                    <option value="in">Дюймы</option>
+                    <option value="ft">Футы</option>
+                    <option value="mi">Мили</option>
+                </select>
+                <button class="btn" onclick="convertLength()">Конвертировать</button>
+                <div class="out" id="unitLengthOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер температуры</h3>
+                <input id="tempIn" type="number" value="0">
+                <select id="tempFrom" style="margin-top:8px">
+                    <option value="C">Цельсий</option>
+                    <option value="F">Фаренгейт</option>
+                    <option value="K">Кельвин</option>
+                </select>
+                <select id="tempTo" style="margin-top:8px">
+                    <option value="C">Цельсий</option>
+                    <option value="F">Фаренгейт</option>
+                    <option value="K">Кельвин</option>
+                </select>
+                <button class="btn" onclick="convertTemp()">Конвертировать</button>
+                <div class="out" id="tempOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Unix Timestamp Converter</h3>
+                <input id="tsIn" placeholder="1650000000 или 2022-04-15T...">
+                <div class="row">
+                    <button class="btn" onclick="tsToDate()">Timestamp ➔ Дата</button>
+                    <button class="btn secondary" onclick="dateToTs()">Дата ➔ Timestamp</button>
+                </div>
+                <div class="out" id="tsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Римские цифры</h3>
+                <input id="romanIn" placeholder="2024 или MMXXIV">
+                <div class="row">
+                    <button class="btn" onclick="toRoman()">Число ➔ Римское</button>
+                    <button class="btn secondary" onclick="fromRoman()">Римское ➔ Число</button>
+                </div>
+                <div class="out" id="romanOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер веса</h3>
+                <input id="weightIn" type="number" value="1">
+                <select id="weightFrom" style="margin-top:8px">
+                    <option value="kg">Килограммы</option>
+                    <option value="g">Граммы</option>
+                    <option value="lb">Фунты</option>
+                    <option value="oz">Унции</option>
+                </select>
+                <select id="weightTo" style="margin-top:8px">
+                    <option value="kg">Килограммы</option>
+                    <option value="g">Граммы</option>
+                    <option value="lb">Фунты</option>
+                    <option value="oz">Унции</option>
+                </select>
+                <button class="btn" onclick="convertWeight()">Конвертировать</button>
+                <div class="out" id="weightOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер площади</h3>
+                <input id="areaIn" type="number" value="1">
+                <select id="areaFrom" style="margin-top:8px">
+                    <option value="m2">м²</option>
+                    <option value="km2">км²</option>
+                    <option value="cm2">см²</option>
+                    <option value="ha">гектары</option>
+                    <option value="acre">акры</option>
+                </select>
+                <select id="areaTo" style="margin-top:8px">
+                    <option value="m2">м²</option>
+                    <option value="km2">км²</option>
+                    <option value="cm2">см²</option>
+                    <option value="ha">гектары</option>
+                    <option value="acre">акры</option>
+                </select>
+                <button class="btn" onclick="convertArea()">Конвертировать</button>
+                <div class="out" id="areaOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер объёма</h3>
+                <input id="volumeIn" type="number" value="1">
+                <select id="volumeFrom" style="margin-top:8px">
+                    <option value="l">Литры</option>
+                    <option value="ml">Миллилитры</option>
+                    <option value="m3">м³</option>
+                    <option value="gal">Галлоны</option>
+                </select>
+                <select id="volumeTo" style="margin-top:8px">
+                    <option value="l">Литры</option>
+                    <option value="ml">Миллилитры</option>
+                    <option value="m3">м³</option>
+                    <option value="gal">Галлоны</option>
+                </select>
+                <button class="btn" onclick="convertVolume()">Конвертировать</button>
+                <div class="out" id="volumeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер скорости</h3>
+                <input id="speedIn" type="number" value="1">
+                <select id="speedFrom" style="margin-top:8px">
+                    <option value="kmh">км/ч</option>
+                    <option value="ms">м/с</option>
+                    <option value="mph">миль/ч</option>
+                </select>
+                <select id="speedTo" style="margin-top:8px">
+                    <option value="kmh">км/ч</option>
+                    <option value="ms">м/с</option>
+                    <option value="mph">миль/ч</option>
+                </select>
+                <button class="btn" onclick="convertSpeed()">Конвертировать</button>
+                <div class="out" id="speedOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер времени</h3>
+                <input id="timeIn" type="number" value="1">
+                <select id="timeFrom" style="margin-top:8px">
+                    <option value="s">Секунды</option>
+                    <option value="min">Минуты</option>
+                    <option value="h">Часы</option>
+                    <option value="d">Дни</option>
+                </select>
+                <select id="timeTo" style="margin-top:8px">
+                    <option value="s">Секунды</option>
+                    <option value="min">Минуты</option>
+                    <option value="h">Часы</option>
+                    <option value="d">Дни</option>
+                </select>
+                <button class="btn" onclick="convertTime()">Конвертировать</button>
+                <div class="out" id="timeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер данных</h3>
+                <input id="dataIn" type="number" value="1">
+                <select id="dataFrom" style="margin-top:8px">
+                    <option value="b">Байты</option>
+                    <option value="kb">Килобайты</option>
+                    <option value="mb">Мегабайты</option>
+                    <option value="gb">Гигабайты</option>
+                </select>
+                <select id="dataTo" style="margin-top:8px">
+                    <option value="b">Байты</option>
+                    <option value="kb">Килобайты</option>
+                    <option value="mb">Мегабайты</option>
+                    <option value="gb">Гигабайты</option>
+                </select>
+                <button class="btn" onclick="convertDataSize()">Конвертировать</button>
+                <div class="out" id="dataOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер давления</h3>
+                <input id="pressureIn" type="number" value="1">
+                <select id="pressureFrom" style="margin-top:8px">
+                    <option value="pa">Паскали</option>
+                    <option value="kpa">Килопаскали</option>
+                    <option value="bar">Бары</option>
+                    <option value="atm">Атмосферы</option>
+                </select>
+                <select id="pressureTo" style="margin-top:8px">
+                    <option value="pa">Паскали</option>
+                    <option value="kpa">Килопаскали</option>
+                    <option value="bar">Бары</option>
+                    <option value="atm">Атмосферы</option>
+                </select>
+                <button class="btn" onclick="convertPressure()">Конвертировать</button>
+                <div class="out" id="pressureOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер энергии</h3>
+                <input id="energyIn" type="number" value="1">
+                <select id="energyFrom" style="margin-top:8px">
+                    <option value="j">Джоули</option>
+                    <option value="kj">Килоджоули</option>
+                    <option value="cal">Калории</option>
+                    <option value="kcal">Килокалории</option>
+                </select>
+                <select id="energyTo" style="margin-top:8px">
+                    <option value="j">Джоули</option>
+                    <option value="kj">Килоджоули</option>
+                    <option value="cal">Калории</option>
+                    <option value="kcal">Килокалории</option>
+                </select>
+                <button class="btn" onclick="convertEnergy()">Конвертировать</button>
+                <div class="out" id="energyOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер мощности</h3>
+                <input id="powerIn" type="number" value="1">
+                <select id="powerFrom" style="margin-top:8px">
+                    <option value="w">Ватты</option>
+                    <option value="kw">Киловатты</option>
+                    <option value="hp">Л.с.</option>
+                </select>
+                <select id="powerTo" style="margin-top:8px">
+                    <option value="w">Ватты</option>
+                    <option value="kw">Киловатты</option>
+                    <option value="hp">Л.с.</option>
+                </select>
+                <button class="btn" onclick="convertPower()">Конвертировать</button>
+                <div class="out" id="powerOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Минуты ↔ Часы</h3>
+                <input id="minHoursIn" placeholder="Минуты...">
+                <div class="row">
+                    <button class="btn" onclick="minutesToHours()">→ Часы</button>
+                    <button class="btn secondary" onclick="hoursToMinutes()">→ Минуты</button>
+                </div>
+                <div class="out" id="minHoursOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Секунды ↔ Время</h3>
+                <input id="secTimeIn" placeholder="Секунды...">
+                <div class="row">
+                    <button class="btn" onclick="secondsToTime()">→ Время</button>
+                    <button class="btn secondary" onclick="timeToSeconds()">→ Секунды</button>
+                </div>
+                <div class="out" id="secTimeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Байты ↔ Биты</h3>
+                <input id="bytesBitsIn" placeholder="Значение...">
+                <div class="row">
+                    <button class="btn" onclick="bytesToBits()">Байты → Биты</button>
+                    <button class="btn secondary" onclick="bitsToBytes()">Биты → Байты</button>
+                </div>
+                <div class="out" id="bytesBitsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Десятичное ↔ Процент</h3>
+                <input id="decPctIn" placeholder="0.5 или 50%">
+                <div class="row">
+                    <button class="btn" onclick="decimalToPercent()">→ Процент</button>
+                    <button class="btn secondary" onclick="percentToDecimal()">→ Десятичное</button>
+                </div>
+                <div class="out" id="decPctOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Дробь ↔ Десятичное</h3>
+                <input id="fracDecIn" placeholder="1/2 или 0.5">
+                <div class="row">
+                    <button class="btn" onclick="fractionToDecimal()">→ Десятичное</button>
+                    <button class="btn secondary" onclick="decimalToFraction()">→ Дробь</button>
+                </div>
+                <div class="out" id="fracDecOut">—</div>
+            </div>
+        </div>
+    
+
+    <div id="adInlineWrap" class="ad-inline">
+        <div id="yandex_rtb_R-A-20456192-2"></div>
+    </div>
+</main>
+</div>
+
+<div id="adStickyWrap" class="ad-sticky">
+    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
+    <div id="yandex_rtb_R-A-20456192-1"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

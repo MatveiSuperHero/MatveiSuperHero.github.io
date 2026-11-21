@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FreeTools — Работа с текстом онлайн</title>
+    <meta name="description" content="Счётчик слов, регистр, сравнение текста, Markdown, генератор PIN и другие текстовые инструменты.">
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="mobile-topbar">
+    <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">☰</button>
+    <div class="mobile-title-wrap">
+        <span class="mobile-brand">FreeTools</span>
+        <span class="mobile-cat-name">📝 Текст</span>
+    </div>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <h1>FreeTools</h1>
+        <p>Онлайн-инструменты в один клик</p>
+    </div>
+
+    <div class="sidebar-search">
+        <input type="text" id="toolSearch" placeholder="Поиск в этом разделе..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Очистить поиск">×</button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-group">
+            <div class="nav-group-title">Текст</div>
+            <a class="nav-item active" href="index.html">
+                <span class="nav-item-label">📝 Текст</span>
+                <span class="nav-badge">23</span>
+            </a>
+            <a class="nav-item" href="encoding.html">
+                <span class="nav-item-label">🔤 Кодирование</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Безопасность</div>
+            <a class="nav-item" href="security.html">
+                <span class="nav-item-label">🔐 Хеши и пароли</span>
+                <span class="nav-badge">7</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Разработка</div>
+            <a class="nav-item" href="dev.html">
+                <span class="nav-item-label">💻 Разработчик</span>
+                <span class="nav-badge">20</span>
+            </a>
+            <a class="nav-item" href="web.html">
+                <span class="nav-item-label">🌐 Веб</span>
+                <span class="nav-badge">5</span>
+            </a>
+            <a class="nav-item" href="network.html">
+                <span class="nav-item-label">📡 Сеть</span>
+                <span class="nav-badge">4</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Конвертеры</div>
+            <a class="nav-item" href="converters.html">
+                <span class="nav-item-label">🔄 Конвертеры</span>
+                <span class="nav-badge">19</span>
+            </a>
+            <a class="nav-item" href="math.html">
+                <span class="nav-item-label">📐 Математика</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="calc.html">
+                <span class="nav-item-label">🧮 Калькуляторы</span>
+                <span class="nav-badge">16</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Маркетинг</div>
+            <a class="nav-item" href="seo.html">
+                <span class="nav-item-label">🔎 SEO</span>
+                <span class="nav-badge">13</span>
+            </a>
+            <a class="nav-item" href="finance.html">
+                <span class="nav-item-label">💰 Финансы</span>
+                <span class="nav-badge">6</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Время</div>
+            <a class="nav-item" href="datetime.html">
+                <span class="nav-item-label">📅 Дата и время</span>
+                <span class="nav-badge">8</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Медиа</div>
+            <a class="nav-item" href="compression.html">
+                <span class="nav-item-label">🗜️ Сжатие</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="pdf.html">
+                <span class="nav-item-label">📄 PDF</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="images.html">
+                <span class="nav-item-label">🖼️ Изображения</span>
+                <span class="nav-badge">2</span>
+            </a>
+        </div>
+    </nav>
+
+    <div id="adLeftWrap" class="sidebar-ad">
+        <div id="yandex_rtb_R-A-20456192-3"></div>
+    </div>
+</aside>
+
+<aside id="adRightWrap" class="ad-right-rail">
+    <div id="yandex_rtb_R-A-20456192-4"></div>
+</aside>
+
+<div class="app-content">
+<main>
+    <div class="search-status" id="searchStatus">
+        <span>Найдено в разделе: <b id="searchCount">0</b></span>
+        <button class="btn secondary" style="width:auto;margin:0;padding:6px 12px;font-size:.82rem" onclick="resetSearch()">Сбросить</button>
+    </div>
+
+<h2 class="section-title">Работа с текстом</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Счётчик слов и символов</h3>
+                <textarea id="txtCount" placeholder="Введите текст для анализа..."></textarea>
+                <div class="stats">
+                    <div><b id="sChars">0</b>символов</div>
+                    <div><b id="sWords">0</b>слов</div>
+                    <div><b id="sSents">0</b>предл.</div>
+                </div>
+            </div>
+            <div class="tool-card">
+                <h3>Регистр и очистка</h3>
+                <textarea id="txtCase" placeholder="Введите текст..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="changeCase('up')">ВЕРХНИЙ</button>
+                    <button class="btn" onclick="changeCase('low')">нижний</button>
+                    <button class="btn secondary" onclick="cleanSpaces()">Очистить</button>
+                </div>
+                <div class="out" id="txtCaseOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Инверсия текста</h3>
+                <textarea id="txtRev" placeholder="Введите текст..."></textarea>
+                <button class="btn" onclick="reverseText()">Перевернуть</button>
+                <div class="out" id="txtRevOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сортировка и дедупликация строк</h3>
+                <textarea id="lineInput" placeholder="Каждая строка — отдельная запись..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="sortLines()">Сортировать</button>
+                    <button class="btn secondary" onclick="dedupLines()">Удалить дубли</button>
+                    <button class="btn secondary" onclick="reverseLines()">Реверс</button>
+                </div>
+                <div class="out" id="lineOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Slug Generator</h3>
+                <input id="slugInput" placeholder="Введите заголовок...">
+                <button class="btn" onclick="makeSlug()">Создать slug</button>
+                <div class="out" id="slugOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Diff Checker (построчно)</h3>
+                <textarea id="diff1" placeholder="Оригинальный текст..."></textarea>
+                <textarea id="diff2" placeholder="Изменённый текст..." style="margin-top:10px"></textarea>
+                <button class="btn" onclick="runDiff()">Сравнить</button>
+                <div class="out" id="diffOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Markdown Preview</h3>
+                <textarea id="mdInput" placeholder="# Заголовок
+**жирный** текст..."></textarea>
+                <button class="btn" onclick="previewMarkdown()">Предпросмотр</button>
+                <div class="out" id="mdOut" style="white-space:normal">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>NATO Alphabet Converter</h3>
+                <input id="natoIn" placeholder="Hello World">
+                <button class="btn" onclick="toNato()">Конвертировать</button>
+                <div class="out" id="natoOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Unicode Character Info</h3>
+                <input id="unicodeIn" placeholder="Введите символ или строку...">
+                <button class="btn" onclick="unicodeInfo()">Показать</button>
+                <div class="out" id="unicodeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Извлечь числа</h3>
+                <textarea id="extractNumbersIn" placeholder="Текст с числами..."></textarea>
+                <button class="btn" onclick="extractNumbers()">Извлечь</button>
+                <div class="out" id="extractNumbersOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Извлечь e-mail</h3>
+                <textarea id="extractEmailsIn" placeholder="Текст с e-mail..."></textarea>
+                <button class="btn" onclick="extractEmails()">Извлечь</button>
+                <div class="out" id="extractEmailsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Извлечь ссылки</h3>
+                <textarea id="extractUrlsIn" placeholder="Текст со ссылками..."></textarea>
+                <button class="btn" onclick="extractUrls()">Извлечь</button>
+                <div class="out" id="extractUrlsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Поиск и замена</h3>
+                <textarea id="replaceIn" placeholder="Исходный текст..."></textarea>
+                <input id="replaceFind" placeholder="Найти...">
+                <input id="replaceWith" placeholder="Заменить на..." style="margin-top:8px">
+                <button class="btn" onclick="doReplace()">Заменить</button>
+                <div class="out" id="replaceOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Частота символов</h3>
+                <textarea id="charFreqIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="charFrequency()">Подсчитать</button>
+                <div class="out" id="charFreqOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>PIN Generator</h3>
+                <input id="pinLength" type="number" value="4" min="3" max="12">
+                <button class="btn" onclick="genPin()">Сгенерировать</button>
+                <div class="out" id="pinOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Текст → Binary</h3>
+                <textarea id="toBinaryIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="textToBinary()">Конвертировать</button>
+                <div class="out" id="toBinaryOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Текст → HEX</h3>
+                <textarea id="toHexIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="textToHex()">Конвертировать</button>
+                <div class="out" id="toHexOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Счётчик строк</h3>
+                <textarea id="countLinesIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="countLines()">Подсчитать</button>
+                <div class="out" id="countLinesOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Статистика текста</h3>
+                <textarea id="textStatsIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="textStatistics()">Показать</button>
+                <div class="out" id="textStatsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сортировка чисел</h3>
+                <textarea id="sortNumbersIn" placeholder="Числа через запятую или с новой строки..."></textarea>
+                <button class="btn" onclick="sortNumbers()">Сортировать</button>
+                <div class="out" id="sortNumbersOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Удалить пустые строки</h3>
+                <textarea id="removeEmptyIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="removeEmptyLines()">Удалить</button>
+                <div class="out" id="removeEmptyOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Длина строки</h3>
+                <input id="strLenIn" placeholder="Введите строку...">
+                <button class="btn" onclick="stringLength()">Показать</button>
+                <div class="out" id="strLenOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Lorem для кода</h3>
+                <label>Количество:</label>
+                <input type="number" id="loremCodeCount" value="3" min="1" max="20">
+                <button class="btn" onclick="genLoremCode()">Сгенерировать</button>
+                <div class="out" id="loremCodeOut">—</div>
+            </div>
+        </div>
+    
+
+    <div id="adInlineWrap" class="ad-inline">
+        <div id="yandex_rtb_R-A-20456192-2"></div>
+    </div>
+</main>
+</div>
+
+<div id="adStickyWrap" class="ad-sticky">
+    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
+    <div id="yandex_rtb_R-A-20456192-1"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

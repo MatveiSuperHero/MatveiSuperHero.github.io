@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Хеши, шифрование и генератор паролей — FreeTools</title>
+    <meta name="description" content="Генератор надёжных паролей, MD5, SHA256, Bcrypt, HMAC и AES-шифрование онлайн.">
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="mobile-topbar">
+    <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">☰</button>
+    <div class="mobile-title-wrap">
+        <span class="mobile-brand">FreeTools</span>
+        <span class="mobile-cat-name">🔐 Хеши и пароли</span>
+    </div>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <h1>FreeTools</h1>
+        <p>Онлайн-инструменты в один клик</p>
+    </div>
+
+    <div class="sidebar-search">
+        <input type="text" id="toolSearch" placeholder="Поиск в этом разделе..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Очистить поиск">×</button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-group">
+            <div class="nav-group-title">Текст</div>
+            <a class="nav-item" href="index.html">
+                <span class="nav-item-label">📝 Текст</span>
+                <span class="nav-badge">23</span>
+            </a>
+            <a class="nav-item" href="encoding.html">
+                <span class="nav-item-label">🔤 Кодирование</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Безопасность</div>
+            <a class="nav-item active" href="security.html">
+                <span class="nav-item-label">🔐 Хеши и пароли</span>
+                <span class="nav-badge">7</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Разработка</div>
+            <a class="nav-item" href="dev.html">
+                <span class="nav-item-label">💻 Разработчик</span>
+                <span class="nav-badge">20</span>
+            </a>
+            <a class="nav-item" href="web.html">
+                <span class="nav-item-label">🌐 Веб</span>
+                <span class="nav-badge">5</span>
+            </a>
+            <a class="nav-item" href="network.html">
+                <span class="nav-item-label">📡 Сеть</span>
+                <span class="nav-badge">4</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Конвертеры</div>
+            <a class="nav-item" href="converters.html">
+                <span class="nav-item-label">🔄 Конвертеры</span>
+                <span class="nav-badge">19</span>
+            </a>
+            <a class="nav-item" href="math.html">
+                <span class="nav-item-label">📐 Математика</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="calc.html">
+                <span class="nav-item-label">🧮 Калькуляторы</span>
+                <span class="nav-badge">16</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Маркетинг</div>
+            <a class="nav-item" href="seo.html">
+                <span class="nav-item-label">🔎 SEO</span>
+                <span class="nav-badge">13</span>
+            </a>
+            <a class="nav-item" href="finance.html">
+                <span class="nav-item-label">💰 Финансы</span>
+                <span class="nav-badge">6</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Время</div>
+            <a class="nav-item" href="datetime.html">
+                <span class="nav-item-label">📅 Дата и время</span>
+                <span class="nav-badge">8</span>
+            </a>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">Медиа</div>
+            <a class="nav-item" href="compression.html">
+                <span class="nav-item-label">🗜️ Сжатие</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="pdf.html">
+                <span class="nav-item-label">📄 PDF</span>
+                <span class="nav-badge">2</span>
+            </a>
+            <a class="nav-item" href="images.html">
+                <span class="nav-item-label">🖼️ Изображения</span>
+                <span class="nav-badge">2</span>
+            </a>
+        </div>
+    </nav>
+
+    <div id="adLeftWrap" class="sidebar-ad">
+        <div id="yandex_rtb_R-A-20456192-3"></div>
+    </div>
+</aside>
+
+<aside id="adRightWrap" class="ad-right-rail">
+    <div id="yandex_rtb_R-A-20456192-4"></div>
+</aside>
+
+<div class="app-content">
+<main>
+    <div class="search-status" id="searchStatus">
+        <span>Найдено в разделе: <b id="searchCount">0</b></span>
+        <button class="btn secondary" style="width:auto;margin:0;padding:6px 12px;font-size:.82rem" onclick="resetSearch()">Сбросить</button>
+    </div>
+
+<h2 class="section-title">Hash &amp; Cryptography</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Генератор паролей</h3>
+                <label>Длина: <span id="pwLenLabel">16</span></label>
+                <input type="range" min="6" max="64" value="16" id="pwrange">
+                <div class="row">
+                    <label class="chk"><input type="checkbox" id="pwUp" checked> A-Z</label>
+                    <label class="chk"><input type="checkbox" id="pwLow" checked> a-z</label>
+                    <label class="chk"><input type="checkbox" id="pwNum" checked> 0-9</label>
+                    <label class="chk"><input type="checkbox" id="pwSpec" checked> !@#$</label>
+                </div>
+                <button class="btn" onclick="genPw()">Создать пароль</button>
+                <div class="out" id="pwout">—</div>
+                <div id="pwStrength"></div>
+            </div>
+            <div class="tool-card">
+                <h3>Хеши: MD5, SHA1, SHA256, SHA512, CRC32</h3>
+                <textarea id="hashin" placeholder="Текст для хеширования..."></textarea>
+                <button class="btn" onclick="makeAllHashes()">Вычислить все хеши</button>
+                <div class="out" id="hashout">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Bcrypt (hash / verify)</h3>
+                <input id="bcryptIn" placeholder="Пароль или текст...">
+                <label>Rounds: <span id="bcryptRoundsLabel">10</span></label>
+                <input type="range" id="bcryptRounds" min="4" max="14" value="10">
+                <button class="btn" onclick="bcryptHash()">Сгенерировать хеш</button>
+                <div class="out" id="bcryptOut">—</div>
+                <input id="bcryptVerifyHash" placeholder="Хеш для проверки..." style="margin-top:10px">
+                <button class="btn secondary" onclick="bcryptVerify()">Проверить</button>
+                <div class="out" id="bcryptVerifyOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>HMAC Generator</h3>
+                <input id="hmacText" placeholder="Сообщение...">
+                <input id="hmacKey" placeholder="Секретный ключ..." style="margin-top:8px">
+                <select id="hmacAlgo" style="margin-top:8px">
+                    <option value="SHA-256">SHA-256</option>
+                    <option value="SHA-384">SHA-384</option>
+                    <option value="SHA-512">SHA-512</option>
+                </select>
+                <button class="btn" onclick="genHmac()">Вычислить HMAC</button>
+                <div class="out" id="hmacOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>AES Encrypt / Decrypt</h3>
+                <textarea id="aesIn" placeholder="Текст для шифрования..."></textarea>
+                <input id="aesKey" placeholder="Пароль..." style="margin-top:8px">
+                <div class="row">
+                    <button class="btn" onclick="aesEncrypt()">Зашифровать</button>
+                    <button class="btn secondary" onclick="aesDecrypt()">Расшифровать</button>
+                </div>
+                <div class="out" id="aesOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Basic Auth Header</h3>
+                <input id="basicUser" placeholder="Логин">
+                <input id="basicPass" placeholder="Пароль" type="password" style="margin-top:8px">
+                <button class="btn" onclick="genBasicAuth()">Сгенерировать</button>
+                <div class="out" id="basicOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Password Strength Analyzer</h3>
+                <input id="pwaIn" placeholder="Введите пароль для анализа...">
+                <button class="btn" onclick="analyzePassword()">Анализировать</button>
+                <div class="out" id="pwaOut">—</div>
+            </div>
+        </div>
+    
+
+    <div id="adInlineWrap" class="ad-inline">
+        <div id="yandex_rtb_R-A-20456192-2"></div>
+    </div>
+</main>
+</div>
+
+<div id="adStickyWrap" class="ad-sticky">
+    <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
+    <div id="yandex_rtb_R-A-20456192-1"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
