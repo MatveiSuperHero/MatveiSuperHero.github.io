@@ -8,7 +8,6 @@
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
 
-    <!-- Библиотеки для расширенных инструментов -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -54,52 +53,57 @@
 
         /* ===== Sticky bottom ad ===== */
         .ad-sticky{
-            position:fixed;
-            left:0;right:0;bottom:0;
-            z-index:999;
-            background:var(--card);
-            border-top:1px solid var(--border);
+            position:fixed;left:0;right:0;bottom:0;z-index:999;
+            background:var(--card);border-top:1px solid var(--border);
             box-shadow:0 -8px 28px rgba(0,0,0,.55);
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:6px 8px;
-            transform:translateY(0);
-            transition:transform .35s ease;
-            will-change:transform;
+            display:flex;justify-content:center;align-items:center;
+            padding:6px 8px;transform:translateY(0);
+            transition:transform .35s ease;will-change:transform;
         }
         .ad-sticky.hidden{transform:translateY(110%);pointer-events:none}
-        .ad-sticky > div[id^="yandex_rtb"]{
-            width:100%;
-            max-width:728px;
-            max-height:120px;
-            overflow:hidden;
-        }
+        .ad-sticky > div[id^="yandex_rtb"]{width:100%;max-width:728px;max-height:120px;overflow:hidden}
         .ad-close{
-            position:absolute;
-            top:4px;right:6px;
-            z-index:2;
-            width:24px;height:24px;
-            background:rgba(0,0,0,.65);
-            border:1px solid var(--border);
-            color:var(--text);
-            border-radius:50%;
-            cursor:pointer;
-            font-size:14px;
-            line-height:1;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:0;
-            transition:border-color .2s,color .2s;
+            position:absolute;top:4px;right:6px;z-index:2;
+            width:24px;height:24px;background:rgba(0,0,0,.65);
+            border:1px solid var(--border);color:var(--text);
+            border-radius:50%;cursor:pointer;font-size:14px;line-height:1;
+            display:flex;align-items:center;justify-content:center;
+            padding:0;transition:border-color .2s,color .2s;
         }
         .ad-close:hover{border-color:var(--accent);color:var(--accent)}
-        /* Резерв места под sticky-баннер, чтобы он не закрывал контент */
         body.ad-open{padding-bottom:150px}
         @media (max-width:600px){
             .ad-sticky > div[id^="yandex_rtb"]{max-height:100px}
             body.ad-open{padding-bottom:125px}
         }
+
+        /* ===== Inline ad (блок 2) ===== */
+        .ad-inline{
+            position:relative;
+            margin:30px auto 20px;
+            max-width:728px;
+            min-height:90px;
+            background:var(--card);
+            border:1px solid var(--border);
+            border-radius:12px;
+            padding:14px 12px 12px;
+            overflow:hidden;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .ad-inline::before{
+            content:'Реклама';
+            position:absolute;
+            top:4px;right:10px;
+            font-size:10px;
+            color:var(--muted);
+            opacity:.6;
+            text-transform:uppercase;
+            letter-spacing:.5px;
+        }
+        .ad-inline > div[id^="yandex_rtb"]{width:100%;min-height:90px}
+        .ad-inline.hidden{display:none}
     </style>
 </head>
 <body>
@@ -368,9 +372,14 @@
             </div>
         </div>
     </div>
+
+    <!-- ========== Inline реклама (блок 2) ========== -->
+    <div id="adInline" class="ad-inline">
+        <div id="yandex_rtb_R-A-20456192-2"></div>
+    </div>
 </main>
 
-<!-- ========== Sticky bottom реклама ========== -->
+<!-- ========== Sticky bottom реклама (блок 1) ========== -->
 <div id="adSticky" class="ad-sticky">
     <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
     <div id="yandex_rtb_R-A-20456192-1"></div>
@@ -380,7 +389,6 @@
     // ==================== УТИЛИТЫ ====================
     const $ = id => document.getElementById(id);
 
-    // Навигация
     document.getElementById('nav').addEventListener('click', e => {
         if (e.target.tagName !== 'BUTTON') return;
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -408,7 +416,6 @@
     function reverseText(){
         $('txtRevOut').textContent = [...$('txtRev').value].reverse().join('');
     }
-
     function sortLines(){
         const lines = $('lineInput').value.split('\n').filter(l => l.trim());
         $('lineOut').textContent = lines.sort((a,b) => a.localeCompare(b)).join('\n');
@@ -421,7 +428,6 @@
         const lines = $('lineInput').value.split('\n').filter(l => l.trim());
         $('lineOut').textContent = lines.reverse().join('\n');
     }
-
     function makeSlug(){
         const s = $('slugInput').value.trim().toLowerCase()
             .replace(/[^\w\s-]/g, '')
@@ -430,7 +436,6 @@
             .replace(/^-|-$/g, '');
         $('slugOut').textContent = s || '—';
     }
-
     function runDiff(){
         const a = $('diff1').value.split('\n');
         const b = $('diff2').value.split('\n');
@@ -447,7 +452,6 @@
         $('diffOut').innerHTML = html || 'Нет различий';
     }
     function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
     function previewMarkdown(){
         if (typeof marked === 'undefined'){ $('mdOut').textContent = 'Библиотека Markdown не загружена'; return; }
         $('mdOut').innerHTML = marked.parse($('mdInput').value);
@@ -534,7 +538,6 @@
         }
         return out.join('');
     }
-
     function makeAllHashes(){
         const text = $('hashin').value;
         if (!text){ $('hashout').textContent = 'Введите текст'; return; }
@@ -554,7 +557,6 @@
         }
         return (crc ^ 0xFFFFFFFF) >>> 0;
     }
-
     function makeHtpasswd(){
         const user = $('htUser').value.trim();
         const pass = $('htPass').value;
@@ -575,7 +577,6 @@
             $('jwtOut').textContent = 'Header:\n' + JSON.stringify(header, null, 2) + '\n\nPayload:\n' + JSON.stringify(payload, null, 2);
         }catch(e){ $('jwtOut').textContent = 'Ошибка: ' + e.message; }
     }
-
     function testRegex(){
         try{
             const pattern = $('regexPattern').value;
@@ -587,7 +588,6 @@
             $('regexOut').textContent = matches.map((m, i) => `#${i+1}: "${m[0]}" (позиция ${m.index})`).join('\n');
         }catch(e){ $('regexOut').textContent = 'Ошибка: ' + e.message; }
     }
-
     function beautifyJs(){
         let code = $('jsIn').value;
         let out = '', indent = 0;
@@ -605,7 +605,6 @@
         code = code.replace(/\s+/g, ' ').replace(/\s*([{};:,=+\-*/<>!&|?])\s*/g, '$1');
         $('jsOut').textContent = code.trim();
     }
-
     function convertData(type){
         const input = $('dataConv').value;
         if (!input){ $('dataConvOut').textContent = '—'; return; }
@@ -636,9 +635,7 @@
         const files = $('zipFiles').files;
         if (!files.length){ $('zipOut').textContent = 'Выберите файлы'; return; }
         const zip = new JSZip();
-        for (let f of files){
-            zip.file(f.name, await f.arrayBuffer());
-        }
+        for (let f of files){ zip.file(f.name, await f.arrayBuffer()); }
         const blob = await zip.generateAsync({type:'blob'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -646,13 +643,11 @@
         a.click();
         $('zipOut').textContent = `ZIP создан (${files.length} файлов)`;
     }
-
     async function unzipFile(){
         const file = $('unzipFile').files[0];
         if (!file){ $('unzipOut').textContent = 'Выберите ZIP-файл'; return; }
         const zip = await JSZip.loadAsync(file);
-        const names = Object.keys(zip.files);
-        $('unzipOut').textContent = 'Содержимое:\n' + names.join('\n');
+        $('unzipOut').textContent = 'Содержимое:\n' + Object.keys(zip.files).join('\n');
     }
 
     // ==================== PDF ====================
@@ -676,7 +671,6 @@
         a.click();
         $('pdfOut').textContent = 'PDF создан';
     }
-
     async function mergePdfs(){
         const files = $('mergePdfs').files;
         if (files.length < 2){ $('mergeOut').textContent = 'Выберите минимум 2 PDF'; return; }
@@ -716,7 +710,6 @@
         };
         img.src = URL.createObjectURL(file);
     }
-
     $('imgQuality').addEventListener('input', () => $('qualityLabel').textContent = $('imgQuality').value);
 
     function compressImage(){
@@ -739,7 +732,7 @@
         img.src = URL.createObjectURL(file);
     }
 
-    // ==================== STICKY BOTTOM РЕКЛАМА ====================
+    // ==================== STICKY BOTTOM РЕКЛАМА (блок 1) ====================
     const AD_KEY = 'adStickyClosed';
 
     function closeStickyAd(){
@@ -754,10 +747,6 @@
         if (closed){ return; }
         document.body.classList.add('ad-open');
 
-        // Рендер RTB-блока. Стандартный render() + CSS-sticky —
-        // работает с любым блоком, вне зависимости от настроек на стороне RTB.
-        // Если блок настроен как "anchor", можно использовать:
-        //   type: 'floorAd', platform: (window.innerWidth < 768 ? 'touch' : 'desktop')
         window.yaContextCb.push(() => {
             if (window.Ya && Ya.Context && Ya.Context.AdvManager){
                 Ya.Context.AdvManager.render({
@@ -767,8 +756,6 @@
             }
         });
 
-        // Если RTB-блок не отрендерился за 8 с (пустой контейнер) —
-        // убираем пустую полосу, чтобы не портить UX.
         setTimeout(() => {
             const c = document.getElementById('yandex_rtb_R-A-20456192-1');
             if (!c || c.children.length === 0){
@@ -778,9 +765,57 @@
         }, 8000);
     }
 
+    // ==================== INLINE РЕКЛАМА (блок 2) ====================
+    // Ленивый рендер: блок грузится только когда пользователь доскроллит до него.
+    // Это и по UX мягче (баннер не «прыгает» на старте), и по метрикам лучше —
+    // показ засчитывается именно когда баннер реально в поле зрения.
+    function initInlineAd(){
+        const wrapper = document.getElementById('adInline');
+        const container = document.getElementById('yandex_rtb_R-A-20456192-2');
+        if (!wrapper || !container) return;
+
+        let rendered = false;
+
+        const render = () => {
+            if (rendered) return;
+            rendered = true;
+            window.yaContextCb.push(() => {
+                if (window.Ya && Ya.Context && Ya.Context.AdvManager){
+                    Ya.Context.AdvManager.render({
+                        renderTo: 'yandex_rtb_R-A-20456192-2',
+                        blockId:  'R-A-20456192-2'
+                    });
+                    // если реклама не заполнилась — прячем пустую карточку
+                    setTimeout(() => {
+                        if (container.children.length === 0){
+                            wrapper.classList.add('hidden');
+                        }
+                    }, 6000);
+                } else {
+                    wrapper.classList.add('hidden');
+                }
+            });
+        };
+
+        if ('IntersectionObserver' in window){
+            const io = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting){
+                        io.disconnect();
+                        render();
+                    }
+                });
+            }, { rootMargin: '200px 0px' });
+            io.observe(wrapper);
+        } else {
+            render(); // фолбэк для старых браузеров
+        }
+    }
+
     // ==================== ИНИЦИАЛИЗАЦИЯ ====================
     genPw();
     initStickyAd();
+    initInlineAd();
 </script>
 </body>
 </html>
