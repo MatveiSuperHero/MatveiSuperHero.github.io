@@ -8,7 +8,6 @@
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
 
-    <!-- Библиотеки: грузим с defer, чтобы не блокировать парсинг страницы -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -25,10 +24,6 @@
         header{padding:50px 16px 30px;text-align:center}
         h1{font-size:2.2rem;margin-bottom:10px;background:linear-gradient(90deg,#4f8cff,#9d72ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         header p{color:var(--muted);font-size:1rem}
-        nav{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:15px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-        nav button{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;transition:all .2s}
-        nav button:hover{border-color:var(--accent);background:rgba(79,140,255,.1)}
-        nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
         main{max-width:900px;margin:0 auto;padding:20px 16px 60px}
         .section-title{margin:40px 0 20px;padding-bottom:10px;border-bottom:2px solid var(--border);font-size:1.5rem;color:var(--accent)}
         .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:40px}
@@ -55,6 +50,46 @@
         #pwStrength{font-size:.85rem;margin-top:5px}
         .diff-add{background:#1e3a1e;color:#8f8} .diff-del{background:#3a1e1e;color:#f88}
         .file-input{display:block;margin:10px 0}
+
+        /* ===== Навигация (сворачиваемая) ===== */
+        nav{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+        .nav-header{
+            display:flex;align-items:center;justify-content:center;gap:10px;
+            width:100%;padding:10px 16px;
+            background:transparent;border:0;color:var(--text);
+            font-family:inherit;font-size:.95rem;font-weight:600;
+            cursor:pointer;user-select:none;
+            transition:background .2s;
+        }
+        .nav-header:hover{background:rgba(79,140,255,.08)}
+        .nav-header:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+        .nav-arrow{display:inline-block;font-size:.7rem;transition:transform .25s ease}
+        nav.collapsed .nav-arrow{transform:rotate(180deg)}
+        .nav-label-collapsed{display:none}
+        nav.collapsed .nav-label-expanded{display:none}
+        nav.collapsed .nav-label-collapsed{display:inline}
+        .nav-buttons{
+            display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+            padding:0 15px 15px;
+            max-height:1000px;opacity:1;overflow:hidden;
+            transition:max-height .3s ease,padding .3s ease,opacity .2s ease;
+        }
+        nav.collapsed .nav-buttons{
+            max-height:0;padding-top:0;padding-bottom:0;opacity:0;
+        }
+        .nav-buttons button{
+            background:transparent;border:1px solid var(--border);color:var(--text);
+            padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;
+            transition:all .2s;font-family:inherit;font-size:1rem;
+        }
+        .nav-buttons button:hover{border-color:var(--accent);background:rgba(79,140,255,.1)}
+        .nav-buttons button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+        @media (max-width:700px){
+            .nav-header{padding:9px 14px;font-size:.9rem}
+            .nav-buttons button{padding:8px 14px;font-size:.9rem}
+        }
+
+        /* ===== Sticky bottom ad ===== */
         .ad-sticky{position:fixed;left:0;right:0;bottom:0;z-index:999;background:var(--card);border-top:1px solid var(--border);box-shadow:0 -8px 28px rgba(0,0,0,.55);display:flex;justify-content:center;align-items:center;padding:6px 8px;transform:translateY(0);transition:transform .35s ease;will-change:transform}
         .ad-sticky.hidden{transform:translateY(110%);pointer-events:none}
         .ad-sticky > div[id^="yandex_rtb"]{width:100%;max-width:728px;max-height:120px;overflow:hidden}
@@ -62,6 +97,8 @@
         .ad-close:hover{border-color:var(--accent);color:var(--accent)}
         body.ad-open{padding-bottom:150px}
         @media (max-width:600px){.ad-sticky > div[id^="yandex_rtb"]{max-height:100px}body.ad-open{padding-bottom:125px}}
+
+        /* ===== Inline ad ===== */
         .ad-inline{position:relative;margin:30px auto 20px;max-width:728px;min-height:90px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px 12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
         .ad-inline::before{content:'Реклама';position:absolute;top:4px;right:10px;font-size:10px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
         .ad-inline > div[id^="yandex_rtb"]{width:100%;min-height:90px}
@@ -77,17 +114,24 @@
 </header>
 
 <nav id="nav">
-    <button class="active" data-t="text">📝 Текст</button>
-    <button data-t="encoding">🔤 Кодирование</button>
-    <button data-t="security">🔐 Хеши и пароли</button>
-    <button data-t="dev">💻 Разработчик</button>
-    <button data-t="converters">🔄 Конвертеры</button>
-    <button data-t="web">🌐 Веб</button>
-    <button data-t="network">📡 Сеть</button>
-    <button data-t="math">🧮 Математика</button>
-    <button data-t="compression">🗜️ Сжатие</button>
-    <button data-t="pdf">📄 PDF</button>
-    <button data-t="images">🖼️ Изображения</button>
+    <button class="nav-header" id="navHeader" aria-expanded="true" aria-controls="navButtons">
+        <span class="nav-label-expanded">Меню</span>
+        <span class="nav-label-collapsed"><span id="navActiveLabel">📝 Текст</span></span>
+        <span class="nav-arrow" aria-hidden="true">▲</span>
+    </button>
+    <div class="nav-buttons" id="navButtons">
+        <button class="active" data-t="text">📝 Текст</button>
+        <button data-t="encoding">🔤 Кодирование</button>
+        <button data-t="security">🔐 Хеши и пароли</button>
+        <button data-t="dev">💻 Разработчик</button>
+        <button data-t="converters">🔄 Конвертеры</button>
+        <button data-t="web">🌐 Веб</button>
+        <button data-t="network">📡 Сеть</button>
+        <button data-t="math">🧮 Математика</button>
+        <button data-t="compression">🗜️ Сжатие</button>
+        <button data-t="pdf">📄 PDF</button>
+        <button data-t="images">🖼️ Изображения</button>
+    </div>
 </nav>
 
 <main>
@@ -609,17 +653,43 @@
 
 <script>
     // ==================================================================
-    //  НАВИГАЦИЯ — САМОЕ ВАЖНОЕ. Работает даже если что-то ниже упадёт.
+    //  НАВИГАЦИЯ — с возможностью сворачивания
     // ==================================================================
     (function () {
-        const $ = id => document.getElementById(id);
         const navEl = document.getElementById('nav');
-        if (!navEl) return;
+        const navHeader = document.getElementById('navHeader');
+        const navActiveLabel = document.getElementById('navActiveLabel');
+        const navButtons = document.getElementById('navButtons');
+        if (!navEl || !navHeader || !navButtons) return;
 
-        navEl.addEventListener('click', function (e) {
+        const MOBILE_BREAKPOINT = 700;
+        const isMobile = () => window.matchMedia('(max-width: ' + MOBILE_BREAKPOINT + 'px)').matches;
+
+        function setCollapsed(collapsed) {
+            navEl.classList.toggle('collapsed', collapsed);
+            navHeader.setAttribute('aria-expanded', String(!collapsed));
+        }
+
+        window.toggleNav = function (force) {
+            const willCollapse = typeof force === 'boolean'
+                ? force
+                : !navEl.classList.contains('collapsed');
+            setCollapsed(willCollapse);
+        };
+
+        // Клик по шапке меню — свернуть/развернуть
+        navHeader.addEventListener('click', () => window.toggleNav());
+        navHeader.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.toggleNav();
+            }
+        });
+
+        // Клик по кнопке раздела
+        navButtons.addEventListener('click', e => {
             let btn = e.target;
-            // Ищем кнопку: пользователь мог кликнуть по тексту/эмодзи внутри.
-            while (btn && btn !== navEl && btn.tagName !== 'BUTTON') btn = btn.parentNode;
+            while (btn && btn !== navButtons && btn.tagName !== 'BUTTON') btn = btn.parentNode;
             if (!btn || btn.tagName !== 'BUTTON') return;
 
             const targetId = btn.getAttribute('data-t');
@@ -627,19 +697,28 @@
             const target = document.getElementById(targetId);
             if (!target) return;
 
-            const buttons = navEl.querySelectorAll('button');
+            // Снять активность со всех, скрыть все секции
+            const buttons = navButtons.querySelectorAll('button');
             for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
-
             const sections = document.querySelectorAll('.section-content');
             for (let i = 0; i < sections.length; i++) sections[i].style.display = 'none';
 
             btn.classList.add('active');
             target.style.display = 'block';
+
+            // Обновить подпись текущего раздела в свёрнутом виде
+            if (navActiveLabel) navActiveLabel.textContent = btn.textContent.trim();
+
+            // На мобильном автоматически свернуть меню
+            if (isMobile()) setCollapsed(true);
         });
+
+        // Стартовое состояние: на мобильном — свёрнуто, на десктопе — развёрнуто
+        if (isMobile()) setCollapsed(true);
     })();
 
     // ==================================================================
-    //  Все остальные функции — в отдельной области видимости.
+    //  Все остальные функции
     // ==================================================================
     (function () {
         const $ = id => document.getElementById(id);
@@ -711,11 +790,10 @@
         window.unicodeInfo = function () {
             const s = $('unicodeIn').value;
             if (!s) { $('unicodeOut').textContent = '—'; return; }
-            const lines = [...s].map(c => {
+            $('unicodeOut').textContent = [...s].map(c => {
                 const cp = c.codePointAt(0);
                 return c + '  →  U+' + cp.toString(16).toUpperCase().padStart(4, '0');
-            });
-            $('unicodeOut').textContent = lines.join('\n');
+            }).join('\n');
         };
 
         // -------------------- КОДИРОВАНИЕ --------------------
@@ -804,14 +882,13 @@
             const text = $('hashin').value;
             if (!text) { $('hashout').textContent = 'Введите текст'; return; }
             if (typeof CryptoJS === 'undefined') { $('hashout').textContent = 'CryptoJS не загружен'; return; }
-            const out = [
+            $('hashout').textContent = [
                 'MD5:    ' + CryptoJS.MD5(text).toString(),
                 'SHA1:   ' + CryptoJS.SHA1(text).toString(),
                 'SHA256: ' + CryptoJS.SHA256(text).toString(),
                 'SHA512: ' + CryptoJS.SHA512(text).toString(),
                 'CRC32:  ' + crc32(text).toString(16).padStart(8, '0').toUpperCase()
-            ];
-            $('hashout').textContent = out.join('\n');
+            ].join('\n');
         };
         function crc32(str) {
             let crc = 0xFFFFFFFF;
@@ -821,16 +898,15 @@
             }
             return (crc ^ 0xFFFFFFFF) >>> 0;
         }
+        const bcryptRoundsEl = $('bcryptRounds');
+        if (bcryptRoundsEl) bcryptRoundsEl.addEventListener('input', () => { $('bcryptRoundsLabel').textContent = bcryptRoundsEl.value; });
         window.bcryptHash = function () {
             if (typeof bcrypt === 'undefined') { $('bcryptOut').textContent = 'bcryptjs не загружен'; return; }
             const pwd = $('bcryptIn').value;
             if (!pwd) { $('bcryptOut').textContent = 'Введите пароль'; return; }
-            const rounds = parseInt($('bcryptRounds').value, 10);
-            try { $('bcryptOut').textContent = bcrypt.hashSync(pwd, rounds); }
+            try { $('bcryptOut').textContent = bcrypt.hashSync(pwd, parseInt($('bcryptRounds').value, 10)); }
             catch (e) { $('bcryptOut').textContent = 'Ошибка: ' + e.message; }
         };
-        const bcryptRoundsEl = $('bcryptRounds');
-        if (bcryptRoundsEl) bcryptRoundsEl.addEventListener('input', () => { $('bcryptRoundsLabel').textContent = bcryptRoundsEl.value; });
         window.bcryptVerify = function () {
             if (typeof bcrypt === 'undefined') { $('bcryptVerifyOut').textContent = 'bcryptjs не загружен'; return; }
             try {
@@ -977,13 +1053,10 @@
         };
         window.fmtXml = function () {
             try {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString($('xmlIn').value, 'text/xml');
+                const doc = new DOMParser().parseFromString($('xmlIn').value, 'text/xml');
                 const err = doc.querySelector('parsererror');
                 if (err) { $('xmlOut').textContent = 'Ошибка XML: ' + err.textContent; return; }
-                const ser = new XMLSerializer();
-                let str = ser.serializeToString(doc);
-                // Простая pretty-print
+                let str = new XMLSerializer().serializeToString(doc);
                 let out = '', indent = 0;
                 str = str.replace(/>\s*</g, '><').replace(/(<\/)/g, '\n$1').replace(/(<[^/!])/g, '\n$1');
                 str.split('\n').forEach(line => {
@@ -1006,19 +1079,18 @@
             catch (e) { $('yamlOut').textContent = 'Ошибка: ' + e.message; }
         };
         window.listToJson = function () {
-            const items = $('listIn').value.split('\n').map(s => s.trim()).filter(Boolean);
-            $('listOut').textContent = JSON.stringify(items, null, 2);
+            $('listOut').textContent = JSON.stringify($('listIn').value.split('\n').map(s => s.trim()).filter(Boolean), null, 2);
         };
         window.listToCsv = function () {
-            const items = $('listIn').value.split('\n').map(s => s.trim()).filter(Boolean);
-            $('listOut').textContent = items.map(s => '"' + s.replace(/"/g, '""') + '"').join('\n');
+            $('listOut').textContent = $('listIn').value.split('\n').map(s => s.trim()).filter(Boolean)
+                .map(s => '"' + s.replace(/"/g, '""') + '"').join('\n');
         };
         window.listToLines = function () {
             const v = $('listIn').value.trim();
             try {
                 const arr = JSON.parse(v);
                 if (Array.isArray(arr)) { $('listOut').textContent = arr.join('\n'); return; }
-            } catch (e) { /* not JSON */ }
+            } catch (e) {}
             $('listOut').textContent = v.split(/[,\n]+/).map(s => s.trim()).filter(Boolean).join('\n');
         };
 
@@ -1046,8 +1118,7 @@
             $('tempOut').textContent = res.toFixed(2);
         };
         window.tsToDate = function () {
-            const v = $('tsIn').value.trim();
-            const n = Number(v);
+            const v = $('tsIn').value.trim(), n = Number(v);
             if (!isNaN(n) && v !== '') { $('tsOut').textContent = new Date(n * 1000).toISOString(); return; }
             const d = new Date(v);
             if (isNaN(d)) { $('tsOut').textContent = 'Неверный формат'; return; }
@@ -1090,7 +1161,8 @@
             if (typeof QRCode === 'undefined') { $('wifiQrOut').textContent = 'QR не загружен'; return; }
             const ssid = $('wifiSsid').value, pass = $('wifiPass').value, enc = $('wifiEnc').value;
             if (!ssid) { $('wifiQrOut').textContent = 'Введите SSID'; return; }
-            const data = 'WIFI:T:' + enc + ';S:' + ssid.replace(/([\\;,":])/g, '\\$1') + ';' + (enc !== 'nopass' ? 'P:' + pass.replace(/([\\;,":])/g, '\\$1') + ';' : '') + ';';
+            const esc = s => s.replace(/([\\;,":])/g, '\\$1');
+            const data = 'WIFI:T:' + enc + ';S:' + esc(ssid) + ';' + (enc !== 'nopass' ? 'P:' + esc(pass) + ';' : '') + ';';
             try { new QRCode(el, { text: data, width: 200, height: 200 }); $('wifiQrOut').textContent = 'Готово'; }
             catch (e) { $('wifiQrOut').textContent = 'Ошибка: ' + e.message; }
         };
@@ -1106,11 +1178,10 @@
             $('httpOut').textContent = codes[c] ? c + ': ' + codes[c] : 'Код не найден (популярные: 200, 301, 400, 404, 500)';
         };
         window.escapeStr = function () {
-            $('escapeOut').textContent = [...$('escapeIn').value]
-                .map(c => {
-                    const code = c.charCodeAt(0);
-                    return code < 128 ? c : '\\u' + code.toString(16).padStart(4, '0');
-                }).join('');
+            $('escapeOut').textContent = [...$('escapeIn').value].map(c => {
+                const code = c.charCodeAt(0);
+                return code < 128 ? c : '\\u' + code.toString(16).padStart(4, '0');
+            }).join('');
         };
         window.unescapeStr = function () {
             $('escapeOut').textContent = $('escapeIn').value.replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
@@ -1162,18 +1233,14 @@
                 $('chmodOut').textContent = v + ' = ' + octal;
             } else { $('chmodOut').textContent = 'Введите 755 или rwxr-xr-x'; }
         };
-        window.genRandomPort = function () {
-            $('portOut').textContent = Math.floor(Math.random() * 55536) + 10000;
-        };
+        window.genRandomPort = function () { $('portOut').textContent = Math.floor(Math.random() * 55536) + 10000; };
 
         // -------------------- МАТЕМАТИКА --------------------
         window.evalMath = function () {
             try {
                 const expr = $('mathExpr').value.replace(/[^0-9+\-*/().%\s]/g, '');
                 if (!expr.trim()) { $('mathOut').textContent = 'Введите выражение'; return; }
-                // Только цифры и арифметика, без доступа к объектам
-                const res = Function('"use strict";return (' + expr + ')')();
-                $('mathOut').textContent = res;
+                $('mathOut').textContent = Function('"use strict";return (' + expr + ')')();
             } catch (e) { $('mathOut').textContent = 'Ошибка: ' + e.message; }
         };
         window.genRandom = function () {
@@ -1235,8 +1302,7 @@
                 const { PDFDocument } = PDFLib;
                 const merged = await PDFDocument.create();
                 for (let i = 0; i < files.length; i++) {
-                    const bytes = await files[i].arrayBuffer();
-                    const doc = await PDFDocument.load(bytes);
+                    const doc = await PDFDocument.load(await files[i].arrayBuffer());
                     const pages = await merged.copyPages(doc, doc.getPageIndices());
                     pages.forEach(p => merged.addPage(p));
                 }
@@ -1314,7 +1380,7 @@
                     }
                 }, 8000);
             }
-        } catch (e) { /* реклама не критична */ }
+        } catch (e) {}
 
         try {
             const wrapper = document.getElementById('adInline');
@@ -1337,10 +1403,9 @@
                     io.observe(wrapper);
                 } else render();
             }
-        } catch (e) { /* реклама не критична */ }
+        } catch (e) {}
 
-        // -------------------- СТАРТ --------------------
-        try { if (typeof genPw === 'function') genPw(); } catch (e) { console.warn('genPw init failed', e); }
+        try { if (typeof genPw === 'function') genPw(); } catch (e) {}
     })();
 </script>
 </body>
