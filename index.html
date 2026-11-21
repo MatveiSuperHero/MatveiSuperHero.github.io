@@ -1,3 +1,15 @@
+Вот обновлённый `index.html`. Вся функциональность инструментов и рекламных блоков (включая разделение ПК `R-A-20456192-3` / `R-A-20456192-4` и телефоны `R-A-20456192-1` / `R-A-20456192-2`) сохранена в полном объёме.
+
+### Что изменено в интерфейсе:
+
+* **Навигационный сайдбар слева (десктоп):** Все 15 категорий разбиты на **7 логических групп** (*Текст*, *Безопасность*, *Разработка*, *Конвертеры*, *Маркетинг*, *Время*, *Медиа*), у каждой категории автоматически подсчитывается и выводится **счётчик инструментов**, а активный пункт выделяется слева акцентной полоской `#4f8cff`.
+* **Живой поиск сверху сайдбара:** Мгновенно фильтрует карточки по заголовкам сразу по всем 15 разделам без перезагрузки; при очистке поля возвращает текущую выбранную категорию.
+* **Мобильный top-bar:** Закреплённая шапка с кнопкой-гамбургером и названием текущей категории (выдвигает сайдбар поверх экрана с затемнением).
+* **Сетка под рекламу на ПК:** Левый рекламный баннер (`R-A-20456192-3`) встроен в нижнюю часть нового навигационного сайдбара, а правый (`R-A-20456192-4`) закреплён справа на широких экранах.
+
+
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -18,18 +30,229 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
 
     <style>
-        :root{--bg:#0f1115;--card:#171a21;--accent:#4f8cff;--text:#e6e9ef;--muted:#8b93a5;--border:#2a2f3a}
+        :root{
+            --bg:#0f1115;
+            --card:#171a21;
+            --sidebar:#13161c;
+            --accent:#4f8cff;
+            --accent-soft:rgba(79,140,255,.12);
+            --text:#e6e9ef;
+            --muted:#8b93a5;
+            --border:#2a2f3a;
+            --sidebar-w:280px;
+        }
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-        header{padding:50px 16px 30px;text-align:center}
-        h1{font-size:2.2rem;margin-bottom:10px;background:linear-gradient(90deg,#4f8cff,#9d72ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        header p{color:var(--muted);font-size:1rem}
-        main{max-width:900px;margin:0 auto;padding:20px 16px 60px}
-        .section-title{margin:40px 0 20px;padding-bottom:10px;border-bottom:2px solid var(--border);font-size:1.5rem;color:var(--accent)}
+
+        /* Мобильный Top-Bar */
+        .mobile-topbar{
+            display:none;
+            position:sticky;
+            top:0;
+            z-index:120;
+            background:var(--sidebar);
+            border-bottom:1px solid var(--border);
+            padding:12px 16px;
+            align-items:center;
+            gap:12px;
+        }
+        .burger-btn{
+            background:var(--card);
+            border:1px solid var(--border);
+            color:var(--text);
+            width:38px;
+            height:38px;
+            border-radius:8px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            font-size:1.2rem;
+            flex-shrink:0;
+        }
+        .burger-btn:hover{border-color:var(--accent)}
+        .mobile-title-wrap{display:flex;flex-direction:column;min-width:0}
+        .mobile-brand{font-size:.75rem;color:var(--accent);font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+        .mobile-cat-name{font-size:.98rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+        /* Затемнение под мобильным меню */
+        .sidebar-backdrop{
+            display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.65);
+            z-index:140;
+            backdrop-filter:blur(2px);
+        }
+        .sidebar-backdrop.open{display:block}
+
+        /* Левый сайдбар */
+        .sidebar{
+            position:fixed;
+            top:0;
+            left:0;
+            bottom:0;
+            width:var(--sidebar-w);
+            background:var(--sidebar);
+            border-right:1px solid var(--border);
+            display:flex;
+            flex-direction:column;
+            z-index:150;
+            transition:transform .25s ease;
+        }
+        .sidebar-brand{
+            padding:20px 20px 14px;
+            border-bottom:1px solid var(--border);
+        }
+        .sidebar-brand h1{
+            font-size:1.5rem;
+            background:linear-gradient(90deg,#4f8cff,#9d72ff);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            line-height:1.2;
+        }
+        .sidebar-brand p{font-size:.78rem;color:var(--muted);margin-top:4px}
+
+        /* Поиск в сайдбаре */
+        .sidebar-search{padding:12px 14px;border-bottom:1px solid var(--border);position:relative}
+        .sidebar-search input{
+            width:100%;
+            background:var(--bg);
+            border:1px solid var(--border);
+            color:var(--text);
+            padding:9px 30px 9px 12px;
+            border-radius:8px;
+            font-size:.86rem;
+        }
+        .sidebar-search input:focus{border-color:var(--accent)}
+        .search-clear{
+            position:absolute;
+            right:22px;
+            top:50%;
+            transform:translateY(-50%);
+            background:none;
+            border:0;
+            color:var(--muted);
+            cursor:pointer;
+            font-size:1rem;
+            display:none;
+            padding:2px 4px;
+        }
+        .search-clear.visible{display:block}
+
+        /* Список категорий */
+        .sidebar-nav{
+            flex:1;
+            overflow-y:auto;
+            padding:10px 0 20px;
+        }
+        .sidebar-nav::-webkit-scrollbar{width:5px}
+        .sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+        .nav-group{margin-bottom:14px}
+        .nav-group-title{
+            padding:6px 18px 4px;
+            font-size:.7rem;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.7px;
+            color:var(--muted);
+        }
+        .nav-item{
+            width:100%;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:8px;
+            padding:9px 16px 9px 18px;
+            background:transparent;
+            border:0;
+            border-left:3px solid transparent;
+            color:var(--text);
+            font-family:inherit;
+            font-size:.9rem;
+            text-align:left;
+            cursor:pointer;
+            transition:background .15s, border-color .15s, color .15s;
+        }
+        .nav-item:hover{background:rgba(255,255,255,.04)}
+        .nav-item.active{
+            background:var(--accent-soft);
+            border-left-color:var(--accent);
+            color:#fff;
+            font-weight:600;
+        }
+        .nav-item-label{
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .nav-badge{
+            background:var(--card);
+            border:1px solid var(--border);
+            color:var(--muted);
+            font-size:.74rem;
+            font-weight:600;
+            padding:1px 7px;
+            border-radius:999px;
+            flex-shrink:0;
+        }
+        .nav-item.active .nav-badge{
+            background:var(--accent);
+            border-color:var(--accent);
+            color:#fff;
+        }
+
+        /* Левый рекламный блок внутри сайдбара (ПК) */
+        .sidebar-ad{
+            display:none;
+            padding:10px;
+            border-top:1px solid var(--border);
+            background:var(--bg);
+            justify-content:center;
+        }
+        @media (min-width:901px){
+            .sidebar-ad.loaded{display:flex}
+        }
+
+        /* Основная область контента */
+        .app-content{
+            margin-left:var(--sidebar-w);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+        }
+        main{
+            width:100%;
+            max-width:960px;
+            padding:28px 24px 70px;
+        }
+
+        /* Заголовок результатов поиска */
+        .search-status{
+            display:none;
+            margin-bottom:20px;
+            padding:12px 16px;
+            background:var(--card);
+            border:1px solid var(--border);
+            border-radius:12px;
+            font-size:.92rem;
+            color:var(--muted);
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+        }
+        .search-status.visible{display:flex}
+        .search-status b{color:var(--text)}
+
+        .section-title{margin:0 0 20px;padding-bottom:10px;border-bottom:2px solid var(--border);font-size:1.5rem;color:var(--accent)}
         .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:40px}
-        .tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:transform .2s}
+        .tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:transform .2s,border-color .2s}
         .tool-card:hover{border-color:var(--accent);transform:translateY(-2px)}
         .tool-card h3{margin-bottom:20px;font-size:1.2rem}
+        .tool-card.search-hidden{display:none}
+        .section-content.search-empty{display:none !important}
+
         label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 5px}
         input,textarea,select{width:100%;background:#0f1115;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:8px;font-size:.9rem;outline:none}
         input:not([type=range]):focus,textarea:focus{border-color:var(--accent)}
@@ -51,89 +274,189 @@
         .diff-add{background:#1e3a1e;color:#8f8} .diff-del{background:#3a1e1e;color:#f88}
         .file-input{display:block;margin:10px 0}
 
-        /* Навигация */
-        nav{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-        .nav-header{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:10px 16px;background:transparent;border:0;color:var(--text);font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;user-select:none;transition:background .2s}
-        .nav-header:hover{background:rgba(79,140,255,.08)}
-        .nav-header:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-        .nav-arrow{display:inline-block;font-size:.7rem;transition:transform .25s ease}
-        nav.collapsed .nav-arrow{transform:rotate(180deg)}
-        .nav-label-collapsed{display:none}
-        nav.collapsed .nav-label-expanded{display:none}
-        nav.collapsed .nav-label-collapsed{display:inline}
-        .nav-buttons{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:0 15px 15px;max-height:1000px;opacity:1;overflow:hidden;transition:max-height .3s ease,padding .3s ease,opacity .2s ease}
-        nav.collapsed .nav-buttons{max-height:0;padding-top:0;padding-bottom:0;opacity:0}
-        .nav-buttons button{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit;font-size:1rem}
-        .nav-buttons button:hover{border-color:var(--accent);background:rgba(79,140,255,.1)}
-        .nav-buttons button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-        @media (max-width:700px){.nav-header{padding:9px 14px;font-size:.9rem}.nav-buttons button{padding:8px 14px;font-size:.9rem}}
-
-        /* Sticky ad */
+        /* Sticky ad (только для телефонов) */
         .ad-sticky{position:fixed;left:0;right:0;bottom:0;z-index:999;background:var(--card);border-top:1px solid var(--border);box-shadow:0 -8px 28px rgba(0,0,0,.55);display:flex;justify-content:center;align-items:center;padding:6px 8px;transform:translateY(0);transition:transform .35s ease;will-change:transform}
         .ad-sticky.hidden{transform:translateY(110%);pointer-events:none}
-        .ad-sticky > div[id^="yandex_rtb"]{width:100%;max-width:728px;max-height:120px;overflow:hidden}
+        .ad-sticky > div[id^="yandex_rtb"]{width:100%;max-width:728px;max-height:100px;overflow:hidden}
         .ad-close{position:absolute;top:4px;right:6px;z-index:2;width:24px;height:24px;background:rgba(0,0,0,.65);border:1px solid var(--border);color:var(--text);border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color .2s,color .2s}
         .ad-close:hover{border-color:var(--accent);color:var(--accent)}
-        body.ad-open{padding-bottom:150px}
-        @media (max-width:600px){.ad-sticky > div[id^="yandex_rtb"]{max-height:100px}body.ad-open{padding-bottom:125px}}
+        body.ad-open{padding-bottom:125px}
+        @media (min-width:769px){.ad-sticky{display:none !important}}
 
-        /* Inline ad */
+        /* Inline ad (только для телефонов) */
         .ad-inline{position:relative;margin:30px auto 20px;max-width:728px;min-height:90px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px 12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
         .ad-inline::before{content:'Реклама';position:absolute;top:4px;right:10px;font-size:10px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
         .ad-inline > div[id^="yandex_rtb"]{width:100%;min-height:90px}
         .ad-inline.hidden{display:none}
+        @media (min-width:769px){.ad-inline{display:none !important}}
 
-        /* Боковая реклама на ПК */
-        .ad-side{position:fixed;top:85px;width:160px;min-height:600px;z-index:90;display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 8px 8px;overflow:hidden}
-        .ad-side::before{content:'Реклама';position:absolute;top:3px;left:0;right:0;text-align:center;font-size:9px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
-        .ad-side.left{left:max(12px,calc(50vw - 630px))}
-        .ad-side.right{right:max(12px,calc(50vw - 630px))}
-        .ad-side > div[id^="yandex_rtb"]{width:100%;min-height:580px}
-        @media (min-width:1360px){.ad-side.loaded{display:block}}
+        /* Правый рекламный баннер на широких ПК */
+        .ad-right-rail{
+            position:fixed;
+            top:28px;
+            right:16px;
+            width:160px;
+            min-height:600px;
+            z-index:90;
+            display:none;
+            background:var(--card);
+            border:1px solid var(--border);
+            border-radius:12px;
+            padding:16px 8px 8px;
+            overflow:hidden;
+        }
+        .ad-right-rail::before{content:'Реклама';position:absolute;top:3px;left:0;right:0;text-align:center;font-size:9px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
+        .ad-right-rail > div[id^="yandex_rtb"]{width:100%;min-height:580px}
+        @media (min-width:1440px){
+            .ad-right-rail.loaded{display:block}
+            .app-content{padding-right:185px}
+        }
+
+        /* Адаптив под планшеты и телефоны */
+        @media (max-width:900px){
+            .mobile-topbar{display:flex}
+            .sidebar{transform:translateX(-100%)}
+            .sidebar.open{transform:translateX(0)}
+            .app-content{margin-left:0}
+            main{padding:20px 16px 60px}
+        }
 
         #qrcode canvas, #qrcode img{max-width:100%;height:auto}
         #wifiQr canvas, #wifiQr img{max-width:100%;height:auto}
     </style>
 </head>
 <body>
-<header>
-    <h1>FreeTools</h1>
-    <p>Профессиональные инструменты для работы с данными в один клик</p>
+
+<!-- Мобильный Top-Bar -->
+<header class="mobile-topbar">
+    <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">☰</button>
+    <div class="mobile-title-wrap">
+        <span class="mobile-brand">FreeTools</span>
+        <span class="mobile-cat-name" id="mobileCatName">📝 Текст</span>
+    </div>
 </header>
 
-<nav id="nav">
-    <button class="nav-header" id="navHeader" aria-expanded="true" aria-controls="navButtons">
-        <span class="nav-label-expanded">Меню</span>
-        <span class="nav-label-collapsed"><span id="navActiveLabel">📝 Текст</span></span>
-        <span class="nav-arrow" aria-hidden="true">▲</span>
-    </button>
-    <div class="nav-buttons" id="navButtons">
-        <button class="active" data-t="text">📝 Текст</button>
-        <button data-t="encoding">🔤 Кодирование</button>
-        <button data-t="security">🔐 Хеши и пароли</button>
-        <button data-t="dev">💻 Разработчик</button>
-        <button data-t="converters">🔄 Конвертеры</button>
-        <button data-t="web">🌐 Веб</button>
-        <button data-t="network">📡 Сеть</button>
-        <button data-t="math">🧮 Математика</button>
-        <button data-t="calc">🧮 Калькуляторы</button>
-        <button data-t="seo">🔎 SEO</button>
-        <button data-t="finance">💰 Финансы</button>
-        <button data-t="datetime">📅 Дата и время</button>
-        <button data-t="compression">🗜️ Сжатие</button>
-        <button data-t="pdf">📄 PDF</button>
-        <button data-t="images">🖼️ Изображения</button>
-    </div>
-</nav>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-<main>
-    <!-- Боковая реклама для ПК -->
-    <aside id="adLeft" class="ad-side left">
+<!-- Левый сайдбар -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <h1>FreeTools</h1>
+        <p>Онлайн-инструменты в один клик</p>
+    </div>
+
+    <div class="sidebar-search">
+        <input type="text" id="toolSearch" placeholder="Поиск по всем инструментам..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Очистить поиск">×</button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-group">
+            <div class="nav-group-title">Текст</div>
+            <button class="nav-item active" data-t="text">
+                <span class="nav-item-label">📝 Текст</span>
+                <span class="nav-badge" data-count="text">0</span>
+            </button>
+            <button class="nav-item" data-t="encoding">
+                <span class="nav-item-label">🔤 Кодирование</span>
+                <span class="nav-badge" data-count="encoding">0</span>
+            </button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">Безопасность</div>
+            <button class="nav-item" data-t="security">
+                <span class="nav-item-label">🔐 Хеши и пароли</span>
+                <span class="nav-badge" data-count="security">0</span>
+            </button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">Разработка</div>
+            <button class="nav-item" data-t="dev">
+                <span class="nav-item-label">💻 Разработчик</span>
+                <span class="nav-badge" data-count="dev">0</span>
+            </button>
+            <button class="nav-item" data-t="web">
+                <span class="nav-item-label">🌐 Веб</span>
+                <span class="nav-badge" data-count="web">0</span>
+            </button>
+            <button class="nav-item" data-t="network">
+                <span class="nav-item-label">📡 Сеть</span>
+                <span class="nav-badge" data-count="network">0</span>
+            </button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">Конвертеры</div>
+            <button class="nav-item" data-t="converters">
+                <span class="nav-item-label">🔄 Конвертеры</span>
+                <span class="nav-badge" data-count="converters">0</span>
+            </button>
+            <button class="nav-item" data-t="math">
+                <span class="nav-item-label">📐 Математика</span>
+                <span class="nav-badge" data-count="math">0</span>
+            </button>
+            <button class="nav-item" data-t="calc">
+                <span class="nav-item-label">🧮 Калькуляторы</span>
+                <span class="nav-badge" data-count="calc">0</span>
+            </button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">Маркетинг</div>
+            <button class="nav-item" data-t="seo">
+                <span class="nav-item-label">🔎 SEO</span>
+                <span class="nav-badge" data-count="seo">0</span>
+            </button>
+            <button class="nav-item" data-t="finance">
+                <span class="nav-item-label">💰 Финансы</span>
+                <span class="nav-badge" data-count="finance">0</span>
+            </button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">Время</div>
+            <button class="nav-item" data-t="datetime">
+                <span class="nav-item-label">📅 Дата и время</span>
+                <span class="nav-badge" data-count="datetime">0</span>
+            </button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">Медиа</div>
+            <button class="nav-item" data-t="compression">
+                <span class="nav-item-label">🗜️ Сжатие</span>
+                <span class="nav-badge" data-count="compression">0</span>
+            </button>
+            <button class="nav-item" data-t="pdf">
+                <span class="nav-item-label">📄 PDF</span>
+                <span class="nav-badge" data-count="pdf">0</span>
+            </button>
+            <button class="nav-item" data-t="images">
+                <span class="nav-item-label">🖼️ Изображения</span>
+                <span class="nav-badge" data-count="images">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Рекламный блок ПК 1 (встроен в сайдбар) -->
+    <div id="adLeft" class="sidebar-ad">
         <div id="yandex_rtb_R-A-20456192-3"></div>
-    </aside>
-    <aside id="adRight" class="ad-side right">
-        <div id="yandex_rtb_R-A-20456192-4"></div>
-    </aside>
+    </div>
+</aside>
+
+<!-- Рекламный блок ПК 2 (правая колонка на широких экранах) -->
+<aside id="adRight" class="ad-right-rail">
+    <div id="yandex_rtb_R-A-20456192-4"></div>
+</aside>
+
+<div class="app-content">
+<main>
+    <div class="search-status" id="searchStatus">
+        <span>Результаты поиска: <b id="searchCount">0</b></span>
+        <button class="btn secondary" style="width:auto;margin:0;padding:6px 12px;font-size:.82rem" onclick="resetSearch()">Сбросить</button>
+    </div>
 
     <!-- ==================== ТЕКСТ (расширенный) ==================== -->
     <div id="text" class="section-content">
@@ -1348,69 +1671,141 @@
         </div>
     </div>
 
+    <!-- Рекламный блок тел 2 (только на мобильных) -->
     <div id="adInline" class="ad-inline hidden">
         <div id="yandex_rtb_R-A-20456192-2"></div>
     </div>
 </main>
+</div>
 
+<!-- Рекламный блок тел 1 (липкий снизу только на мобильных) -->
 <div id="adSticky" class="ad-sticky hidden">
     <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
     <div id="yandex_rtb_R-A-20456192-1"></div>
 </div>
 
 <script>
-    // ==================== НАВИГАЦИЯ ====================
+    // ==================== САЙДБАР, НАВИГАЦИЯ И ПОИСК ====================
     (function () {
-        const navEl = document.getElementById('nav');
-        const navHeader = document.getElementById('navHeader');
-        const navActiveLabel = document.getElementById('navActiveLabel');
-        const navButtons = document.getElementById('navButtons');
-        if (!navEl || !navHeader || !navButtons) return;
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileCatName = document.getElementById('mobileCatName');
+        const sidebarNav = document.getElementById('sidebarNav');
+        const searchInput = document.getElementById('toolSearch');
+        const searchClear = document.getElementById('searchClear');
+        const searchStatus = document.getElementById('searchStatus');
+        const searchCount = document.getElementById('searchCount');
 
-        const MOBILE_BREAKPOINT = 700;
-        const isMobile = () => window.matchMedia('(max-width: ' + MOBILE_BREAKPOINT + 'px)').matches;
+        let activeCategory = 'text';
 
-        function setCollapsed(collapsed) {
-            navEl.classList.toggle('collapsed', collapsed);
-            navHeader.setAttribute('aria-expanded', String(!collapsed));
+        // 1. Автоматический подсчёт инструментов в каждой категории
+        document.querySelectorAll('.section-content').forEach(sec => {
+            const count = sec.querySelectorAll('.tool-card').length;
+            const badge = document.querySelector(`.nav-badge[data-count="${sec.id}"]`);
+            if (badge) badge.textContent = count;
+        });
+
+        // Мобильное меню
+        function openMobileMenu() {
+            sidebar.classList.add('open');
+            backdrop.classList.add('open');
+        }
+        function closeMobileMenu() {
+            sidebar.classList.remove('open');
+            backdrop.classList.remove('open');
+        }
+        if (burgerBtn) burgerBtn.addEventListener('click', openMobileMenu);
+        if (backdrop) backdrop.addEventListener('click', closeMobileMenu);
+
+        // Переключение активной категории
+        function switchCategory(catId) {
+            activeCategory = catId;
+
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                const isTarget = btn.getAttribute('data-t') === catId;
+                btn.classList.toggle('active', isTarget);
+                if (isTarget && mobileCatName) {
+                    const labelEl = btn.querySelector('.nav-item-label');
+                    if (labelEl) mobileCatName.textContent = labelEl.textContent.trim();
+                }
+            });
+
+            document.querySelectorAll('.section-content').forEach(sec => {
+                sec.classList.remove('search-empty');
+                sec.style.display = (sec.id === catId) ? 'block' : 'none';
+                sec.querySelectorAll('.tool-card').forEach(card => card.classList.remove('search-hidden'));
+            });
         }
 
-        window.toggleNav = function (force) {
-            const willCollapse = typeof force === 'boolean' ? force : !navEl.classList.contains('collapsed');
-            setCollapsed(willCollapse);
+        if (sidebarNav) {
+            sidebarNav.addEventListener('click', e => {
+                const btn = e.target.closest('.nav-item');
+                if (!btn) return;
+                const targetId = btn.getAttribute('data-t');
+                if (!targetId) return;
+
+                if (searchInput && searchInput.value.trim() !== '') {
+                    searchInput.value = '';
+                    searchClear.classList.remove('visible');
+                    searchStatus.classList.remove('visible');
+                }
+                switchCategory(targetId);
+                closeMobileMenu();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Живой поиск по всем инструментам
+        window.resetSearch = function () {
+            if (!searchInput) return;
+            searchInput.value = '';
+            searchClear.classList.remove('visible');
+            searchStatus.classList.remove('visible');
+            switchCategory(activeCategory);
         };
 
-        navHeader.addEventListener('click', () => window.toggleNav());
-        navHeader.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.toggleNav(); }
-        });
+        if (searchClear) searchClear.addEventListener('click', window.resetSearch);
 
-        navButtons.addEventListener('click', e => {
-            let btn = e.target;
-            while (btn && btn !== navButtons && btn.tagName !== 'BUTTON') btn = btn.parentNode;
-            if (!btn || btn.tagName !== 'BUTTON') return;
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.trim().toLowerCase();
+                searchClear.classList.toggle('visible', query.length > 0);
 
-            const targetId = btn.getAttribute('data-t');
-            if (!targetId) return;
-            const target = document.getElementById(targetId);
-            if (!target) return;
+                if (!query) {
+                    searchStatus.classList.remove('visible');
+                    switchCategory(activeCategory);
+                    return;
+                }
 
-            const buttons = navButtons.querySelectorAll('button');
-            for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
-            const sections = document.querySelectorAll('.section-content');
-            for (let i = 0; i < sections.length; i++) sections[i].style.display = 'none';
+                let totalMatches = 0;
+                document.querySelectorAll('.section-content').forEach(sec => {
+                    let sectionMatches = 0;
+                    sec.querySelectorAll('.tool-card').forEach(card => {
+                        const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
+                        const match = title.includes(query);
+                        card.classList.toggle('search-hidden', !match);
+                        if (match) {
+                            sectionMatches++;
+                            totalMatches++;
+                        }
+                    });
+                    if (sectionMatches > 0) {
+                        sec.style.display = 'block';
+                        sec.classList.remove('search-empty');
+                    } else {
+                        sec.style.display = 'none';
+                        sec.classList.add('search-empty');
+                    }
+                });
 
-            btn.classList.add('active');
-            target.style.display = 'block';
-
-            if (navActiveLabel) navActiveLabel.textContent = btn.textContent.trim();
-            if (isMobile()) setCollapsed(true);
-        });
-
-        if (isMobile()) setCollapsed(true);
+                searchCount.textContent = totalMatches;
+                searchStatus.classList.add('visible');
+            });
+        }
     })();
 
-    // ==================== ОСНОВНОЙ СКРИПТ ====================
+    // ==================== ОСНОВНОЙ СКРИПТ ИНСТРУМЕНТОВ ====================
     (function () {
         const $ = id => document.getElementById(id);
 
@@ -1556,7 +1951,7 @@
         window.listToLines = function () { const v = $('listIn').value.trim(); try { const a = JSON.parse(v); if (Array.isArray(a)) { $('listOut').textContent = a.join('\n'); return; } } catch (e) {} $('listOut').textContent = v.split(/[,\n]+/).map(s => s.trim()).filter(Boolean).join('\n'); };
         window.validateJson = function () { try { JSON.parse($('jsonValidateIn').value); $('jsonValidateOut').textContent = '✅ Валидный JSON'; } catch (e) { $('jsonValidateOut').textContent = '❌ Ошибка: ' + e.message; } };
         window.genUuid = function () { $('uuidOut').textContent = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); }); };
-        window.hexToRgb = function () { let h = $('hexRgbIn').value.trim().replace('#', ''); if (!/^[0-9a-f]{3,6}$/i.test(h)) { $('hexRgbOut').textContent = 'Ошибка: неверный HEX'; return; } if (h.length === 3) h = h.split('').map(c => c + c).join(''); const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16); $('hexRgbOut').textContent = `rgb(${r}, ${g}, ${b})`; $('hexRgbPreview').style.background = `rgb(${r},${g},${b})`; };
+        window.hexToRgb = function () { let h = ($('hexRgbIn')?.value || $('colorHex')?.value || '').trim().replace('#', ''); if (!/^[0-9a-f]{3,6}$/i.test(h)) { if ($('hexRgbOut')) $('hexRgbOut').textContent = 'Ошибка: неверный HEX'; if ($('colorOut')) $('colorOut').textContent = 'Ошибка: неверный HEX'; return; } if (h.length === 3) h = h.split('').map(c => c + c).join(''); const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16); if ($('hexRgbOut')) { $('hexRgbOut').textContent = `rgb(${r}, ${g}, ${b})`; $('hexRgbPreview').style.background = `rgb(${r},${g},${b})`; } if ($('colorOut')) { $('colorOut').textContent = `rgb(${r}, ${g}, ${b})`; $('colorPreview').style.background = `rgb(${r},${g},${b})`; } };
         window.convertBase = function () { try { const v = $('baseConvertIn').value.trim(); const f = parseInt($('baseConvertFrom').value, 10), t = parseInt($('baseConvertTo').value, 10); $('baseConvertOut').textContent = parseInt(v, f).toString(t).toUpperCase(); } catch (e) { $('baseConvertOut').textContent = 'Ошибка'; } };
         window.parseUrl = function () { try { const u = new URL($('urlParseIn').value); $('urlParseOut').textContent = `Protocol: ${u.protocol}\nHost: ${u.host}\nPath: ${u.pathname}\nQuery: ${u.search}\nHash: ${u.hash}`; } catch (e) { $('urlParseOut').textContent = 'Ошибка: неверный URL'; } };
         window.parseQueryString = function () { const p = new URLSearchParams($('queryStringIn').value); const o = {}; p.forEach((v, k) => o[k] = v); $('queryStringOut').textContent = JSON.stringify(o, null, 2); };
@@ -1567,7 +1962,13 @@
         window.genBoxShadow = function () { $('boxShadowOut').textContent = `box-shadow: ${$('shadowX').value}px ${$('shadowY').value}px ${$('shadowBlur').value}px ${$('shadowColor').value};`; };
         window.genGradient = function () { $('gradientOut').textContent = `background: linear-gradient(${$('gradientDir').value}, ${$('gradientColor1').value}, ${$('gradientColor2').value});`; };
 
-        // ---------- КОНВЕРТЕРЫ (дополнительные) ----------
+        // ---------- КОНВЕРТЕРЫ ----------
+        window.convertLength = function () { const f = { m: 1, km: 1000, cm: 0.01, mm: 0.001, in: 0.0254, ft: 0.3048, mi: 1609.34 }; $('unitLengthOut').textContent = (parseFloat($('unitLengthIn').value) * f[$('unitLengthFrom').value] / f[$('unitLengthTo').value]).toPrecision(6); };
+        window.convertTemp = function () { let v = parseFloat($('tempIn').value); const fr = $('tempFrom').value, to = $('tempTo').value; if (fr === 'F') v = (v - 32) * 5 / 9; else if (fr === 'K') v = v - 273.15; if (to === 'F') v = v * 9 / 5 + 32; else if (to === 'K') v = v + 273.15; $('tempOut').textContent = v.toFixed(2); };
+        window.tsToDate = function () { const n = parseInt($('tsIn').value, 10); $('tsOut').textContent = isNaN(n) ? 'Ошибка' : new Date(n * (String(n).length <= 10 ? 1000 : 1)).toISOString(); };
+        window.dateToTs = function () { const d = new Date($('tsIn').value); $('tsOut').textContent = isNaN(d) ? 'Ошибка' : Math.floor(d.getTime() / 1000); };
+        window.toRoman = function () { let n = parseInt($('romanIn').value, 10); if (!n || n < 1 || n > 3999) { $('romanOut').textContent = '1–3999'; return; } const map = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let r = ''; for (const [v, s] of map) while (n >= v) { r += s; n -= v; } $('romanOut').textContent = r; };
+        window.fromRoman = function () { const s = $('romanIn').value.toUpperCase().trim(); const m = { I:1,V:5,X:10,L:50,C:100,D:500,M:1000 }; let res = 0; for (let i = 0; i < s.length; i++) res += m[s[i]] < m[s[i+1]] ? -m[s[i]] : m[s[i]]; $('romanOut').textContent = res || 'Ошибка'; };
         window.convertWeight = function () { const f = { kg: 1, g: 0.001, lb: 0.453592, oz: 0.0283495 }; $('weightOut').textContent = (parseFloat($('weightIn').value) * f[$('weightFrom').value] / f[$('weightTo').value]).toPrecision(6); };
         window.convertArea = function () { const f = { m2: 1, km2: 1e6, cm2: 0.0001, ha: 10000, acre: 4046.86 }; $('areaOut').textContent = (parseFloat($('areaIn').value) * f[$('areaFrom').value] / f[$('areaTo').value]).toPrecision(6); };
         window.convertVolume = function () { const f = { l: 1, ml: 0.001, m3: 1000, gal: 3.78541 }; $('volumeOut').textContent = (parseFloat($('volumeIn').value) * f[$('volumeFrom').value] / f[$('volumeTo').value]).toPrecision(6); };
@@ -1587,6 +1988,20 @@
         window.percentToDecimal = function () { $('decPctOut').textContent = (parseFloat($('decPctIn').value) / 100).toFixed(4); };
         window.fractionToDecimal = function () { const p = $('fracDecIn').value.split('/'); $('fracDecOut').textContent = (parseFloat(p[0]) / parseFloat(p[1])).toFixed(4); };
         window.decimalToFraction = function () { const v = parseFloat($('fracDecIn').value); const prec = 10000; const gcd = (a, b) => b ? gcd(b, a % b) : a; const d = gcd(Math.round(v * prec), prec); $('fracDecOut').textContent = `${Math.round(v * prec) / d}/${prec / d}`; };
+
+        // ---------- ВЕБ И СЕТЬ ----------
+        window.genQr = function () { const el = $('qrcode'); el.innerHTML = ''; const t = $('qrText').value.trim(); if (!t) return; new QRCode(el, { text: t, width: 180, height: 180 }); $('qrOut').textContent = t; };
+        window.genWifiQr = function () { const el = $('wifiQr'); el.innerHTML = ''; const s = $('wifiSsid').value, p = $('wifiPass').value, e = $('wifiEnc').value; const str = `WIFI:T:${e};S:${s};P:${p};;`; new QRCode(el, { text: str, width: 180, height: 180 }); $('wifiQrOut').textContent = str; };
+        window.lookupHttp = function () { const c = {200:'OK',201:'Created',204:'No Content',301:'Moved Permanently',302:'Found',400:'Bad Request',401:'Unauthorized',403:'Forbidden',404:'Not Found',429:'Too Many Requests',500:'Internal Server Error',502:'Bad Gateway',503:'Service Unavailable'}; const k = $('httpCode').value.trim(); $('httpOut').textContent = c[k] ? `${k} ${c[k]}` : 'Код не найден'; };
+        window.escapeStr = function () { $('escapeOut').textContent = JSON.stringify($('escapeIn').value); };
+        window.unescapeStr = function () { try { $('escapeOut').textContent = JSON.parse($('escapeIn').value); } catch (e) { $('escapeOut').textContent = 'Ошибка'; } };
+        window.lookupMime = function () { const m = {'.html':'text/html','.css':'text/css','.js':'application/javascript','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.pdf':'application/pdf','.zip':'application/zip'}; const v = $('mimeIn').value.trim().toLowerCase(); $('mimeOut').textContent = m[v] || Object.entries(m).find(([,val]) => val === v)?.[0] || 'Не найдено'; };
+        window.calcSubnet = function () { try { const [ip, mask] = $('ipCidr').value.trim().split('/'); const m = parseInt(mask, 10); const parts = ip.split('.').map(Number); const num = ((parts[0]<<24)|(parts[1]<<16)|(parts[2]<<8)|parts[3])>>>0; const sm = m === 0 ? 0 : (~0 << (32 - m)) >>> 0; const net = (num & sm) >>> 0; const bc = (net | ~sm) >>> 0; const toIp = n => [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.'); $('ipOut').textContent = `Network: ${toIp(net)}\nBroadcast: ${toIp(bc)}\nMask: ${toIp(sm)}\nHosts: ${m >= 31 ? 0 : Math.pow(2, 32 - m) - 2}`; } catch (e) { $('ipOut').textContent = 'Ошибка CIDR'; } };
+        window.genCron = function () { $('cronOut').textContent = ['cronMin','cronHour','cronDay','cronMonth','cronDow'].map(id => $(id).value.trim() || '*').join(' '); };
+        window.calcChmod = function () { const v = $('chmodIn').value.trim(); if (/^[0-7]{3}$/.test(v)) { const map = ['---','--x','-w-','-wx','r--','r-x','rw-','rwx']; $('chmodOut').textContent = [...v].map(d => map[Number(d)]).join(''); } else $('chmodOut').textContent = 'Введите 3 цифры (например, 755)'; };
+        window.genRandomPort = function () { $('portOut').textContent = Math.floor(Math.random() * (65535 - 1024 + 1)) + 1024; };
+        window.evalMath = function () { try { const expr = $('mathExpr').value.replace(/[^0-9+\-*/().%\s]/g, ''); $('mathOut').textContent = Function('"use strict";return (' + expr + ')')(); } catch (e) { $('mathOut').textContent = 'Ошибка'; } };
+        window.genRandom = function () { const min = parseInt($('randMin').value, 10), max = parseInt($('randMax').value, 10); $('randOut').textContent = Math.floor(Math.random() * (max - min + 1)) + min; };
 
         // ---------- КАЛЬКУЛЯТОРЫ ----------
         window.calcPercent = function () { $('percentOut').textContent = (parseFloat($('percentA').value) * parseFloat($('percentB').value) / 100).toFixed(2); };
@@ -1650,7 +2065,7 @@
         window.compressImage = function () { const f = $('imgCompressFile').files[0]; if (!f) { $('imgCompressOut').textContent = 'Выберите изображение'; return; } const q = parseFloat($('imgQuality').value); const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); c.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'compressed.jpg'; a.click(); $('imgCompressOut').textContent = 'Сжато'; }, 'image/jpeg', q); }; img.src = URL.createObjectURL(f); };
         const imgQualityEl = $('imgQuality'); if (imgQualityEl) imgQualityEl.addEventListener('input', () => { $('qualityLabel').textContent = imgQualityEl.value; });
 
-        // ---------- РЕКЛАМА ----------
+        // ---------- РЕКЛАМА (разделение ПК и Телефоны) ----------
         function initYandexBlock(containerId, blockId, onRenderCallback) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -1673,41 +2088,45 @@
             });
         }
 
-        // 1. Нижний Sticky-баннер
-        const stickyEl = $('adSticky');
-        window.closeStickyAd = function () {
-            if (stickyEl) stickyEl.classList.add('hidden');
-            document.body.classList.remove('ad-open');
-            try { sessionStorage.setItem('adStickyClosed', '1'); } catch (e) {}
-        };
+        const isMobileDevice = window.innerWidth <= 768;
 
-        try {
-            if (sessionStorage.getItem('adStickyClosed') !== '1') {
-                initYandexBlock('yandex_rtb_R-A-20456192-1', 'R-A-20456192-1', () => {
-                    if (stickyEl) stickyEl.classList.remove('hidden');
-                    document.body.classList.add('ad-open');
+        if (isMobileDevice) {
+            // ТЕЛЕФОНЫ: тел1 (R-A-20456192-1) и тел2 (R-A-20456192-2)
+            const stickyEl = $('adSticky');
+            window.closeStickyAd = function () {
+                if (stickyEl) stickyEl.classList.add('hidden');
+                document.body.classList.remove('ad-open');
+                try { sessionStorage.setItem('adStickyClosed', '1'); } catch (e) {}
+            };
+
+            try {
+                if (sessionStorage.getItem('adStickyClosed') !== '1') {
+                    initYandexBlock('yandex_rtb_R-A-20456192-1', 'R-A-20456192-1', () => {
+                        if (stickyEl) stickyEl.classList.remove('hidden');
+                        document.body.classList.add('ad-open');
+                    });
+                }
+            } catch (e) {}
+
+            const inlineWrap = $('adInline');
+            if (inlineWrap) {
+                initYandexBlock('yandex_rtb_R-A-20456192-2', 'R-A-20456192-2', () => {
+                    inlineWrap.classList.remove('hidden');
                 });
             }
-        } catch (e) {}
-
-        // 2. Inline-баннер под инструментами
-        const inlineWrap = $('adInline');
-        if (inlineWrap) {
-            initYandexBlock('yandex_rtb_R-A-20456192-2', 'R-A-20456192-2', () => {
-                inlineWrap.classList.remove('hidden');
-            });
-        }
-
-        // 3. Боковые баннеры для ПК (1 - левый, 2 - правый)
-        if (window.innerWidth >= 1360) {
+        } else {
+            // ПК: пк1 (R-A-20456192-3) и пк2 (R-A-20456192-4)
             initYandexBlock('yandex_rtb_R-A-20456192-3', 'R-A-20456192-3', () => {
                 const leftEl = $('adLeft');
                 if (leftEl) leftEl.classList.add('loaded');
             });
-            initYandexBlock('yandex_rtb_R-A-20456192-4', 'R-A-20456192-4', () => {
-                const rightEl = $('adRight');
-                if (rightEl) rightEl.classList.add('loaded');
-            });
+
+            if (window.innerWidth >= 1440) {
+                initYandexBlock('yandex_rtb_R-A-20456192-4', 'R-A-20456192-4', () => {
+                    const rightEl = $('adRight');
+                    if (rightEl) rightEl.classList.add('loaded');
+                });
+            }
         }
 
         try { if (typeof genPw === 'function') genPw(); } catch (e) {}
@@ -1715,3 +2134,5 @@
 </script>
 </body>
 </html>
+
+```
