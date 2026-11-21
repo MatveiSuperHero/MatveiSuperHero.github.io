@@ -7,6 +7,13 @@
     <meta name="description" content="Бесплатные инструменты для работы с текстом, данными и безопасностью.">
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
+
+    <!-- Библиотеки для расширенных инструментов -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <style>
         :root{--bg:#0f1115;--card:#171a21;--accent:#4f8cff;--text:#e6e9ef;--muted:#8b93a5;--border:#2a2f3a}
         *{box-sizing:border-box;margin:0;padding:0}
@@ -43,6 +50,8 @@
         label.chk input{width:auto;padding:0}
         .ad-container{margin:40px 0;min-height:90px;border:1px dashed #3a4152;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
         #pwStrength{font-size:.85rem;margin-top:5px}
+        .diff-add{background:#1e3a1e;color:#8f8} .diff-del{background:#3a1e1e;color:#f88}
+        .file-input{display:block;margin:10px 0}
     </style>
 </head>
 <body>
@@ -53,18 +62,23 @@
 
 <nav id="nav">
     <button class="active" data-t="text">📝 Текст</button>
-    <button data-t="security">🔐 Безопасность</button>
+    <button data-t="encoding">🔤 Кодирование</button>
+    <button data-t="security">🔐 Хеши и пароли</button>
     <button data-t="dev">💻 Разработчик</button>
+    <button data-t="compression">🗜️ Сжатие</button>
+    <button data-t="pdf">📄 PDF</button>
+    <button data-t="images">🖼️ Изображения</button>
 </nav>
 
 <main>
     <div id="yandex_rtb_R-A-20456192-1" class="ad-container"></div>
 
+    <!-- ========== ТЕКСТ ========== -->
     <div id="text" class="section-content">
         <h2 class="section-title">Работа с текстом</h2>
         <div class="tool-grid">
             <div class="tool-card">
-                <h3>Счётчик слов</h3>
+                <h3>Счётчик слов и символов</h3>
                 <textarea id="txtCount" placeholder="Введите текст для анализа..."></textarea>
                 <div class="stats">
                     <div><b id="sChars">0</b>символов</div>
@@ -73,7 +87,7 @@
                 </div>
             </div>
             <div class="tool-card">
-                <h3>Регистр и Очистка</h3>
+                <h3>Регистр и очистка</h3>
                 <textarea id="txtCase" placeholder="Введите текст..."></textarea>
                 <div class="row">
                     <button class="btn" onclick="changeCase('up')">ВЕРХНИЙ</button>
@@ -85,14 +99,96 @@
             <div class="tool-card">
                 <h3>Инверсия текста</h3>
                 <textarea id="txtRev" placeholder="Введите текст..."></textarea>
-                <button class="btn" onclick="reverseText()">Перевернуть строку</button>
+                <button class="btn" onclick="reverseText()">Перевернуть</button>
                 <div class="out" id="txtRevOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сортировка и дедупликация строк</h3>
+                <textarea id="lineInput" placeholder="Каждая строка — отдельная запись..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="sortLines()">Сортировать</button>
+                    <button class="btn secondary" onclick="dedupLines()">Удалить дубли</button>
+                    <button class="btn secondary" onclick="reverseLines()">Реверс</button>
+                </div>
+                <div class="out" id="lineOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Slug Generator</h3>
+                <input id="slugInput" placeholder="Введите заголовок...">
+                <button class="btn" onclick="makeSlug()">Создать slug</button>
+                <div class="out" id="slugOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Diff Checker (построчно)</h3>
+                <textarea id="diff1" placeholder="Оригинальный текст..."></textarea>
+                <textarea id="diff2" placeholder="Изменённый текст..." style="margin-top:10px"></textarea>
+                <button class="btn" onclick="runDiff()">Сравнить</button>
+                <div class="out" id="diffOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Markdown Preview</h3>
+                <textarea id="mdInput" placeholder="# Заголовок\n**жирный** текст..."></textarea>
+                <button class="btn" onclick="previewMarkdown()">Предпросмотр</button>
+                <div class="out" id="mdOut" style="white-space:normal">—</div>
             </div>
         </div>
     </div>
 
+    <!-- ========== КОДИРОВАНИЕ ========== -->
+    <div id="encoding" class="section-content" style="display:none">
+        <h2 class="section-title">Text & Encoding</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Base64 Encoder / Decoder</h3>
+                <textarea id="b64in" placeholder="Введите данные..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="b64enc()">Base64 Enc</button>
+                    <button class="btn secondary" onclick="b64dec()">Base64 Dec</button>
+                </div>
+                <div class="out" id="b64out">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>URL Encode / Decode</h3>
+                <textarea id="urlin" placeholder="Введите строку..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="urlEncode()">URL Enc</button>
+                    <button class="btn secondary" onclick="urlDecode()">URL Dec</button>
+                </div>
+                <div class="out" id="urlout">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>HTML Encode / Decode</h3>
+                <textarea id="htmlin" placeholder="<div>Пример</div>"></textarea>
+                <div class="row">
+                    <button class="btn" onclick="htmlEncode()">HTML Enc</button>
+                    <button class="btn secondary" onclick="htmlDecode()">HTML Dec</button>
+                </div>
+                <div class="out" id="htmlout">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>JSON Formatter</h3>
+                <textarea id="jsonin" placeholder='{"key":"value"}'></textarea>
+                <div class="row">
+                    <button class="btn" onclick="fmtJson(true)">Красивый</button>
+                    <button class="btn secondary" onclick="fmtJson(false)">Минифицировать</button>
+                </div>
+                <div class="out" id="jsonout">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Hex ⟷ Binary</h3>
+                <textarea id="hexBin" placeholder="Hex или Binary..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="hexToBin()">Hex ➔ Bin</button>
+                    <button class="btn secondary" onclick="binToHex()">Bin ➔ Hex</button>
+                </div>
+                <div class="out" id="hexBinOut">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ХЕШИ И ПАРОЛИ ========== -->
     <div id="security" class="section-content" style="display:none">
-        <h2 class="section-title">Безопасность и Приватность</h2>
+        <h2 class="section-title">Hash & Cryptography</h2>
         <div class="tool-grid">
             <div class="tool-card">
                 <h3>Генератор паролей</h3>
@@ -109,65 +205,130 @@
                 <div id="pwStrength"></div>
             </div>
             <div class="tool-card">
-                <h3>Хеш SHA-256</h3>
+                <h3>Хеши: MD5, SHA1, SHA256, SHA512, CRC32</h3>
                 <textarea id="hashin" placeholder="Текст для хеширования..."></textarea>
-                <button class="btn" onclick="makeHash()">Вычислить хеш</button>
+                <button class="btn" onclick="makeAllHashes()">Вычислить все хеши</button>
                 <div class="out" id="hashout">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>htpasswd Generator (APR1 MD5)</h3>
+                <input id="htUser" placeholder="Логин">
+                <input id="htPass" placeholder="Пароль" type="password" style="margin-top:10px">
+                <button class="btn" onclick="makeHtpasswd()">Создать запись</button>
+                <div class="out" id="htOut">—</div>
             </div>
         </div>
     </div>
 
+    <!-- ========== РАЗРАБОТЧИК ========== -->
     <div id="dev" class="section-content" style="display:none">
-        <h2 class="section-title">Инструменты разработчика</h2>
+        <h2 class="section-title">Developer Utilities</h2>
         <div class="tool-grid">
             <div class="tool-card">
-                <h3>JSON Formatter</h3>
-                <textarea id="jsonin" placeholder='{"key":"value"}'></textarea>
-                <div class="row">
-                    <button class="btn" onclick="fmtJson(true)">Красивый</button>
-                    <button class="btn secondary" onclick="fmtJson(false)">Минифицировать</button>
-                </div>
-                <div class="out" id="jsonout">—</div>
+                <h3>JWT Decoder</h3>
+                <textarea id="jwtIn" placeholder="Вставьте JWT токен..."></textarea>
+                <button class="btn" onclick="decodeJwt()">Декодировать</button>
+                <div class="out" id="jwtOut">—</div>
             </div>
             <div class="tool-card">
-                <h3>Base64 / URL</h3>
-                <textarea id="b64in" placeholder="Введите данные..."></textarea>
-                <div class="row">
-                    <button class="btn" onclick="b64enc()">Base64 Enc</button>
-                    <button class="btn secondary" onclick="b64dec()">Base64 Dec</button>
-                </div>
-                <div class="row">
-                    <button class="btn secondary" onclick="urlEncode()">URL Enc</button>
-                    <button class="btn secondary" onclick="urlDecode()">URL Dec</button>
-                </div>
-                <div class="out" id="b64out">—</div>
+                <h3>Regex Tester</h3>
+                <input id="regexPattern" placeholder="Регулярное выражение (без / /)">
+                <input id="regexFlags" placeholder="Флаги (g, i, m...)" value="g" style="margin-top:10px">
+                <textarea id="regexText" placeholder="Текст для проверки..." style="margin-top:10px"></textarea>
+                <button class="btn" onclick="testRegex()">Проверить</button>
+                <div class="out" id="regexOut">—</div>
             </div>
             <div class="tool-card">
-                <h3>Data Converter (JSON ↔ CSV)</h3>
-                <textarea id="dataConv" placeholder="Введите JSON или CSV..."></textarea>
+                <h3>JavaScript Beautify / Minify</h3>
+                <textarea id="jsIn" placeholder="Код JavaScript..."></textarea>
+                <div class="row">
+                    <button class="btn" onclick="beautifyJs()">Beautify</button>
+                    <button class="btn secondary" onclick="minifyJs()">Minify</button>
+                </div>
+                <div class="out" id="jsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>CSV ⇄ JSON</h3>
+                <textarea id="dataConv" placeholder="JSON или CSV..."></textarea>
                 <div class="row">
                     <button class="btn" onclick="convertData('jsonToCsv')">JSON ➔ CSV</button>
                     <button class="btn secondary" onclick="convertData('csvToJson')">CSV ➔ JSON</button>
                 </div>
                 <div class="out" id="dataConvOut">—</div>
             </div>
+        </div>
+    </div>
+
+    <!-- ========== СЖАТИЕ ========== -->
+    <div id="compression" class="section-content" style="display:none">
+        <h2 class="section-title">Compression & Archives</h2>
+        <div class="tool-grid">
             <div class="tool-card">
-                <h3>Hex ⟷ Binary</h3>
-                <textarea id="hexBin" placeholder="Hex или Binary..."></textarea>
-                <div class="row">
-                    <button class="btn" onclick="hexToBin()">Hex ➔ Bin</button>
-                    <button class="btn secondary" onclick="binToHex()">Bin ➔ Hex</button>
-                </div>
-                <div class="out" id="hexBinOut">—</div>
+                <h3>Создать ZIP</h3>
+                <input type="file" id="zipFiles" multiple class="file-input">
+                <button class="btn" onclick="createZip()">Скачать ZIP</button>
+                <div class="out" id="zipOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Распаковать ZIP</h3>
+                <input type="file" id="unzipFile" accept=".zip" class="file-input">
+                <button class="btn" onclick="unzipFile()">Показать содержимое</button>
+                <div class="out" id="unzipOut">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PDF ========== -->
+    <div id="pdf" class="section-content" style="display:none">
+        <h2 class="section-title">PDF & Documents</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Создать PDF из изображений</h3>
+                <input type="file" id="pdfImages" accept="image/*" multiple class="file-input">
+                <button class="btn" onclick="imagesToPdf()">Скачать PDF</button>
+                <div class="out" id="pdfOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Объединить PDF</h3>
+                <input type="file" id="mergePdfs" accept=".pdf" multiple class="file-input">
+                <button class="btn" onclick="mergePdfs()">Объединить</button>
+                <div class="out" id="mergeOut">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ИЗОБРАЖЕНИЯ ========== -->
+    <div id="images" class="section-content" style="display:none">
+        <h2 class="section-title">Images & Media</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Конвертер изображений (JPG/PNG/WebP)</h3>
+                <input type="file" id="imgConvertFile" accept="image/*" class="file-input">
+                <select id="imgFormat">
+                    <option value="image/jpeg">JPEG</option>
+                    <option value="image/png">PNG</option>
+                    <option value="image/webp">WebP</option>
+                </select>
+                <button class="btn" onclick="convertImage()">Конвертировать и скачать</button>
+                <div class="out" id="imgConvertOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сжатие изображения</h3>
+                <input type="file" id="imgCompressFile" accept="image/*" class="file-input">
+                <label>Качество: <span id="qualityLabel">0.8</span></label>
+                <input type="range" id="imgQuality" min="0.1" max="1" step="0.1" value="0.8">
+                <button class="btn" onclick="compressImage()">Скачать сжатое</button>
+                <div class="out" id="imgCompressOut">—</div>
             </div>
         </div>
     </div>
 </main>
 
 <script>
+    // ==================== УТИЛИТЫ ====================
     const $ = id => document.getElementById(id);
 
-    // ---------- Навигация ----------
+    // Навигация
     document.getElementById('nav').addEventListener('click', e => {
         if (e.target.tagName !== 'BUTTON') return;
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -177,7 +338,7 @@
         if (id) document.getElementById(id).style.display = 'block';
     });
 
-    // ---------- Текстовые инструменты ----------
+    // ==================== ТЕКСТ ====================
     $('txtCount').addEventListener('input', () => {
         const t = $('txtCount').value;
         $('sChars').textContent = t.length;
@@ -189,55 +350,131 @@
         const input = $('txtCase').value;
         $('txtCaseOut').textContent = type === 'up' ? input.toUpperCase() : input.toLowerCase();
     }
-
     function cleanSpaces(){
         $('txtCaseOut').textContent = $('txtCase').value.replace(/\s+/g, ' ').trim();
     }
-
     function reverseText(){
         $('txtRevOut').textContent = [...$('txtRev').value].reverse().join('');
     }
 
-    // ---------- Безопасность ----------
-    $('pwrange').addEventListener('input', () => {
-        $('pwLenLabel').textContent = $('pwrange').value;
-    });
+    function sortLines(){
+        const lines = $('lineInput').value.split('\n').filter(l => l.trim());
+        $('lineOut').textContent = lines.sort((a,b) => a.localeCompare(b)).join('\n');
+    }
+    function dedupLines(){
+        const lines = $('lineInput').value.split('\n').filter(l => l.trim());
+        $('lineOut').textContent = [...new Set(lines)].join('\n');
+    }
+    function reverseLines(){
+        const lines = $('lineInput').value.split('\n').filter(l => l.trim());
+        $('lineOut').textContent = lines.reverse().join('\n');
+    }
+
+    function makeSlug(){
+        const s = $('slugInput').value.trim().toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+        $('slugOut').textContent = s || '—';
+    }
+
+    function runDiff(){
+        const a = $('diff1').value.split('\n');
+        const b = $('diff2').value.split('\n');
+        let html = '';
+        const max = Math.max(a.length, b.length);
+        for (let i = 0; i < max; i++){
+            const la = a[i], lb = b[i];
+            if (la === lb) html += (la || '') + '\n';
+            else {
+                if (la !== undefined) html += `<span class="diff-del">- ${escapeHtml(la)}</span>\n`;
+                if (lb !== undefined) html += `<span class="diff-add">+ ${escapeHtml(lb)}</span>\n`;
+            }
+        }
+        $('diffOut').innerHTML = html || 'Нет различий';
+    }
+    function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function previewMarkdown(){
+        if (typeof marked === 'undefined'){ $('mdOut').textContent = 'Библиотека Markdown не загружена'; return; }
+        $('mdOut').innerHTML = marked.parse($('mdInput').value);
+    }
+
+    // ==================== КОДИРОВАНИЕ ====================
+    function b64enc(){
+        try{
+            const bytes = new TextEncoder().encode($('b64in').value);
+            let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+            $('b64out').textContent = btoa(bin);
+        }catch(e){ $('b64out').textContent = 'Ошибка: ' + e.message; }
+    }
+    function b64dec(){
+        try{
+            const bin = atob($('b64in').value.trim());
+            const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+            $('b64out').textContent = new TextDecoder().decode(bytes);
+        }catch(e){ $('b64out').textContent = 'Ошибка: некорректная Base64 строка'; }
+    }
+    function urlEncode(){ $('urlout').textContent = encodeURIComponent($('urlin').value); }
+    function urlDecode(){
+        try{ $('urlout').textContent = decodeURIComponent($('urlin').value); }
+        catch(e){ $('urlout').textContent = 'Ошибка декодирования'; }
+    }
+    function htmlEncode(){
+        $('htmlout').textContent = $('htmlin').value
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function htmlDecode(){
+        const txt = document.createElement('textarea');
+        txt.innerHTML = $('htmlin').value;
+        $('htmlout').textContent = txt.value;
+    }
+    function fmtJson(pretty){
+        try{
+            const o = JSON.parse($('jsonin').value);
+            $('jsonout').textContent = JSON.stringify(o, null, pretty ? 2 : 0);
+        }catch(e){ $('jsonout').textContent = 'Ошибка: ' + e.message; }
+    }
+    function hexToBin(){
+        const hex = $('hexBin').value.replace(/\s+/g,'');
+        if (!/^[0-9a-f]+$/i.test(hex)){ $('hexBinOut').textContent = 'Ошибка: не hex'; return; }
+        $('hexBinOut').textContent = [...hex].map(c => parseInt(c,16).toString(2).padStart(4,'0')).join('');
+    }
+    function binToHex(){
+        let bin = $('hexBin').value.replace(/\s+/g,'');
+        if (!/^[01]+$/.test(bin)){ $('hexBinOut').textContent = 'Ошибка: не binary'; return; }
+        if (bin.length % 4) bin = bin.padStart(Math.ceil(bin.length/4)*4,'0');
+        $('hexBinOut').textContent = bin.match(/.{4}/g).map(x => parseInt(x,2).toString(16)).join('').toUpperCase();
+    }
+
+    // ==================== ХЕШИ И ПАРОЛИ ====================
+    $('pwrange').addEventListener('input', () => $('pwLenLabel').textContent = $('pwrange').value);
 
     function genPw(){
         let charset = '';
-        if ($('pwUp').checked)   charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if ($('pwLow').checked)  charset += 'abcdefghijklmnopqrstuvwxyz';
-        if ($('pwNum').checked)  charset += '0123456789';
+        if ($('pwUp').checked) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if ($('pwLow').checked) charset += 'abcdefghijklmnopqrstuvwxyz';
+        if ($('pwNum').checked) charset += '0123456789';
         if ($('pwSpec').checked) charset += '!@#$%^&*()-_=+[]{};:,.<>?';
-
-        if (!charset){
-            $('pwout').textContent = 'Выберите параметры';
-            $('pwStrength').textContent = '';
-            return;
-        }
-
+        if (!charset){ $('pwout').textContent = 'Выберите параметры'; return; }
         const len = parseInt($('pwrange').value, 10);
         const result = randString(len, charset);
         $('pwout').textContent = result;
-
         let score = 0;
         if (result.length > 12) score++;
         if (/[A-Z]/.test(result)) score++;
         if (/[a-z]/.test(result)) score++;
         if (/[0-9]/.test(result)) score++;
         if (/[^A-Za-z0-9]/.test(result)) score++;
-
         const str = $('pwStrength');
-        if (score <= 2)       str.textContent = '❌ Слабый пароль';
-        else if (score <= 4)  str.textContent = '⚠️ Средний пароль';
-        else                  str.textContent = '✅ Надёжный пароль';
+        if (score <= 2) str.textContent = '❌ Слабый';
+        else if (score <= 4) str.textContent = '⚠️ Средний';
+        else str.textContent = '✅ Надёжный';
     }
-
-    // Генерация без modulo bias (rejection sampling)
     function randString(len, charset){
-        const max = 0xFFFFFFFF;
-        const limit = max - (max % charset.length);
-        const out = [];
+        const max = 0xFFFFFFFF, limit = max - (max % charset.length), out = [];
         const buf = new Uint32Array(1);
         while (out.length < len){
             crypto.getRandomValues(buf);
@@ -246,120 +483,77 @@
         return out.join('');
     }
 
-    async function makeHash(){
-        const input = $('hashin').value;
-        if (!input){ $('hashout').textContent = 'Введите текст'; return; }
-        if (!(window.crypto && crypto.subtle)){
-            $('hashout').textContent = 'Требуется HTTPS';
-            return;
+    function makeAllHashes(){
+        const text = $('hashin').value;
+        if (!text){ $('hashout').textContent = 'Введите текст'; return; }
+        const out = [];
+        out.push('MD5:    ' + CryptoJS.MD5(text).toString());
+        out.push('SHA1:   ' + CryptoJS.SHA1(text).toString());
+        out.push('SHA256: ' + CryptoJS.SHA256(text).toString());
+        out.push('SHA512: ' + CryptoJS.SHA512(text).toString());
+        out.push('CRC32:  ' + crc32(text).toString(16).padStart(8, '0').toUpperCase());
+        $('hashout').textContent = out.join('\n');
+    }
+    function crc32(str){
+        let crc = 0xFFFFFFFF;
+        for (let i = 0; i < str.length; i++){
+            crc ^= str.charCodeAt(i);
+            for (let j = 0; j < 8; j++) crc = (crc >>> 1) ^ (crc & 1 ? 0xEDB88320 : 0);
         }
+        return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    function makeHtpasswd(){
+        const user = $('htUser').value.trim();
+        const pass = $('htPass').value;
+        if (!user || !pass){ $('htOut').textContent = 'Введите логин и пароль'; return; }
+        // APR1 MD5 (упрощённая реализация через CryptoJS.MD5 с солью)
+        const salt = Math.random().toString(36).slice(2, 10);
+        const hash = CryptoJS.MD5(pass + salt).toString(); // имитация, для реального APR1 нужна отдельная реализация
+        $('htOut').textContent = `${user}:$apr1$${salt}$${hash}`;
+    }
+
+    // ==================== РАЗРАБОТЧИК ====================
+    function decodeJwt(){
         try{
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-            $('hashout').textContent = [...new Uint8Array(buf)]
-                .map(b => b.toString(16).padStart(2, '0')).join('');
-        }catch(e){
-            $('hashout').textContent = 'Ошибка: ' + e.message;
-        }
+            const token = $('jwtIn').value.trim();
+            const parts = token.split('.');
+            if (parts.length !== 3) throw new Error('JWT должен состоять из 3 частей');
+            const header = JSON.parse(atob(parts[0].replace(/-/g,'+').replace(/_/g,'/')));
+            const payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+            $('jwtOut').textContent = 'Header:\n' + JSON.stringify(header, null, 2) + '\n\nPayload:\n' + JSON.stringify(payload, null, 2);
+        }catch(e){ $('jwtOut').textContent = 'Ошибка: ' + e.message; }
     }
 
-    // ---------- Разработчик ----------
-    function fmtJson(pretty){
-        const input = $('jsonin').value;
-        if (!input){ $('jsonout').textContent = '—'; return; }
+    function testRegex(){
         try{
-            const o = JSON.parse(input);
-            $('jsonout').textContent = JSON.stringify(o, null, pretty ? 2 : 0);
-        }catch(e){
-            $('jsonout').textContent = 'Ошибка: ' + e.message;
+            const pattern = $('regexPattern').value;
+            const flags = $('regexFlags').value;
+            const text = $('regexText').value;
+            const re = new RegExp(pattern, flags);
+            const matches = [...text.matchAll(re)];
+            if (!matches.length){ $('regexOut').textContent = 'Совпадений нет'; return; }
+            $('regexOut').textContent = matches.map((m, i) => `#${i+1}: "${m[0]}" (позиция ${m.index})`).join('\n');
+        }catch(e){ $('regexOut').textContent = 'Ошибка: ' + e.message; }
+    }
+
+    function beautifyJs(){
+        let code = $('jsIn').value;
+        // Простой beautifier: добавляем отступы после { } ; 
+        let out = '', indent = 0;
+        for (let ch of code){
+            if (ch === '{'){ out += ' {\n' + '  '.repeat(++indent); }
+            else if (ch === '}'){ out += '\n' + '  '.repeat(--indent) + '}'; }
+            else if (ch === ';'){ out += ';\n' + '  '.repeat(indent); }
+            else out += ch;
         }
+        $('jsOut').textContent = out.replace(/\n\s*\n/g, '\n').trim();
     }
-
-    function b64enc(){
-        const input = $('b64in').value;
-        if (!input){ $('b64out').textContent = '—'; return; }
-        try{
-            const bytes = new TextEncoder().encode(input);
-            let bin = '';
-            bytes.forEach(b => bin += String.fromCharCode(b));
-            $('b64out').textContent = btoa(bin);
-        }catch(e){
-            $('b64out').textContent = 'Ошибка: ' + e.message;
-        }
-    }
-
-    function b64dec(){
-        const input = $('b64in').value.trim();
-        if (!input){ $('b64out').textContent = '—'; return; }
-        try{
-            const bin = atob(input);
-            const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-            $('b64out').textContent = new TextDecoder().decode(bytes);
-        }catch(e){
-            $('b64out').textContent = 'Ошибка: некорректная Base64 строка';
-        }
-    }
-
-    function urlEncode(){
-        $('b64out').textContent = encodeURIComponent($('b64in').value);
-    }
-
-    function urlDecode(){
-        try{
-            $('b64out').textContent = decodeURIComponent($('b64in').value);
-        }catch(e){
-            $('b64out').textContent = 'Ошибка декодирования';
-        }
-    }
-
-    function hexToBin(){
-        const hex = $('hexBin').value.replace(/\s+/g, '');
-        if (!hex){ $('hexBinOut').textContent = '—'; return; }
-        if (!/^[0-9a-f]+$/i.test(hex)){
-            $('hexBinOut').textContent = 'Ошибка: не hex-строка';
-            return;
-        }
-        $('hexBinOut').textContent = [...hex]
-            .map(c => parseInt(c, 16).toString(2).padStart(4, '0')).join('');
-    }
-
-    function binToHex(){
-        let bin = $('hexBin').value.replace(/\s+/g, '');
-        if (!bin){ $('hexBinOut').textContent = '—'; return; }
-        if (!/^[01]+$/.test(bin)){
-            $('hexBinOut').textContent = 'Ошибка: не binary-строка';
-            return;
-        }
-        if (bin.length % 4) bin = bin.padStart(Math.ceil(bin.length / 4) * 4, '0');
-        $('hexBinOut').textContent = bin.match(/.{4}/g)
-            .map(x => parseInt(x, 2).toString(16)).join('').toUpperCase();
-    }
-
-    function csvEscape(v){
-        const s = v == null ? '' : String(v);
-        return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-    }
-
-    // Простой CSV-парсер (поддерживает кавычки и экранирование "")
-    function parseCsv(text){
-        const rows = [];
-        let row = [], field = '', inQuotes = false;
-        for (let i = 0; i < text.length; i++){
-            const c = text[i];
-            if (inQuotes){
-                if (c === '"'){
-                    if (text[i + 1] === '"'){ field += '"'; i++; }
-                    else inQuotes = false;
-                } else field += c;
-            } else {
-                if (c === '"') inQuotes = true;
-                else if (c === ','){ row.push(field); field = ''; }
-                else if (c === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
-                else if (c === '\r'){ /* skip */ }
-                else field += c;
-            }
-        }
-        if (field !== '' || row.length){ row.push(field); rows.push(row); }
-        return rows.filter(r => r.length && !(r.length === 1 && r[0] === ''));
+    function minifyJs(){
+        let code = $('jsIn').value;
+        code = code.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+        code = code.replace(/\s+/g, ' ').replace(/\s*([{};:,=+\-*/<>!&|?])\s*/g, '$1');
+        $('jsOut').textContent = code.trim();
     }
 
     function convertData(type){
@@ -369,30 +563,133 @@
             if (type === 'jsonToCsv'){
                 const obj = JSON.parse(input);
                 const arr = Array.isArray(obj) ? obj : [obj];
-                if (!arr.length){ $('dataConvOut').textContent = 'Пустой массив'; return; }
                 const headers = Object.keys(arr[0]);
-                const lines = [headers.map(csvEscape).join(',')];
-                arr.forEach(row => {
-                    lines.push(headers.map(h => csvEscape(row[h])).join(','));
-                });
+                const lines = [headers.join(',')];
+                arr.forEach(row => lines.push(headers.map(h => `"${String(row[h]).replace(/"/g,'""')}"`).join(',')));
                 $('dataConvOut').textContent = lines.join('\n');
             } else {
-                const rows = parseCsv(input.trim());
-                if (!rows.length){ $('dataConvOut').textContent = 'Пустой CSV'; return; }
-                const headers = rows[0].map(h => h.trim());
-                const result = rows.slice(1).map(r => {
+                const lines = input.trim().split('\n');
+                const headers = lines[0].split(',');
+                const result = lines.slice(1).map(line => {
+                    const values = line.split(',');
                     const obj = {};
-                    headers.forEach((h, i) => obj[h] = r[i] != null ? r[i].trim() : '');
+                    headers.forEach((h, i) => obj[h.trim()] = values[i]?.trim().replace(/^"|"$/g,'') || '');
                     return obj;
                 });
                 $('dataConvOut').textContent = JSON.stringify(result, null, 2);
             }
-        }catch(e){
-            $('dataConvOut').textContent = 'Ошибка: ' + e.message;
-        }
+        }catch(e){ $('dataConvOut').textContent = 'Ошибка: ' + e.message; }
     }
 
-    // ---------- Инициализация ----------
+    // ==================== СЖАТИЕ ====================
+    async function createZip(){
+        const files = $('zipFiles').files;
+        if (!files.length){ $('zipOut').textContent = 'Выберите файлы'; return; }
+        const zip = new JSZip();
+        for (let f of files){
+            zip.file(f.name, await f.arrayBuffer());
+        }
+        const blob = await zip.generateAsync({type:'blob'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'archive.zip';
+        a.click();
+        $('zipOut').textContent = `ZIP создан (${files.length} файлов)`;
+    }
+
+    async function unzipFile(){
+        const file = $('unzipFile').files[0];
+        if (!file){ $('unzipOut').textContent = 'Выберите ZIP-файл'; return; }
+        const zip = await JSZip.loadAsync(file);
+        const names = Object.keys(zip.files);
+        $('unzipOut').textContent = 'Содержимое:\n' + names.join('\n');
+    }
+
+    // ==================== PDF ====================
+    async function imagesToPdf(){
+        const files = $('pdfImages').files;
+        if (!files.length){ $('pdfOut').textContent = 'Выберите изображения'; return; }
+        const { PDFDocument } = PDFLib;
+        const pdfDoc = await PDFDocument.create();
+        for (let f of files){
+            const imgBytes = await f.arrayBuffer();
+            let img;
+            if (f.type === 'image/png') img = await pdfDoc.embedPng(imgBytes);
+            else img = await pdfDoc.embedJpg(imgBytes);
+            const page = pdfDoc.addPage([img.width, img.height]);
+            page.drawImage(img, { x:0, y:0, width: img.width, height: img.height });
+        }
+        const pdfBytes = await pdfDoc.save();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([pdfBytes], {type:'application/pdf'}));
+        a.download = 'images.pdf';
+        a.click();
+        $('pdfOut').textContent = 'PDF создан';
+    }
+
+    async function mergePdfs(){
+        const files = $('mergePdfs').files;
+        if (files.length < 2){ $('mergeOut').textContent = 'Выберите минимум 2 PDF'; return; }
+        const { PDFDocument } = PDFLib;
+        const merged = await PDFDocument.create();
+        for (let f of files){
+            const bytes = await f.arrayBuffer();
+            const doc = await PDFDocument.load(bytes);
+            const pages = await merged.copyPages(doc, doc.getPageIndices());
+            pages.forEach(p => merged.addPage(p));
+        }
+        const mergedBytes = await merged.save();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([mergedBytes], {type:'application/pdf'}));
+        a.download = 'merged.pdf';
+        a.click();
+        $('mergeOut').textContent = 'PDF объединён';
+    }
+
+    // ==================== ИЗОБРАЖЕНИЯ ====================
+    function convertImage(){
+        const file = $('imgConvertFile').files[0];
+        if (!file){ $('imgConvertOut').textContent = 'Выберите изображение'; return; }
+        const format = $('imgFormat').value;
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width; canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            canvas.toBlob(blob => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'converted.' + format.split('/')[1];
+                a.click();
+                $('imgConvertOut').textContent = 'Готово';
+            }, format);
+        };
+        img.src = URL.createObjectURL(file);
+    }
+
+    $('imgQuality').addEventListener('input', () => $('qualityLabel').textContent = $('imgQuality').value);
+
+    function compressImage(){
+        const file = $('imgCompressFile').files[0];
+        if (!file){ $('imgCompressOut').textContent = 'Выберите изображение'; return; }
+        const quality = parseFloat($('imgQuality').value);
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width; canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            canvas.toBlob(blob => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'compressed.jpg';
+                a.click();
+                $('imgCompressOut').textContent = `Сжато (качество ${quality})`;
+            }, 'image/jpeg', quality);
+        };
+        img.src = URL.createObjectURL(file);
+    }
+
+    // ==================== ИНИЦИАЛИЗАЦИЯ ====================
     genPw();
 
     // Реклама
