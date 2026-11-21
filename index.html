@@ -12,32 +12,37 @@
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
         header{padding:50px 16px 30px;text-align:center}
-        h1{font-size:2.2rem;margin-bottom:10px;background:linear-gradient(90deg, #4f8cff, #9d72ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        h1{font-size:2.2rem;margin-bottom:10px;background:linear-gradient(90deg,#4f8cff,#9d72ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         header p{color:var(--muted);font-size:1rem}
         nav{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:15px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-        nav button{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;transition: all 0.2s}
-        nav button:hover{border-color:var(--accent);background:rgba(79,140,255,0.1)}
+        nav button{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;transition:all .2s}
+        nav button:hover{border-color:var(--accent);background:rgba(79,140,255,.1)}
         nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
         main{max-width:900px;margin:0 auto;padding:20px 16px 60px}
         .section-title{margin:40px 0 20px;padding-bottom:10px;border-bottom:2px solid var(--border);font-size:1.5rem;color:var(--accent)}
-        .tool-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:20px;margin-bottom:40px}
-        .tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition: transform 0.2s}
+        .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:40px}
+        .tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:transform .2s}
         .tool-card:hover{border-color:var(--accent);transform:translateY(-2px)}
         .tool-card h3{margin-bottom:20px;font-size:1.2rem}
         label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 5px}
         input,textarea,select{width:100%;background:#0f1115;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:8px;font-size:.9rem;outline:none}
-        input:focus,textarea:focus{border-color:var(--accent)}
+        input:not([type=range]):focus,textarea:focus{border-color:var(--accent)}
+        input[type=range]{padding:0;border:0;background:transparent}
         textarea{min-height:120px;font-family:ui-monospace,monospace;resize:vertical}
-        .btn{background:var(--accent);border:0;color:#fff;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;width:100%;margin-top:15px}
-        .btn:hover{opacity:0.9}
+        .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+        .row .btn{flex:1 1 auto;width:auto;margin-top:0}
+        .btn{background:var(--accent);border:0;color:#fff;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;width:100%;margin-top:15px;transition:opacity .2s,background .2s}
+        .btn:hover{opacity:.9}
         .btn.secondary{background:#2a2f3a}
         .btn.secondary:hover{background:#3a4152}
-        .out{background:#0f1115;border:1px dashed var(--border);padding:12px;border-radius:8px;margin-top:15px;font-family:monospace;font-size:0.85rem;word-break:break-all;min-height:42px;display:flex;align-items:center;justify-content:center}
+        .out{background:#0f1115;border:1px dashed var(--border);padding:12px;border-radius:8px;margin-top:15px;font-family:ui-monospace,monospace;font-size:.85rem;min-height:42px;white-space:pre-wrap;word-break:break-word;text-align:left;overflow-x:auto}
         .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
         .stats div{background:#0f1115;padding:8px;border-radius:6px;text-align:center;flex:1}
         .stats b{display:block;color:var(--accent);font-size:1.1rem}
-        label.chk{display:inline-flex;gap:8px;align-items:center;font-size:0.85rem}
+        label.chk{display:inline-flex;gap:8px;align-items:center;font-size:.85rem;color:var(--text);margin:0;cursor:pointer}
+        label.chk input{width:auto;padding:0}
         .ad-container{margin:40px 0;min-height:90px;border:1px dashed #3a4152;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+        #pwStrength{font-size:.85rem;margin-top:5px}
     </style>
 </head>
 <body>
@@ -71,9 +76,9 @@
                 <h3>Регистр и Очистка</h3>
                 <textarea id="txtCase" placeholder="Введите текст..."></textarea>
                 <div class="row">
-                    <button class="btn" style="width:auto" onclick="changeCase('up')">ВЕРХНИЙ</button>
-                    <button class="btn" style="width:auto" onclick="changeCase('low')">нижний</button>
-                    <button class="btn" style="width:auto" onclick="cleanSpaces()">Очистить</button>
+                    <button class="btn" onclick="changeCase('up')">ВЕРХНИЙ</button>
+                    <button class="btn" onclick="changeCase('low')">нижний</button>
+                    <button class="btn secondary" onclick="cleanSpaces()">Очистить</button>
                 </div>
                 <div class="out" id="txtCaseOut">—</div>
             </div>
@@ -91,17 +96,17 @@
         <div class="tool-grid">
             <div class="tool-card">
                 <h3>Генератор паролей</h3>
-                <label>Длина:</label>
+                <label>Длина: <span id="pwLenLabel">16</span></label>
                 <input type="range" min="6" max="64" value="16" id="pwrange">
                 <div class="row">
-                    <label class.chk"><input type="checkbox" id="up" checked> A-Z</label>
-                    <label class.chk"><input type="checkbox" id="low" checked> a-z</label>
-                    <label class.chk"><input type="checkbox" id="num" checked> 0-9</label>
-                    <label class.chk"><input type="checkbox" id="spec" checked> !@#$</label>
+                    <label class="chk"><input type="checkbox" id="pwUp" checked> A-Z</label>
+                    <label class="chk"><input type="checkbox" id="pwLow" checked> a-z</label>
+                    <label class="chk"><input type="checkbox" id="pwNum" checked> 0-9</label>
+                    <label class="chk"><input type="checkbox" id="pwSpec" checked> !@#$</label>
                 </div>
                 <button class="btn" onclick="genPw()">Создать пароль</button>
                 <div class="out" id="pwout">—</div>
-                <div id="pwStrength" style="font-size:0.85rem;margin-top:5px"></div>
+                <div id="pwStrength"></div>
             </div>
             <div class="tool-card">
                 <h3>Хеш SHA-256</h3>
@@ -118,17 +123,22 @@
             <div class="tool-card">
                 <h3>JSON Formatter</h3>
                 <textarea id="jsonin" placeholder='{"key":"value"}'></textarea>
-                <button class="btn" onclick="fmtJson(true)">Красивый</button>
-                <button class="btn secondary" onclick="fmtJson(false)">Минифицировать</button>
+                <div class="row">
+                    <button class="btn" onclick="fmtJson(true)">Красивый</button>
+                    <button class="btn secondary" onclick="fmtJson(false)">Минифицировать</button>
+                </div>
                 <div class="out" id="jsonout">—</div>
             </div>
             <div class="tool-card">
                 <h3>Base64 / URL</h3>
                 <textarea id="b64in" placeholder="Введите данные..."></textarea>
                 <div class="row">
-                    <button class="btn" onclick="b64enc()">Base64</button>
-                    <button class="btn" onclick="urlEncode()">URL Enc</button>
-                    <button class="btn" onclick="urlDecode()">URL Dec</button>
+                    <button class="btn" onclick="b64enc()">Base64 Enc</button>
+                    <button class="btn secondary" onclick="b64dec()">Base64 Dec</button>
+                </div>
+                <div class="row">
+                    <button class="btn secondary" onclick="urlEncode()">URL Enc</button>
+                    <button class="btn secondary" onclick="urlDecode()">URL Dec</button>
                 </div>
                 <div class="out" id="b64out">—</div>
             </div>
@@ -137,7 +147,7 @@
                 <textarea id="dataConv" placeholder="Введите JSON или CSV..."></textarea>
                 <div class="row">
                     <button class="btn" onclick="convertData('jsonToCsv')">JSON ➔ CSV</button>
-                    <button class="btn" onclick="convertData('csvToJson')">CSV ➔ JSON</button>
+                    <button class="btn secondary" onclick="convertData('csvToJson')">CSV ➔ JSON</button>
                 </div>
                 <div class="out" id="dataConvOut">—</div>
             </div>
@@ -146,7 +156,7 @@
                 <textarea id="hexBin" placeholder="Hex или Binary..."></textarea>
                 <div class="row">
                     <button class="btn" onclick="hexToBin()">Hex ➔ Bin</button>
-                    <button class="btn" onclick="binToHex()">Bin ➔ Hex</button>
+                    <button class="btn secondary" onclick="binToHex()">Bin ➔ Hex</button>
                 </div>
                 <div class="out" id="hexBinOut">—</div>
             </div>
@@ -155,153 +165,245 @@
 </main>
 
 <script>
-    const $=id=>document.getElementById(id);
+    const $ = id => document.getElementById(id);
 
-    // Навигация
-    document.getElementById('nav').addEventListener('click',e=>{
-        if(e.target.tagName!=='BUTTON')return;
-        document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.section-content').forEach(s=>s.style.display='none');
+    // ---------- Навигация ----------
+    document.getElementById('nav').addEventListener('click', e => {
+        if (e.target.tagName !== 'BUTTON') return;
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none');
         e.target.classList.add('active');
-        document.getElementById(e.target.dataset.t).style.display='block';
+        const id = e.target.dataset.t;
+        if (id) document.getElementById(id).style.display = 'block';
     });
 
-    // ТЕКСТОВЫЕ ИНСТРУМЕНТЫ
-    $('txtCount').addEventListener('input',()=>{
-        const t=$('txtCount').value;
-        $('sChars').textContent=t.length;
-        $('sWords').textContent=(t.trim().match(/\S+/g)||[]).length;
-        $('sSents').textContent=(t.match(/[.!?…]+/g)||[]).length;
+    // ---------- Текстовые инструменты ----------
+    $('txtCount').addEventListener('input', () => {
+        const t = $('txtCount').value;
+        $('sChars').textContent = t.length;
+        $('sWords').textContent = (t.trim().match(/\S+/g) || []).length;
+        $('sSents').textContent = (t.match(/[.!?…]+/g) || []).length;
     });
 
     function changeCase(type){
         const input = $('txtCase').value;
-        if(type === 'up') $('txtCaseOut').textContent = input.toUpperCase();
-        else $('txtCaseOut').textContent = input.toLowerCase();
+        $('txtCaseOut').textContent = type === 'up' ? input.toUpperCase() : input.toLowerCase();
     }
 
     function cleanSpaces(){
-        const input = $('txtCase').value;
-        $('txtCaseOut').textContent = input.replace(/\s+/g, ' ').trim();
+        $('txtCaseOut').textContent = $('txtCase').value.replace(/\s+/g, ' ').trim();
     }
 
     function reverseText(){
-        const input = $('txtRev').value;
-        $('txtRevOut').textContent = input.split('').reverse().join('');
+        $('txtRevOut').textContent = [...$('txtRev').value].reverse().join('');
     }
 
-    // БЕЗОПАСНОСТЬ
+    // ---------- Безопасность ----------
+    $('pwrange').addEventListener('input', () => {
+        $('pwLenLabel').textContent = $('pwrange').value;
+    });
+
     function genPw(){
-        let s='';
-        if($('up').checked)s+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if($('low').checked)s+='abcdefghijklmnopqrstuvwxyz';
-        if($('num').checked)s+='0123456789';
-        if($('spec').checked)s+='!@#$';
-        if(!s){$('pwout').textContent='Выберите параметры';return;}
-        const len = parseInt($('pwrange').value);
-        const a = new Uint32Array(len);
-        crypto.getRandomValues(a);
-        const result = Array.from(a).map(n => s[n % s.length]).join('');
+        let charset = '';
+        if ($('pwUp').checked)   charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if ($('pwLow').checked)  charset += 'abcdefghijklmnopqrstuvwxyz';
+        if ($('pwNum').checked)  charset += '0123456789';
+        if ($('pwSpec').checked) charset += '!@#$%^&*()-_=+[]{};:,.<>?';
+
+        if (!charset){
+            $('pwout').textContent = 'Выберите параметры';
+            $('pwStrength').textContent = '';
+            return;
+        }
+
+        const len = parseInt($('pwrange').value, 10);
+        const result = randString(len, charset);
         $('pwout').textContent = result;
-        
+
         let score = 0;
-        if(result.length > 12) score += 1;
-        if(/[A-Z]/.test(result)) score += 1;
-        if(/[0-9]/.test(result)) score += 1;
-        if(/[!@#$]/.test(result)) score += 1;
-        
+        if (result.length > 12) score++;
+        if (/[A-Z]/.test(result)) score++;
+        if (/[a-z]/.test(result)) score++;
+        if (/[0-9]/.test(result)) score++;
+        if (/[^A-Za-z0-9]/.test(result)) score++;
+
         const str = $('pwStrength');
-        if(score <= 1) str.textContent = "❌ Слабый пароль";
-        else if(score <= 3) str.textContent = "⚠️ Средний пароль";
-        else str.textContent = "✅ Надежный пароль";
+        if (score <= 2)       str.textContent = '❌ Слабый пароль';
+        else if (score <= 4)  str.textContent = '⚠️ Средний пароль';
+        else                  str.textContent = '✅ Надёжный пароль';
     }
 
-    function makeHash(){
+    // Генерация без modulo bias (rejection sampling)
+    function randString(len, charset){
+        const max = 0xFFFFFFFF;
+        const limit = max - (max % charset.length);
+        const out = [];
+        const buf = new Uint32Array(1);
+        while (out.length < len){
+            crypto.getRandomValues(buf);
+            if (buf[0] < limit) out.push(charset[buf[0] % charset.length]);
+        }
+        return out.join('');
+    }
+
+    async function makeHash(){
         const input = $('hashin').value;
-        if(!input) return;
-        const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(input));
-        $('hashout').textContent=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+        if (!input){ $('hashout').textContent = 'Введите текст'; return; }
+        if (!(window.crypto && crypto.subtle)){
+            $('hashout').textContent = 'Требуется HTTPS';
+            return;
+        }
+        try{
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+            $('hashout').textContent = [...new Uint8Array(buf)]
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+        }catch(e){
+            $('hashout').textContent = 'Ошибка: ' + e.message;
+        }
     }
 
-    // РАЗРАБОТЧИК
+    // ---------- Разработчик ----------
     function fmtJson(pretty){
+        const input = $('jsonin').value;
+        if (!input){ $('jsonout').textContent = '—'; return; }
         try{
-            const input = $('jsonin').value;
-            if(!input) return;
-            const o=JSON.parse(input);
-            $('jsonout').textContent=JSON.stringify(o,null,pretty?2:0);
-        }catch(e){$('jsonout').textContent='Ошибка: '+e.message;}
+            const o = JSON.parse(input);
+            $('jsonout').textContent = JSON.stringify(o, null, pretty ? 2 : 0);
+        }catch(e){
+            $('jsonout').textContent = 'Ошибка: ' + e.message;
+        }
     }
 
     function b64enc(){
+        const input = $('b64in').value;
+        if (!input){ $('b64out').textContent = '—'; return; }
         try{
-            const input = $('b64in').value;
-            if(!input) return;
-            $('b64out').textContent=btoa(unescape(encodeURIComponent(input)));
-        }catch(e){$('b64out').textContent='Ошибка: '+e.message;}
+            const bytes = new TextEncoder().encode(input);
+            let bin = '';
+            bytes.forEach(b => bin += String.fromCharCode(b));
+            $('b64out').textContent = btoa(bin);
+        }catch(e){
+            $('b64out').textContent = 'Ошибка: ' + e.message;
+        }
     }
+
     function b64dec(){
+        const input = $('b64in').value.trim();
+        if (!input){ $('b64out').textContent = '—'; return; }
         try{
-            const input = $('b64in').value.trim();
-            if(!input) return;
-            $('b64out').textContent=decodeURIComponent(escape(atob(input)));
-        }catch(e){$('b64out').textContent='Ошибка: Некорректная Base64 строка';}
+            const bin = atob(input);
+            const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+            $('b64out').textContent = new TextDecoder().decode(bytes);
+        }catch(e){
+            $('b64out').textContent = 'Ошибка: некорректная Base64 строка';
+        }
     }
 
     function urlEncode(){
         $('b64out').textContent = encodeURIComponent($('b64in').value);
     }
+
     function urlDecode(){
         try{
-            $('b64out').textContent = decodeURIComponent(escape($('b64in').value));
-        }catch(e){$('b64out').textContent = 'Ошибка декодирования';}
+            $('b64out').textContent = decodeURIComponent($('b64in').value);
+        }catch(e){
+            $('b64out').textContent = 'Ошибка декодирования';
+        }
     }
 
     function hexToBin(){
-        try{
-            const hex = $('hexBin').value.replace(/\s/g,'');
-            const bin = hex.split('').map(x=>parseInt(x,16).toString(2).padStart(4,'0')).join('');
-            $('hexBinOut').textContent = bin;
-        }catch(e){$('hexBinOut').textContent = 'Ошибка';}
+        const hex = $('hexBin').value.replace(/\s+/g, '');
+        if (!hex){ $('hexBinOut').textContent = '—'; return; }
+        if (!/^[0-9a-f]+$/i.test(hex)){
+            $('hexBinOut').textContent = 'Ошибка: не hex-строка';
+            return;
+        }
+        $('hexBinOut').textContent = [...hex]
+            .map(c => parseInt(c, 16).toString(2).padStart(4, '0')).join('');
     }
+
     function binToHex(){
-        try{
-            const bin = $('hexBin').value.replace(/\s/g,'');
-            const hex = bin.match(/.{1,4}/g).map(x=>parseInt(x,2).toString(16)).join('').toUpperCase();
-            $('hexBinOut').textContent = hex;
-        }catch(e){$('hexBinOut').textContent = 'Ошибка';}
+        let bin = $('hexBin').value.replace(/\s+/g, '');
+        if (!bin){ $('hexBinOut').textContent = '—'; return; }
+        if (!/^[01]+$/.test(bin)){
+            $('hexBinOut').textContent = 'Ошибка: не binary-строка';
+            return;
+        }
+        if (bin.length % 4) bin = bin.padStart(Math.ceil(bin.length / 4) * 4, '0');
+        $('hexBinOut').textContent = bin.match(/.{4}/g)
+            .map(x => parseInt(x, 2).toString(16)).join('').toUpperCase();
+    }
+
+    function csvEscape(v){
+        const s = v == null ? '' : String(v);
+        return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+
+    // Простой CSV-парсер (поддерживает кавычки и экранирование "")
+    function parseCsv(text){
+        const rows = [];
+        let row = [], field = '', inQuotes = false;
+        for (let i = 0; i < text.length; i++){
+            const c = text[i];
+            if (inQuotes){
+                if (c === '"'){
+                    if (text[i + 1] === '"'){ field += '"'; i++; }
+                    else inQuotes = false;
+                } else field += c;
+            } else {
+                if (c === '"') inQuotes = true;
+                else if (c === ','){ row.push(field); field = ''; }
+                else if (c === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
+                else if (c === '\r'){ /* skip */ }
+                else field += c;
+            }
+        }
+        if (field !== '' || row.length){ row.push(field); rows.push(row); }
+        return rows.filter(r => r.length && !(r.length === 1 && r[0] === ''));
     }
 
     function convertData(type){
         const input = $('dataConv').value;
-        if(!input) return;
+        if (!input){ $('dataConvOut').textContent = '—'; return; }
         try{
-            if(type === 'jsonToCsv'){
+            if (type === 'jsonToCsv'){
                 const obj = JSON.parse(input);
                 const arr = Array.isArray(obj) ? obj : [obj];
+                if (!arr.length){ $('dataConvOut').textContent = 'Пустой массив'; return; }
                 const headers = Object.keys(arr[0]);
-                const csv = [headers.join(',')];
+                const lines = [headers.map(csvEscape).join(',')];
                 arr.forEach(row => {
-                    csv.push(headers.map(h => `"${row[h]}"`).join(','));
+                    lines.push(headers.map(h => csvEscape(row[h])).join(','));
                 });
-                $('dataConvOut').textContent = csv.join('\n');
+                $('dataConvOut').textContent = lines.join('\n');
             } else {
-                const lines = input.trim().split('\n');
-                const headers = lines[0].split(',');
-                const result = lines.slice(1).map(line => {
-                    const values = line.split(',');
-                    let obj = {};
-                    headers.forEach((h, i) => obj[h.trim()] = values[i]?.trim());
+                const rows = parseCsv(input.trim());
+                if (!rows.length){ $('dataConvOut').textContent = 'Пустой CSV'; return; }
+                const headers = rows[0].map(h => h.trim());
+                const result = rows.slice(1).map(r => {
+                    const obj = {};
+                    headers.forEach((h, i) => obj[h] = r[i] != null ? r[i].trim() : '');
                     return obj;
                 });
                 $('dataConvOut').textContent = JSON.stringify(result, null, 2);
             }
-        } catch(e) {
-            $('dataConvOut').textContent = 'Ошибка: Неверный формат данных';
+        }catch(e){
+            $('dataConvOut').textContent = 'Ошибка: ' + e.message;
         }
     }
 
+    // ---------- Инициализация ----------
     genPw();
+
+    // Реклама
+    window.yaContextCb.push(() => {
+        if (window.Ya && Ya.Context && Ya.Context.AdvManager){
+            Ya.Context.AdvManager.render({
+                renderTo: 'yandex_rtb_R-A-20456192-1',
+                blockId:  'R-A-20456192-1'
+            });
+        }
+    });
 </script>
 </body>
 </html>
