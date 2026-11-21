@@ -82,6 +82,15 @@
         .ad-inline::before{content:'Реклама';position:absolute;top:4px;right:10px;font-size:10px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
         .ad-inline > div[id^="yandex_rtb"]{width:100%;min-height:90px}
         .ad-inline.hidden{display:none}
+
+        /* Боковая реклама на ПК */
+        .ad-side{position:fixed;top:85px;width:160px;min-height:600px;z-index:90;display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 8px 8px;overflow:hidden}
+        .ad-side::before{content:'Реклама';position:absolute;top:3px;left:0;right:0;text-align:center;font-size:9px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
+        .ad-side.left{left:max(12px,calc(50vw - 630px))}
+        .ad-side.right{right:max(12px,calc(50vw - 630px))}
+        .ad-side > div[id^="yandex_rtb"]{width:100%;min-height:580px}
+        @media (min-width:1360px){.ad-side.loaded{display:block}}
+
         #qrcode canvas, #qrcode img{max-width:100%;height:auto}
         #wifiQr canvas, #wifiQr img{max-width:100%;height:auto}
     </style>
@@ -118,6 +127,14 @@
 </nav>
 
 <main>
+    <!-- Боковая реклама для ПК -->
+    <aside id="adLeft" class="ad-side left">
+        <div id="yandex_rtb_R-A-20456192-3"></div>
+    </aside>
+    <aside id="adRight" class="ad-side right">
+        <div id="yandex_rtb_R-A-20456192-4"></div>
+    </aside>
+
     <!-- ==================== ТЕКСТ (расширенный) ==================== -->
     <div id="text" class="section-content">
         <h2 class="section-title">Работа с текстом</h2>
@@ -1331,12 +1348,12 @@
         </div>
     </div>
 
-    <div id="adInline" class="ad-inline">
+    <div id="adInline" class="ad-inline hidden">
         <div id="yandex_rtb_R-A-20456192-2"></div>
     </div>
 </main>
 
-<div id="adSticky" class="ad-sticky">
+<div id="adSticky" class="ad-sticky hidden">
     <button class="ad-close" onclick="closeStickyAd()" aria-label="Закрыть рекламу">×</button>
     <div id="yandex_rtb_R-A-20456192-1"></div>
 </div>
@@ -1624,7 +1641,7 @@
         window.showUnixNow = function () { $('unixNowOut').textContent = Math.floor(Date.now() / 1000); };
         window.calcDetailedAge = function () { const b = new Date($('detailAgeBirth').value), n = new Date(); let y = n.getFullYear() - b.getFullYear(); let m = n.getMonth() - b.getMonth(); let d = n.getDate() - b.getDate(); if (d < 0) { m--; d += 30; } if (m < 0) { y--; m += 12; } $('detailAgeOut').textContent = `${y} лет, ${m} мес., ${d} дн.`; };
 
-        // ---------- СЖАТИЕ / PDF / ИЗОБРАЖЕНИЯ (существующие) ----------
+        // ---------- СЖАТИЕ / PDF / ИЗОБРАЖЕНИЯ ----------
         window.createZip = async function () { const f = $('zipFiles').files; if (!f.length) { $('zipOut').textContent = 'Выберите файлы'; return; } if (typeof JSZip === 'undefined') { $('zipOut').textContent = 'JSZip не загружен'; return; } const z = new JSZip(); for (let x of f) z.file(x.name, await x.arrayBuffer()); const b = await z.generateAsync({ type: 'blob' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'archive.zip'; a.click(); $('zipOut').textContent = 'ZIP создан'; };
         window.unzipFile = async function () { const f = $('unzipFile').files[0]; if (!f) { $('unzipOut').textContent = 'Выберите ZIP'; return; } if (typeof JSZip === 'undefined') { $('unzipOut').textContent = 'JSZip не загружен'; return; } const z = await JSZip.loadAsync(f); $('unzipOut').textContent = Object.keys(z.files).join('\n'); };
         window.imagesToPdf = async function () { const f = $('pdfImages').files; if (!f.length) { $('pdfOut').textContent = 'Выберите изображения'; return; } if (typeof PDFLib === 'undefined') { $('pdfOut').textContent = 'PDF-lib не загружен'; return; } const { PDFDocument } = PDFLib; const doc = await PDFDocument.create(); for (let x of f) { const b = await x.arrayBuffer(); const i = x.type === 'image/png' ? await doc.embedPng(b) : await doc.embedJpg(b); const p = doc.addPage([i.width, i.height]); p.drawImage(i, { x: 0, y: 0, width: i.width, height: i.height }); } const bytes = await doc.save(); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' })); a.download = 'images.pdf'; a.click(); $('pdfOut').textContent = 'PDF создан'; };
@@ -1634,9 +1651,64 @@
         const imgQualityEl = $('imgQuality'); if (imgQualityEl) imgQualityEl.addEventListener('input', () => { $('qualityLabel').textContent = imgQualityEl.value; });
 
         // ---------- РЕКЛАМА ----------
-        window.closeStickyAd = function () { const el = $('adSticky'); if (el) el.classList.add('hidden'); document.body.classList.remove('ad-open'); try { sessionStorage.setItem('adStickyClosed', '1'); } catch (e) {} };
-        try { if (sessionStorage.getItem('adStickyClosed') !== '1') { document.body.classList.add('ad-open'); window.yaContextCb.push(() => { if (window.Ya && Ya.Context && Ya.Context.AdvManager) Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-20456192-1', blockId: 'R-A-20456192-1' }); }); setTimeout(() => { const c = document.getElementById('yandex_rtb_R-A-20456192-1'); if (!c || c.children.length === 0) { $('adSticky').classList.add('hidden'); document.body.classList.remove('ad-open'); } }, 8000); } } catch (e) {}
-        try { const w = document.getElementById('adInline'), c = document.getElementById('yandex_rtb_R-A-20456192-2'); if (w && c) { let r = false; const render = () => { if (r) return; r = true; window.yaContextCb.push(() => { if (window.Ya && Ya.Context && Ya.Context.AdvManager) { Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-20456192-2', blockId: 'R-A-20456192-2' }); setTimeout(() => { if (c.children.length === 0) w.classList.add('hidden'); }, 6000); } else w.classList.add('hidden'); }); }; if ('IntersectionObserver' in window) { const io = new IntersectionObserver(en => { en.forEach(e => { if (e.isIntersecting) { io.disconnect(); render(); } }); }, { rootMargin: '200px 0px' }); io.observe(w); } else render(); } } catch (e) {}
+        function initYandexBlock(containerId, blockId, onRenderCallback) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const observer = new MutationObserver(() => {
+                if (container.children.length > 0) {
+                    observer.disconnect();
+                    if (onRenderCallback) onRenderCallback();
+                }
+            });
+            observer.observe(container, { childList: true });
+
+            window.yaContextCb.push(() => {
+                if (window.Ya && Ya.Context && Ya.Context.AdvManager) {
+                    Ya.Context.AdvManager.render({
+                        blockId: blockId,
+                        renderTo: containerId
+                    });
+                }
+            });
+        }
+
+        // 1. Нижний Sticky-баннер
+        const stickyEl = $('adSticky');
+        window.closeStickyAd = function () {
+            if (stickyEl) stickyEl.classList.add('hidden');
+            document.body.classList.remove('ad-open');
+            try { sessionStorage.setItem('adStickyClosed', '1'); } catch (e) {}
+        };
+
+        try {
+            if (sessionStorage.getItem('adStickyClosed') !== '1') {
+                initYandexBlock('yandex_rtb_R-A-20456192-1', 'R-A-20456192-1', () => {
+                    if (stickyEl) stickyEl.classList.remove('hidden');
+                    document.body.classList.add('ad-open');
+                });
+            }
+        } catch (e) {}
+
+        // 2. Inline-баннер под инструментами
+        const inlineWrap = $('adInline');
+        if (inlineWrap) {
+            initYandexBlock('yandex_rtb_R-A-20456192-2', 'R-A-20456192-2', () => {
+                inlineWrap.classList.remove('hidden');
+            });
+        }
+
+        // 3. Боковые баннеры для ПК (1 - левый, 2 - правый)
+        if (window.innerWidth >= 1360) {
+            initYandexBlock('yandex_rtb_R-A-20456192-3', 'R-A-20456192-3', () => {
+                const leftEl = $('adLeft');
+                if (leftEl) leftEl.classList.add('loaded');
+            });
+            initYandexBlock('yandex_rtb_R-A-20456192-4', 'R-A-20456192-4', () => {
+                const rightEl = $('adRight');
+                if (rightEl) rightEl.classList.add('loaded');
+            });
+        }
 
         try { if (typeof genPw === 'function') genPw(); } catch (e) {}
     })();
