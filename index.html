@@ -51,16 +51,9 @@
         .diff-add{background:#1e3a1e;color:#8f8} .diff-del{background:#3a1e1e;color:#f88}
         .file-input{display:block;margin:10px 0}
 
-        /* ===== Навигация (сворачиваемая) ===== */
+        /* Навигация */
         nav{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-        .nav-header{
-            display:flex;align-items:center;justify-content:center;gap:10px;
-            width:100%;padding:10px 16px;
-            background:transparent;border:0;color:var(--text);
-            font-family:inherit;font-size:.95rem;font-weight:600;
-            cursor:pointer;user-select:none;
-            transition:background .2s;
-        }
+        .nav-header{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:10px 16px;background:transparent;border:0;color:var(--text);font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;user-select:none;transition:background .2s}
         .nav-header:hover{background:rgba(79,140,255,.08)}
         .nav-header:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
         .nav-arrow{display:inline-block;font-size:.7rem;transition:transform .25s ease}
@@ -68,28 +61,14 @@
         .nav-label-collapsed{display:none}
         nav.collapsed .nav-label-expanded{display:none}
         nav.collapsed .nav-label-collapsed{display:inline}
-        .nav-buttons{
-            display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
-            padding:0 15px 15px;
-            max-height:1000px;opacity:1;overflow:hidden;
-            transition:max-height .3s ease,padding .3s ease,opacity .2s ease;
-        }
-        nav.collapsed .nav-buttons{
-            max-height:0;padding-top:0;padding-bottom:0;opacity:0;
-        }
-        .nav-buttons button{
-            background:transparent;border:1px solid var(--border);color:var(--text);
-            padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;
-            transition:all .2s;font-family:inherit;font-size:1rem;
-        }
+        .nav-buttons{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:0 15px 15px;max-height:1000px;opacity:1;overflow:hidden;transition:max-height .3s ease,padding .3s ease,opacity .2s ease}
+        nav.collapsed .nav-buttons{max-height:0;padding-top:0;padding-bottom:0;opacity:0}
+        .nav-buttons button{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit;font-size:1rem}
         .nav-buttons button:hover{border-color:var(--accent);background:rgba(79,140,255,.1)}
         .nav-buttons button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-        @media (max-width:700px){
-            .nav-header{padding:9px 14px;font-size:.9rem}
-            .nav-buttons button{padding:8px 14px;font-size:.9rem}
-        }
+        @media (max-width:700px){.nav-header{padding:9px 14px;font-size:.9rem}.nav-buttons button{padding:8px 14px;font-size:.9rem}}
 
-        /* ===== Sticky bottom ad ===== */
+        /* Sticky ad */
         .ad-sticky{position:fixed;left:0;right:0;bottom:0;z-index:999;background:var(--card);border-top:1px solid var(--border);box-shadow:0 -8px 28px rgba(0,0,0,.55);display:flex;justify-content:center;align-items:center;padding:6px 8px;transform:translateY(0);transition:transform .35s ease;will-change:transform}
         .ad-sticky.hidden{transform:translateY(110%);pointer-events:none}
         .ad-sticky > div[id^="yandex_rtb"]{width:100%;max-width:728px;max-height:120px;overflow:hidden}
@@ -98,7 +77,7 @@
         body.ad-open{padding-bottom:150px}
         @media (max-width:600px){.ad-sticky > div[id^="yandex_rtb"]{max-height:100px}body.ad-open{padding-bottom:125px}}
 
-        /* ===== Inline ad ===== */
+        /* Inline ad */
         .ad-inline{position:relative;margin:30px auto 20px;max-width:728px;min-height:90px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px 12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
         .ad-inline::before{content:'Реклама';position:absolute;top:4px;right:10px;font-size:10px;color:var(--muted);opacity:.6;text-transform:uppercase;letter-spacing:.5px}
         .ad-inline > div[id^="yandex_rtb"]{width:100%;min-height:90px}
@@ -128,6 +107,10 @@
         <button data-t="web">🌐 Веб</button>
         <button data-t="network">📡 Сеть</button>
         <button data-t="math">🧮 Математика</button>
+        <button data-t="calc">🧮 Калькуляторы</button>
+        <button data-t="seo">🔎 SEO</button>
+        <button data-t="finance">💰 Финансы</button>
+        <button data-t="datetime">📅 Дата и время</button>
         <button data-t="compression">🗜️ Сжатие</button>
         <button data-t="pdf">📄 PDF</button>
         <button data-t="images">🖼️ Изображения</button>
@@ -135,7 +118,7 @@
 </nav>
 
 <main>
-    <!-- ========== ТЕКСТ ========== -->
+    <!-- ==================== ТЕКСТ (расширенный) ==================== -->
     <div id="text" class="section-content">
         <h2 class="section-title">Работа с текстом</h2>
         <div class="tool-grid">
@@ -205,10 +188,97 @@
                 <button class="btn" onclick="unicodeInfo()">Показать</button>
                 <div class="out" id="unicodeOut">—</div>
             </div>
+            <div class="tool-card">
+                <h3>Извлечь числа</h3>
+                <textarea id="extractNumbersIn" placeholder="Текст с числами..."></textarea>
+                <button class="btn" onclick="extractNumbers()">Извлечь</button>
+                <div class="out" id="extractNumbersOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Извлечь e-mail</h3>
+                <textarea id="extractEmailsIn" placeholder="Текст с e-mail..."></textarea>
+                <button class="btn" onclick="extractEmails()">Извлечь</button>
+                <div class="out" id="extractEmailsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Извлечь ссылки</h3>
+                <textarea id="extractUrlsIn" placeholder="Текст со ссылками..."></textarea>
+                <button class="btn" onclick="extractUrls()">Извлечь</button>
+                <div class="out" id="extractUrlsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Поиск и замена</h3>
+                <textarea id="replaceIn" placeholder="Исходный текст..."></textarea>
+                <input id="replaceFind" placeholder="Найти...">
+                <input id="replaceWith" placeholder="Заменить на..." style="margin-top:8px">
+                <button class="btn" onclick="doReplace()">Заменить</button>
+                <div class="out" id="replaceOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Частота символов</h3>
+                <textarea id="charFreqIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="charFrequency()">Подсчитать</button>
+                <div class="out" id="charFreqOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>PIN Generator</h3>
+                <input id="pinLength" type="number" value="4" min="3" max="12">
+                <button class="btn" onclick="genPin()">Сгенерировать</button>
+                <div class="out" id="pinOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Текст → Binary</h3>
+                <textarea id="toBinaryIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="textToBinary()">Конвертировать</button>
+                <div class="out" id="toBinaryOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Текст → HEX</h3>
+                <textarea id="toHexIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="textToHex()">Конвертировать</button>
+                <div class="out" id="toHexOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Счётчик строк</h3>
+                <textarea id="countLinesIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="countLines()">Подсчитать</button>
+                <div class="out" id="countLinesOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Статистика текста</h3>
+                <textarea id="textStatsIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="textStatistics()">Показать</button>
+                <div class="out" id="textStatsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сортировка чисел</h3>
+                <textarea id="sortNumbersIn" placeholder="Числа через запятую или с новой строки..."></textarea>
+                <button class="btn" onclick="sortNumbers()">Сортировать</button>
+                <div class="out" id="sortNumbersOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Удалить пустые строки</h3>
+                <textarea id="removeEmptyIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="removeEmptyLines()">Удалить</button>
+                <div class="out" id="removeEmptyOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Длина строки</h3>
+                <input id="strLenIn" placeholder="Введите строку...">
+                <button class="btn" onclick="stringLength()">Показать</button>
+                <div class="out" id="strLenOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Lorem для кода</h3>
+                <label>Количество:</label>
+                <input type="number" id="loremCodeCount" value="3" min="1" max="20">
+                <button class="btn" onclick="genLoremCode()">Сгенерировать</button>
+                <div class="out" id="loremCodeOut">—</div>
+            </div>
         </div>
     </div>
 
-    <!-- ========== КОДИРОВАНИЕ ========== -->
+    <!-- ==================== КОДИРОВАНИЕ ==================== -->
     <div id="encoding" class="section-content" style="display:none">
         <h2 class="section-title">Text & Encoding</h2>
         <div class="tool-grid">
@@ -260,7 +330,7 @@
         </div>
     </div>
 
-    <!-- ========== ХЕШИ И ПАРОЛИ ========== -->
+    <!-- ==================== ХЕШИ И ПАРОЛИ ==================== -->
     <div id="security" class="section-content" style="display:none">
         <h2 class="section-title">Hash & Cryptography</h2>
         <div class="tool-grid">
@@ -333,7 +403,7 @@
         </div>
     </div>
 
-    <!-- ========== РАЗРАБОТЧИК ========== -->
+    <!-- ==================== РАЗРАБОТЧИК (расширенный) ==================== -->
     <div id="dev" class="section-content" style="display:none">
         <h2 class="section-title">Developer Utilities</h2>
         <div class="tool-grid">
@@ -400,10 +470,108 @@
                 </div>
                 <div class="out" id="listOut">—</div>
             </div>
+            <div class="tool-card">
+                <h3>JSON Validator</h3>
+                <textarea id="jsonValidateIn" placeholder='{"key":"value"}'></textarea>
+                <button class="btn" onclick="validateJson()">Проверить</button>
+                <div class="out" id="jsonValidateOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>UUID Generator</h3>
+                <button class="btn" onclick="genUuid()">Сгенерировать UUID</button>
+                <div class="out" id="uuidOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>HEX → RGB</h3>
+                <input id="hexRgbIn" placeholder="#4f8cff">
+                <button class="btn" onclick="hexToRgb()">Конвертировать</button>
+                <div class="out" id="hexRgbOut">—</div>
+                <div id="hexRgbPreview" style="height:40px;border-radius:8px;margin-top:10px;border:1px solid var(--border)"></div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер систем счисления</h3>
+                <input id="baseConvertIn" placeholder="Число...">
+                <select id="baseConvertFrom" style="margin-top:8px">
+                    <option value="2">Binary (2)</option>
+                    <option value="8">Octal (8)</option>
+                    <option value="10">Decimal (10)</option>
+                    <option value="16">Hex (16)</option>
+                </select>
+                <select id="baseConvertTo" style="margin-top:8px">
+                    <option value="2">Binary (2)</option>
+                    <option value="8">Octal (8)</option>
+                    <option value="10">Decimal (10)</option>
+                    <option value="16">Hex (16)</option>
+                </select>
+                <button class="btn" onclick="convertBase()">Конвертировать</button>
+                <div class="out" id="baseConvertOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>URL Parser</h3>
+                <input id="urlParseIn" placeholder="https://example.com/path?query=1">
+                <button class="btn" onclick="parseUrl()">Разобрать</button>
+                <div class="out" id="urlParseOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Query String Parser</h3>
+                <input id="queryStringIn" placeholder="?a=1&b=2">
+                <button class="btn" onclick="parseQueryString()">Разобрать</button>
+                <div class="out" id="queryStringOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Cron Generator</h3>
+                <input id="cronMinDev" placeholder="Минуты" value="*">
+                <input id="cronHourDev" placeholder="Часы" value="*" style="margin-top:8px">
+                <input id="cronDayDev" placeholder="День" value="*" style="margin-top:8px">
+                <input id="cronMonthDev" placeholder="Месяц" value="*" style="margin-top:8px">
+                <input id="cronDowDev" placeholder="День недели" value="*" style="margin-top:8px">
+                <button class="btn" onclick="genCronDev()">Сгенерировать</button>
+                <div class="out" id="cronDevOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Color Contrast Checker</h3>
+                <input id="contrastFg" placeholder="#ffffff">
+                <input id="contrastBg" placeholder="#000000" style="margin-top:8px">
+                <button class="btn" onclick="checkContrast()">Проверить</button>
+                <div class="out" id="contrastOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Text to JSON</h3>
+                <textarea id="textToJsonIn" placeholder="Ключ: значение..."></textarea>
+                <button class="btn" onclick="textToJson()">Конвертировать</button>
+                <div class="out" id="textToJsonOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>HTML Table Generator</h3>
+                <textarea id="htmlTableIn" placeholder="Строки и столбцы через запятую..."></textarea>
+                <button class="btn" onclick="genHtmlTable()">Сгенерировать</button>
+                <div class="out" id="htmlTableOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>CSS Box Shadow</h3>
+                <input id="shadowX" placeholder="X" value="0">
+                <input id="shadowY" placeholder="Y" value="4" style="margin-top:8px">
+                <input id="shadowBlur" placeholder="Blur" value="8" style="margin-top:8px">
+                <input id="shadowColor" placeholder="Color" value="rgba(0,0,0,0.3)" style="margin-top:8px">
+                <button class="btn" onclick="genBoxShadow()">Сгенерировать</button>
+                <div class="out" id="boxShadowOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>CSS Gradient</h3>
+                <input id="gradientColor1" placeholder="Цвет 1" value="#4f8cff">
+                <input id="gradientColor2" placeholder="Цвет 2" value="#9d72ff" style="margin-top:8px">
+                <select id="gradientDir" style="margin-top:8px">
+                    <option value="to right">→</option>
+                    <option value="to bottom">↓</option>
+                    <option value="to bottom right">↘</option>
+                </select>
+                <button class="btn" onclick="genGradient()">Сгенерировать</button>
+                <div class="out" id="gradientOut">—</div>
+            </div>
         </div>
     </div>
 
-    <!-- ========== КОНВЕРТЕРЫ ========== -->
+    <!-- ==================== КОНВЕРТЕРЫ (расширенные) ==================== -->
     <div id="converters" class="section-content" style="display:none">
         <h2 class="section-title">Converters</h2>
         <div class="tool-grid">
@@ -472,10 +640,215 @@
                 </div>
                 <div class="out" id="romanOut">—</div>
             </div>
+            <div class="tool-card">
+                <h3>Конвертер веса</h3>
+                <input id="weightIn" type="number" value="1">
+                <select id="weightFrom" style="margin-top:8px">
+                    <option value="kg">Килограммы</option>
+                    <option value="g">Граммы</option>
+                    <option value="lb">Фунты</option>
+                    <option value="oz">Унции</option>
+                </select>
+                <select id="weightTo" style="margin-top:8px">
+                    <option value="kg">Килограммы</option>
+                    <option value="g">Граммы</option>
+                    <option value="lb">Фунты</option>
+                    <option value="oz">Унции</option>
+                </select>
+                <button class="btn" onclick="convertWeight()">Конвертировать</button>
+                <div class="out" id="weightOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер площади</h3>
+                <input id="areaIn" type="number" value="1">
+                <select id="areaFrom" style="margin-top:8px">
+                    <option value="m2">м²</option>
+                    <option value="km2">км²</option>
+                    <option value="cm2">см²</option>
+                    <option value="ha">гектары</option>
+                    <option value="acre">акры</option>
+                </select>
+                <select id="areaTo" style="margin-top:8px">
+                    <option value="m2">м²</option>
+                    <option value="km2">км²</option>
+                    <option value="cm2">см²</option>
+                    <option value="ha">гектары</option>
+                    <option value="acre">акры</option>
+                </select>
+                <button class="btn" onclick="convertArea()">Конвертировать</button>
+                <div class="out" id="areaOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер объёма</h3>
+                <input id="volumeIn" type="number" value="1">
+                <select id="volumeFrom" style="margin-top:8px">
+                    <option value="l">Литры</option>
+                    <option value="ml">Миллилитры</option>
+                    <option value="m3">м³</option>
+                    <option value="gal">Галлоны</option>
+                </select>
+                <select id="volumeTo" style="margin-top:8px">
+                    <option value="l">Литры</option>
+                    <option value="ml">Миллилитры</option>
+                    <option value="m3">м³</option>
+                    <option value="gal">Галлоны</option>
+                </select>
+                <button class="btn" onclick="convertVolume()">Конвертировать</button>
+                <div class="out" id="volumeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер скорости</h3>
+                <input id="speedIn" type="number" value="1">
+                <select id="speedFrom" style="margin-top:8px">
+                    <option value="kmh">км/ч</option>
+                    <option value="ms">м/с</option>
+                    <option value="mph">миль/ч</option>
+                </select>
+                <select id="speedTo" style="margin-top:8px">
+                    <option value="kmh">км/ч</option>
+                    <option value="ms">м/с</option>
+                    <option value="mph">миль/ч</option>
+                </select>
+                <button class="btn" onclick="convertSpeed()">Конвертировать</button>
+                <div class="out" id="speedOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер времени</h3>
+                <input id="timeIn" type="number" value="1">
+                <select id="timeFrom" style="margin-top:8px">
+                    <option value="s">Секунды</option>
+                    <option value="min">Минуты</option>
+                    <option value="h">Часы</option>
+                    <option value="d">Дни</option>
+                </select>
+                <select id="timeTo" style="margin-top:8px">
+                    <option value="s">Секунды</option>
+                    <option value="min">Минуты</option>
+                    <option value="h">Часы</option>
+                    <option value="d">Дни</option>
+                </select>
+                <button class="btn" onclick="convertTime()">Конвертировать</button>
+                <div class="out" id="timeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер данных</h3>
+                <input id="dataIn" type="number" value="1">
+                <select id="dataFrom" style="margin-top:8px">
+                    <option value="b">Байты</option>
+                    <option value="kb">Килобайты</option>
+                    <option value="mb">Мегабайты</option>
+                    <option value="gb">Гигабайты</option>
+                </select>
+                <select id="dataTo" style="margin-top:8px">
+                    <option value="b">Байты</option>
+                    <option value="kb">Килобайты</option>
+                    <option value="mb">Мегабайты</option>
+                    <option value="gb">Гигабайты</option>
+                </select>
+                <button class="btn" onclick="convertDataSize()">Конвертировать</button>
+                <div class="out" id="dataOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер давления</h3>
+                <input id="pressureIn" type="number" value="1">
+                <select id="pressureFrom" style="margin-top:8px">
+                    <option value="pa">Паскали</option>
+                    <option value="kpa">Килопаскали</option>
+                    <option value="bar">Бары</option>
+                    <option value="atm">Атмосферы</option>
+                </select>
+                <select id="pressureTo" style="margin-top:8px">
+                    <option value="pa">Паскали</option>
+                    <option value="kpa">Килопаскали</option>
+                    <option value="bar">Бары</option>
+                    <option value="atm">Атмосферы</option>
+                </select>
+                <button class="btn" onclick="convertPressure()">Конвертировать</button>
+                <div class="out" id="pressureOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер энергии</h3>
+                <input id="energyIn" type="number" value="1">
+                <select id="energyFrom" style="margin-top:8px">
+                    <option value="j">Джоули</option>
+                    <option value="kj">Килоджоули</option>
+                    <option value="cal">Калории</option>
+                    <option value="kcal">Килокалории</option>
+                </select>
+                <select id="energyTo" style="margin-top:8px">
+                    <option value="j">Джоули</option>
+                    <option value="kj">Килоджоули</option>
+                    <option value="cal">Калории</option>
+                    <option value="kcal">Килокалории</option>
+                </select>
+                <button class="btn" onclick="convertEnergy()">Конвертировать</button>
+                <div class="out" id="energyOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Конвертер мощности</h3>
+                <input id="powerIn" type="number" value="1">
+                <select id="powerFrom" style="margin-top:8px">
+                    <option value="w">Ватты</option>
+                    <option value="kw">Киловатты</option>
+                    <option value="hp">Л.с.</option>
+                </select>
+                <select id="powerTo" style="margin-top:8px">
+                    <option value="w">Ватты</option>
+                    <option value="kw">Киловатты</option>
+                    <option value="hp">Л.с.</option>
+                </select>
+                <button class="btn" onclick="convertPower()">Конвертировать</button>
+                <div class="out" id="powerOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Минуты ↔ Часы</h3>
+                <input id="minHoursIn" placeholder="Минуты...">
+                <div class="row">
+                    <button class="btn" onclick="minutesToHours()">→ Часы</button>
+                    <button class="btn secondary" onclick="hoursToMinutes()">→ Минуты</button>
+                </div>
+                <div class="out" id="minHoursOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Секунды ↔ Время</h3>
+                <input id="secTimeIn" placeholder="Секунды...">
+                <div class="row">
+                    <button class="btn" onclick="secondsToTime()">→ Время</button>
+                    <button class="btn secondary" onclick="timeToSeconds()">→ Секунды</button>
+                </div>
+                <div class="out" id="secTimeOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Байты ↔ Биты</h3>
+                <input id="bytesBitsIn" placeholder="Значение...">
+                <div class="row">
+                    <button class="btn" onclick="bytesToBits()">Байты → Биты</button>
+                    <button class="btn secondary" onclick="bitsToBytes()">Биты → Байты</button>
+                </div>
+                <div class="out" id="bytesBitsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Десятичное ↔ Процент</h3>
+                <input id="decPctIn" placeholder="0.5 или 50%">
+                <div class="row">
+                    <button class="btn" onclick="decimalToPercent()">→ Процент</button>
+                    <button class="btn secondary" onclick="percentToDecimal()">→ Десятичное</button>
+                </div>
+                <div class="out" id="decPctOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Дробь ↔ Десятичное</h3>
+                <input id="fracDecIn" placeholder="1/2 или 0.5">
+                <div class="row">
+                    <button class="btn" onclick="fractionToDecimal()">→ Десятичное</button>
+                    <button class="btn secondary" onclick="decimalToFraction()">→ Дробь</button>
+                </div>
+                <div class="out" id="fracDecOut">—</div>
+            </div>
         </div>
     </div>
 
-    <!-- ========== ВЕБ ========== -->
+    <!-- ==================== ВЕБ ==================== -->
     <div id="web" class="section-content" style="display:none">
         <h2 class="section-title">Web</h2>
         <div class="tool-grid">
@@ -523,7 +896,7 @@
         </div>
     </div>
 
-    <!-- ========== СЕТЬ ========== -->
+    <!-- ==================== СЕТЬ ==================== -->
     <div id="network" class="section-content" style="display:none">
         <h2 class="section-title">Network</h2>
         <div class="tool-grid">
@@ -557,7 +930,7 @@
         </div>
     </div>
 
-    <!-- ========== МАТЕМАТИКА ========== -->
+    <!-- ==================== МАТЕМАТИКА ==================== -->
     <div id="math" class="section-content" style="display:none">
         <h2 class="section-title">Math</h2>
         <div class="tool-grid">
@@ -577,7 +950,324 @@
         </div>
     </div>
 
-    <!-- ========== СЖАТИЕ ========== -->
+    <!-- ==================== КАЛЬКУЛЯТОРЫ (новые) ==================== -->
+    <div id="calc" class="section-content" style="display:none">
+        <h2 class="section-title">Калькуляторы</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Калькулятор процентов</h3>
+                <input id="percentA" type="number" placeholder="Число A">
+                <input id="percentB" type="number" placeholder="Процент B (%)" style="margin-top:8px">
+                <button class="btn" onclick="calcPercent()">Сколько составляет B% от A</button>
+                <div class="out" id="percentOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор кредита</h3>
+                <input id="loanAmount" type="number" placeholder="Сумма кредита">
+                <input id="loanRate" type="number" step="0.1" placeholder="Годовая ставка (%)" style="margin-top:8px">
+                <input id="loanTerm" type="number" placeholder="Срок (мес.)" style="margin-top:8px">
+                <button class="btn" onclick="calcLoan()">Рассчитать</button>
+                <div class="out" id="loanOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>BMI Калькулятор</h3>
+                <input id="bmiWeight" type="number" placeholder="Вес (кг)">
+                <input id="bmiHeight" type="number" placeholder="Рост (см)" style="margin-top:8px">
+                <button class="btn" onclick="calcBmi()">Рассчитать</button>
+                <div class="out" id="bmiOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор возраста</h3>
+                <input id="ageBirth" type="date">
+                <button class="btn" onclick="calcAge()">Рассчитать</button>
+                <div class="out" id="ageOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор площади</h3>
+                <input id="areaCalcW" type="number" placeholder="Ширина">
+                <input id="areaCalcH" type="number" placeholder="Высота" style="margin-top:8px">
+                <button class="btn" onclick="calcArea()">Рассчитать</button>
+                <div class="out" id="areaCalcOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор объёма</h3>
+                <input id="volCalcL" type="number" placeholder="Длина">
+                <input id="volCalcW" type="number" placeholder="Ширина" style="margin-top:8px">
+                <input id="volCalcH" type="number" placeholder="Высота" style="margin-top:8px">
+                <button class="btn" onclick="calcVolume()">Рассчитать</button>
+                <div class="out" id="volCalcOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Среднее число</h3>
+                <input id="avgIn" placeholder="Числа через запятую...">
+                <button class="btn" onclick="calcAverage()">Рассчитать</button>
+                <div class="out" id="avgOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сумма чисел</h3>
+                <input id="sumIn" placeholder="Числа через запятую...">
+                <button class="btn" onclick="calcSum()">Рассчитать</button>
+                <div class="out" id="sumOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Пропорция</h3>
+                <input id="ratioA" type="number" placeholder="A">
+                <input id="ratioB" type="number" placeholder="B" style="margin-top:8px">
+                <input id="ratioC" type="number" placeholder="C" style="margin-top:8px">
+                <button class="btn" onclick="calcRatio()">Найти D (A:B = C:D)</button>
+                <div class="out" id="ratioOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Дроби</h3>
+                <input id="fracA" placeholder="Числитель 1">
+                <input id="fracB" placeholder="Знаменатель 1" style="margin-top:8px">
+                <input id="fracC" placeholder="Числитель 2" style="margin-top:8px">
+                <input id="fracD" placeholder="Знаменатель 2" style="margin-top:8px">
+                <button class="btn" onclick="calcFraction()">Сложить</button>
+                <div class="out" id="fracOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>НОД и НОК</h3>
+                <input id="gcdA" type="number" placeholder="Число A">
+                <input id="gcdB" type="number" placeholder="Число B" style="margin-top:8px">
+                <button class="btn" onclick="calcGcdLcm()">Рассчитать</button>
+                <div class="out" id="gcdOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Степень и корень</h3>
+                <input id="powerBase" type="number" placeholder="Число">
+                <input id="powerExp" type="number" placeholder="Степень" style="margin-top:8px">
+                <div class="row">
+                    <button class="btn" onclick="calcPower()">Степень</button>
+                    <button class="btn secondary" onclick="calcRoot()">Корень</button>
+                </div>
+                <div class="out" id="powerOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Калькулятор чаевых</h3>
+                <input id="tipBill" type="number" placeholder="Сумма счёта">
+                <input id="tipPercent" type="number" placeholder="Чаевые (%)" style="margin-top:8px">
+                <button class="btn" onclick="calcTip()">Рассчитать</button>
+                <div class="out" id="tipOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Разделить счёт</h3>
+                <input id="splitTotal" type="number" placeholder="Общая сумма">
+                <input id="splitPeople" type="number" placeholder="Количество человек" style="margin-top:8px">
+                <button class="btn" onclick="calcSplit()">Рассчитать</button>
+                <div class="out" id="splitOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Сложные проценты</h3>
+                <input id="compoundPrincipal" type="number" placeholder="Начальная сумма">
+                <input id="compoundRate" type="number" step="0.1" placeholder="Ставка (%)" style="margin-top:8px">
+                <input id="compoundYears" type="number" placeholder="Лет" style="margin-top:8px">
+                <button class="btn" onclick="calcCompound()">Рассчитать</button>
+                <div class="out" id="compoundOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Простые проценты</h3>
+                <input id="simplePrincipal" type="number" placeholder="Сумма">
+                <input id="simpleRate" type="number" step="0.1" placeholder="Ставка (%)" style="margin-top:8px">
+                <input id="simpleYears" type="number" placeholder="Лет" style="margin-top:8px">
+                <button class="btn" onclick="calcSimpleInterest()">Рассчитать</button>
+                <div class="out" id="simpleInterestOut">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SEO (новые) ==================== -->
+    <div id="seo" class="section-content" style="display:none">
+        <h2 class="section-title">SEO</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>SEO Meta Generator</h3>
+                <input id="metaTitle" placeholder="Title">
+                <input id="metaDescription" placeholder="Description" style="margin-top:8px">
+                <button class="btn" onclick="genMeta()">Сгенерировать</button>
+                <div class="out" id="metaOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Robots.txt Generator</h3>
+                <textarea id="robotsIn" placeholder="User-agent: *&#10;Disallow: /admin/"></textarea>
+                <button class="btn" onclick="genRobots()">Сгенерировать</button>
+                <div class="out" id="robotsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Sitemap Generator</h3>
+                <textarea id="sitemapIn" placeholder="URL-адреса по одному на строку..."></textarea>
+                <button class="btn" onclick="genSitemap()">Сгенерировать</button>
+                <div class="out" id="sitemapOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>SEO Slug</h3>
+                <input id="seoSlugIn" placeholder="Заголовок...">
+                <button class="btn" onclick="genSeoSlug()">Сгенерировать</button>
+                <div class="out" id="seoSlugOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Title Counter</h3>
+                <input id="titleCounterIn" placeholder="Title...">
+                <button class="btn" onclick="countTitle()">Подсчитать</button>
+                <div class="out" id="titleCounterOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Description Counter</h3>
+                <input id="descCounterIn" placeholder="Description...">
+                <button class="btn" onclick="countDescription()">Подсчитать</button>
+                <div class="out" id="descCounterOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Плотность ключевых слов</h3>
+                <textarea id="keywordDensityIn" placeholder="Текст..."></textarea>
+                <button class="btn" onclick="calcKeywordDensity()">Рассчитать</button>
+                <div class="out" id="keywordDensityOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Canonical Generator</h3>
+                <input id="canonicalIn" placeholder="https://example.com/page">
+                <button class="btn" onclick="genCanonical()">Сгенерировать</button>
+                <div class="out" id="canonicalOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Schema.org Generator</h3>
+                <input id="schemaType" placeholder="Тип (Article, Product...)">
+                <button class="btn" onclick="genSchema()">Сгенерировать</button>
+                <div class="out" id="schemaOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Open Graph Generator</h3>
+                <input id="ogTitle" placeholder="og:title">
+                <input id="ogDesc" placeholder="og:description" style="margin-top:8px">
+                <input id="ogUrl" placeholder="og:url" style="margin-top:8px">
+                <button class="btn" onclick="genOpenGraph()">Сгенерировать</button>
+                <div class="out" id="ogOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Twitter Card Generator</h3>
+                <input id="twitterTitle" placeholder="twitter:title">
+                <input id="twitterDesc" placeholder="twitter:description" style="margin-top:8px">
+                <button class="btn" onclick="genTwitterCard()">Сгенерировать</button>
+                <div class="out" id="twitterOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Hreflang Generator</h3>
+                <input id="hreflangUrl" placeholder="https://example.com/ru/">
+                <button class="btn" onclick="genHreflang()">Сгенерировать</button>
+                <div class="out" id="hreflangOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>URL Checker</h3>
+                <input id="urlCheckIn" placeholder="https://example.com">
+                <button class="btn" onclick="checkUrl()">Проверить</button>
+                <div class="out" id="urlCheckOut">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ФИНАНСЫ (новые) ==================== -->
+    <div id="finance" class="section-content" style="display:none">
+        <h2 class="section-title">Финансы</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Конвертер валют (USD ↔ UZS)</h3>
+                <input id="usdAmount" type="number" placeholder="Сумма в USD">
+                <input id="usdRate" type="number" step="0.01" placeholder="Курс (UZS за 1 USD)" style="margin-top:8px">
+                <button class="btn" onclick="usdToUzs()">USD → UZS</button>
+                <div class="out" id="usdUzsOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>ROI Калькулятор</h3>
+                <input id="roiInvest" type="number" placeholder="Инвестиции">
+                <input id="roiReturn" type="number" placeholder="Возврат" style="margin-top:8px">
+                <button class="btn" onclick="calcRoi()">Рассчитать</button>
+                <div class="out" id="roiOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Прибыль и маржа</h3>
+                <input id="profitRevenue" type="number" placeholder="Выручка">
+                <input id="profitCost" type="number" placeholder="Себестоимость" style="margin-top:8px">
+                <button class="btn" onclick="calcProfit()">Рассчитать</button>
+                <div class="out" id="profitOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Комиссия маркетплейса</h3>
+                <input id="commPrice" type="number" placeholder="Цена товара">
+                <input id="commPercent" type="number" step="0.1" placeholder="Комиссия (%)" style="margin-top:8px">
+                <button class="btn" onclick="calcCommission()">Рассчитать</button>
+                <div class="out" id="commOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Рассрочка</h3>
+                <input id="installmentTotal" type="number" placeholder="Сумма">
+                <input id="installmentMonths" type="number" placeholder="Месяцев" style="margin-top:8px">
+                <button class="btn" onclick="calcInstallment()">Рассчитать</button>
+                <div class="out" id="installmentOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Бюджет</h3>
+                <input id="budgetIncome" type="number" placeholder="Доход">
+                <input id="budgetExpenses" type="number" placeholder="Расходы" style="margin-top:8px">
+                <button class="btn" onclick="calcBudget()">Рассчитать</button>
+                <div class="out" id="budgetOut">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ДАТА И ВРЕМЯ (новые) ==================== -->
+    <div id="datetime" class="section-content" style="display:none">
+        <h2 class="section-title">Дата и время</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Калькулятор даты</h3>
+                <input id="dateCalcStart" type="date">
+                <input id="dateCalcEnd" type="date" style="margin-top:8px">
+                <button class="btn" onclick="calcDateDiff()">Разница</button>
+                <div class="out" id="dateCalcOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Таймер</h3>
+                <input id="timerSeconds" type="number" placeholder="Секунды">
+                <button class="btn" onclick="startTimer()">Старт</button>
+                <div class="out" id="timerOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Секундомер</h3>
+                <button class="btn" onclick="startStopwatch()">Старт / Стоп</button>
+                <div class="out" id="stopwatchOut">00:00:00</div>
+            </div>
+            <div class="tool-card">
+                <h3>Мировые часы</h3>
+                <button class="btn" onclick="showWorldClock()">Показать</button>
+                <div class="out" id="worldClockOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Номер недели</h3>
+                <input id="weekNumDate" type="date">
+                <button class="btn" onclick="getWeekNumber()">Узнать</button>
+                <div class="out" id="weekNumOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>День недели</h3>
+                <input id="dayOfWeekDate" type="date">
+                <button class="btn" onclick="getDayOfWeek()">Узнать</button>
+                <div class="out" id="dayOfWeekOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Unix время сейчас</h3>
+                <button class="btn" onclick="showUnixNow()">Показать</button>
+                <div class="out" id="unixNowOut">—</div>
+            </div>
+            <div class="tool-card">
+                <h3>Подробный возраст</h3>
+                <input id="detailAgeBirth" type="date">
+                <button class="btn" onclick="calcDetailedAge()">Рассчитать</button>
+                <div class="out" id="detailAgeOut">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЖАТИЕ ==================== -->
     <div id="compression" class="section-content" style="display:none">
         <h2 class="section-title">Compression & Archives</h2>
         <div class="tool-grid">
@@ -596,7 +1286,7 @@
         </div>
     </div>
 
-    <!-- ========== PDF ========== -->
+    <!-- ==================== PDF ==================== -->
     <div id="pdf" class="section-content" style="display:none">
         <h2 class="section-title">PDF & Documents</h2>
         <div class="tool-grid">
@@ -615,7 +1305,7 @@
         </div>
     </div>
 
-    <!-- ========== ИЗОБРАЖЕНИЯ ========== -->
+    <!-- ==================== ИЗОБРАЖЕНИЯ ==================== -->
     <div id="images" class="section-content" style="display:none">
         <h2 class="section-title">Images & Media</h2>
         <div class="tool-grid">
@@ -652,9 +1342,7 @@
 </div>
 
 <script>
-    // ==================================================================
-    //  НАВИГАЦИЯ — с возможностью сворачивания
-    // ==================================================================
+    // ==================== НАВИГАЦИЯ ====================
     (function () {
         const navEl = document.getElementById('nav');
         const navHeader = document.getElementById('navHeader');
@@ -671,22 +1359,15 @@
         }
 
         window.toggleNav = function (force) {
-            const willCollapse = typeof force === 'boolean'
-                ? force
-                : !navEl.classList.contains('collapsed');
+            const willCollapse = typeof force === 'boolean' ? force : !navEl.classList.contains('collapsed');
             setCollapsed(willCollapse);
         };
 
-        // Клик по шапке меню — свернуть/развернуть
         navHeader.addEventListener('click', () => window.toggleNav());
         navHeader.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.toggleNav();
-            }
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.toggleNav(); }
         });
 
-        // Клик по кнопке раздела
         navButtons.addEventListener('click', e => {
             let btn = e.target;
             while (btn && btn !== navButtons && btn.tagName !== 'BUTTON') btn = btn.parentNode;
@@ -697,7 +1378,6 @@
             const target = document.getElementById(targetId);
             if (!target) return;
 
-            // Снять активность со всех, скрыть все секции
             const buttons = navButtons.querySelectorAll('button');
             for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
             const sections = document.querySelectorAll('.section-content');
@@ -706,61 +1386,33 @@
             btn.classList.add('active');
             target.style.display = 'block';
 
-            // Обновить подпись текущего раздела в свёрнутом виде
             if (navActiveLabel) navActiveLabel.textContent = btn.textContent.trim();
-
-            // На мобильном автоматически свернуть меню
             if (isMobile()) setCollapsed(true);
         });
 
-        // Стартовое состояние: на мобильном — свёрнуто, на десктопе — развёрнуто
         if (isMobile()) setCollapsed(true);
     })();
 
-    // ==================================================================
-    //  Все остальные функции
-    // ==================================================================
+    // ==================== ОСНОВНОЙ СКРИПТ ====================
     (function () {
         const $ = id => document.getElementById(id);
 
-        // -------------------- ТЕКСТ --------------------
+        // ---------- ТЕКСТ ----------
         const txtCountEl = $('txtCount');
-        if (txtCountEl) {
-            txtCountEl.addEventListener('input', () => {
-                const t = txtCountEl.value;
-                $('sChars').textContent = t.length;
-                $('sWords').textContent = (t.trim().match(/\S+/g) || []).length;
-                $('sSents').textContent = (t.match(/[.!?…]+/g) || []).length;
-            });
-        }
-        window.changeCase = function (type) {
-            const v = $('txtCase').value;
-            $('txtCaseOut').textContent = type === 'up' ? v.toUpperCase() : v.toLowerCase();
-        };
-        window.cleanSpaces = function () {
-            $('txtCaseOut').textContent = $('txtCase').value.replace(/\s+/g, ' ').trim();
-        };
-        window.reverseText = function () {
-            $('txtRevOut').textContent = [...$('txtRev').value].reverse().join('');
-        };
-        window.sortLines = function () {
-            const lines = $('lineInput').value.split('\n').filter(l => l.trim());
-            $('lineOut').textContent = lines.sort((a, b) => a.localeCompare(b)).join('\n');
-        };
-        window.dedupLines = function () {
-            const lines = $('lineInput').value.split('\n').filter(l => l.trim());
-            $('lineOut').textContent = [...new Set(lines)].join('\n');
-        };
-        window.reverseLines = function () {
-            const lines = $('lineInput').value.split('\n').filter(l => l.trim());
-            $('lineOut').textContent = lines.reverse().join('\n');
-        };
-        window.makeSlug = function () {
-            const s = $('slugInput').value.trim().toLowerCase()
-                .replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-')
-                .replace(/-+/g, '-').replace(/^-|-$/g, '');
-            $('slugOut').textContent = s || '—';
-        };
+        if (txtCountEl) txtCountEl.addEventListener('input', () => {
+            const t = txtCountEl.value;
+            $('sChars').textContent = t.length;
+            $('sWords').textContent = (t.trim().match(/\S+/g) || []).length;
+            $('sSents').textContent = (t.match(/[.!?…]+/g) || []).length;
+        });
+
+        window.changeCase = function (type) { $('txtCaseOut').textContent = type === 'up' ? $('txtCase').value.toUpperCase() : $('txtCase').value.toLowerCase(); };
+        window.cleanSpaces = function () { $('txtCaseOut').textContent = $('txtCase').value.replace(/\s+/g, ' ').trim(); };
+        window.reverseText = function () { $('txtRevOut').textContent = [...$('txtRev').value].reverse().join(''); };
+        window.sortLines = function () { const l = $('lineInput').value.split('\n').filter(x => x.trim()); $('lineOut').textContent = l.sort((a, b) => a.localeCompare(b)).join('\n'); };
+        window.dedupLines = function () { const l = $('lineInput').value.split('\n').filter(x => x.trim()); $('lineOut').textContent = [...new Set(l)].join('\n'); };
+        window.reverseLines = function () { const l = $('lineInput').value.split('\n').filter(x => x.trim()); $('lineOut').textContent = l.reverse().join('\n'); };
+        window.makeSlug = function () { const s = $('slugInput').value.trim().toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''); $('slugOut').textContent = s || '—'; };
         window.runDiff = function () {
             const a = $('diff1').value.split('\n'), b = $('diff2').value.split('\n');
             let html = ''; const max = Math.max(a.length, b.length);
@@ -774,636 +1426,217 @@
             $('diffOut').innerHTML = html || 'Нет различий';
         };
         function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-        window.previewMarkdown = function () {
-            if (typeof marked === 'undefined') { $('mdOut').textContent = 'Markdown не загружен'; return; }
-            $('mdOut').innerHTML = marked.parse($('mdInput').value);
-        };
+        window.previewMarkdown = function () { if (typeof marked === 'undefined') { $('mdOut').textContent = 'Markdown не загружен'; return; } $('mdOut').innerHTML = marked.parse($('mdInput').value); };
         window.toNato = function () {
-            const map = { A:'Alpha', B:'Bravo', C:'Charlie', D:'Delta', E:'Echo', F:'Foxtrot', G:'Golf',
-                H:'Hotel', I:'India', J:'Juliett', K:'Kilo', L:'Lima', M:'Mike', N:'November',
-                O:'Oscar', P:'Papa', Q:'Quebec', R:'Romeo', S:'Sierra', T:'Tango', U:'Uniform',
-                V:'Victor', W:'Whiskey', X:'X-ray', Y:'Yankee', Z:'Zulu',
-                '0':'Zero','1':'One','2':'Two','3':'Three','4':'Four','5':'Five','6':'Six','7':'Seven','8':'Eight','9':'Nine',' ':'(space)' };
-            const v = $('natoIn').value.toUpperCase();
-            $('natoOut').textContent = [...v].map(c => map[c] || c).join(' ');
+            const map = { A:'Alpha',B:'Bravo',C:'Charlie',D:'Delta',E:'Echo',F:'Foxtrot',G:'Golf',H:'Hotel',I:'India',J:'Juliett',K:'Kilo',L:'Lima',M:'Mike',N:'November',O:'Oscar',P:'Papa',Q:'Quebec',R:'Romeo',S:'Sierra',T:'Tango',U:'Uniform',V:'Victor',W:'Whiskey',X:'X-ray',Y:'Yankee',Z:'Zulu','0':'Zero','1':'One','2':'Two','3':'Three','4':'Four','5':'Five','6':'Six','7':'Seven','8':'Eight','9':'Nine',' ':'(space)' };
+            $('natoOut').textContent = [...$('natoIn').value.toUpperCase()].map(c => map[c] || c).join(' ');
         };
         window.unicodeInfo = function () {
-            const s = $('unicodeIn').value;
-            if (!s) { $('unicodeOut').textContent = '—'; return; }
-            $('unicodeOut').textContent = [...s].map(c => {
-                const cp = c.codePointAt(0);
-                return c + '  →  U+' + cp.toString(16).toUpperCase().padStart(4, '0');
-            }).join('\n');
+            const s = $('unicodeIn').value; if (!s) { $('unicodeOut').textContent = '—'; return; }
+            $('unicodeOut').textContent = [...s].map(c => c + '  →  U+' + c.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')).join('\n');
+        };
+        window.extractNumbers = function () { $('extractNumbersOut').textContent = ($('extractNumbersIn').value.match(/-?\d+(\.\d+)?/g) || []).join('\n') || '—'; };
+        window.extractEmails = function () { $('extractEmailsOut').textContent = ($('extractEmailsIn').value.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) || []).join('\n') || '—'; };
+        window.extractUrls = function () { $('extractUrlsOut').textContent = ($('extractUrlsIn').value.match(/https?:\/\/[^\s]+/g) || []).join('\n') || '—'; };
+        window.doReplace = function () { $('replaceOut').textContent = $('replaceIn').value.split($('replaceFind').value).join($('replaceWith').value); };
+        window.charFrequency = function () {
+            const t = $('charFreqIn').value, map = {};
+            for (const c of t) map[c] = (map[c] || 0) + 1;
+            $('charFreqOut').textContent = Object.entries(map).sort((a, b) => b[1] - a[1]).map(([c, n]) => `'${c}': ${n}`).join('\n') || '—';
+        };
+        window.genPin = function () {
+            const len = parseInt($('pinLength').value, 10) || 4;
+            $('pinOut').textContent = Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+        };
+        window.textToBinary = function () {
+            $('toBinaryOut').textContent = [...$('toBinaryIn').value].map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+        };
+        window.textToHex = function () {
+            $('toHexOut').textContent = [...$('toHexIn').value].map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+        };
+        window.countLines = function () {
+            const lines = $('countLinesIn').value.split('\n');
+            $('countLinesOut').textContent = 'Строк: ' + lines.length + '\nСимволов: ' + $('countLinesIn').value.length;
+        };
+        window.textStatistics = function () {
+            const t = $('textStatsIn').value;
+            $('textStatsOut').textContent = 'Символов: ' + t.length + '\nСлов: ' + (t.trim().match(/\S+/g) || []).length + '\nСтрок: ' + t.split('\n').length;
+        };
+        window.sortNumbers = function () {
+            const nums = ($('sortNumbersIn').value.match(/-?\d+(\.\d+)?/g) || []).map(Number).sort((a, b) => a - b);
+            $('sortNumbersOut').textContent = nums.join(', ');
+        };
+        window.removeEmptyLines = function () {
+            $('removeEmptyOut').textContent = $('removeEmptyIn').value.split('\n').filter(l => l.trim()).join('\n');
+        };
+        window.stringLength = function () { $('strLenOut').textContent = $('strLenIn').value.length; };
+        window.genLoremCode = function () {
+            const n = parseInt($('loremCodeCount').value, 10) || 3;
+            const words = ['function', 'const', 'return', 'if', 'else', 'for', 'while', 'let', 'var', 'async', 'await', 'try', 'catch'];
+            $('loremCodeOut').textContent = Array.from({ length: n }, () => Array.from({ length: 8 }, () => words[Math.floor(Math.random() * words.length)]).join(' ') + ';').join('\n');
         };
 
-        // -------------------- КОДИРОВАНИЕ --------------------
-        window.b64enc = function () {
-            try {
-                const bytes = new TextEncoder().encode($('b64in').value);
-                let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
-                $('b64out').textContent = btoa(bin);
-            } catch (e) { $('b64out').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.b64dec = function () {
-            try {
-                const bin = atob($('b64in').value.trim());
-                const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-                $('b64out').textContent = new TextDecoder().decode(bytes);
-            } catch (e) { $('b64out').textContent = 'Ошибка: некорректная Base64'; }
-        };
+        // ---------- КОДИРОВАНИЕ ----------
+        window.b64enc = function () { try { const b = new TextEncoder().encode($('b64in').value); let s = ''; b.forEach(x => s += String.fromCharCode(x)); $('b64out').textContent = btoa(s); } catch (e) { $('b64out').textContent = 'Ошибка'; } };
+        window.b64dec = function () { try { const b = atob($('b64in').value.trim()); const a = Uint8Array.from(b, c => c.charCodeAt(0)); $('b64out').textContent = new TextDecoder().decode(a); } catch (e) { $('b64out').textContent = 'Ошибка: некорректная Base64'; } };
         window.urlEncode = function () { $('urlout').textContent = encodeURIComponent($('urlin').value); };
-        window.urlDecode = function () {
-            try { $('urlout').textContent = decodeURIComponent($('urlin').value); }
-            catch (e) { $('urlout').textContent = 'Ошибка'; }
-        };
-        window.htmlEncode = function () {
-            $('htmlout').textContent = $('htmlin').value
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        };
-        window.htmlDecode = function () {
-            const t = document.createElement('textarea');
-            t.innerHTML = $('htmlin').value;
-            $('htmlout').textContent = t.value;
-        };
-        window.fmtJson = function (pretty) {
-            try {
-                const o = JSON.parse($('jsonin').value);
-                $('jsonout').textContent = JSON.stringify(o, null, pretty ? 2 : 0);
-            } catch (e) { $('jsonout').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.hexToBin = function () {
-            const hex = $('hexBin').value.replace(/\s+/g, '');
-            if (!/^[0-9a-f]+$/i.test(hex)) { $('hexBinOut').textContent = 'Ошибка: не hex'; return; }
-            $('hexBinOut').textContent = [...hex].map(c => parseInt(c, 16).toString(2).padStart(4, '0')).join('');
-        };
-        window.binToHex = function () {
-            let bin = $('hexBin').value.replace(/\s+/g, '');
-            if (!/^[01]+$/.test(bin)) { $('hexBinOut').textContent = 'Ошибка: не binary'; return; }
-            if (bin.length % 4) bin = bin.padStart(Math.ceil(bin.length / 4) * 4, '0');
-            $('hexBinOut').textContent = bin.match(/.{4}/g).map(x => parseInt(x, 2).toString(16)).join('').toUpperCase();
-        };
+        window.urlDecode = function () { try { $('urlout').textContent = decodeURIComponent($('urlin').value); } catch (e) { $('urlout').textContent = 'Ошибка'; } };
+        window.htmlEncode = function () { $('htmlout').textContent = $('htmlin').value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
+        window.htmlDecode = function () { const t = document.createElement('textarea'); t.innerHTML = $('htmlin').value; $('htmlout').textContent = t.value; };
+        window.fmtJson = function (p) { try { $('jsonout').textContent = JSON.stringify(JSON.parse($('jsonin').value), null, p ? 2 : 0); } catch (e) { $('jsonout').textContent = 'Ошибка: ' + e.message; } };
+        window.hexToBin = function () { const h = $('hexBin').value.replace(/\s+/g, ''); if (!/^[0-9a-f]+$/i.test(h)) { $('hexBinOut').textContent = 'Ошибка: не hex'; return; } $('hexBinOut').textContent = [...h].map(c => parseInt(c, 16).toString(2).padStart(4, '0')).join(''); };
+        window.binToHex = function () { let b = $('hexBin').value.replace(/\s+/g, ''); if (!/^[01]+$/.test(b)) { $('hexBinOut').textContent = 'Ошибка: не binary'; return; } if (b.length % 4) b = b.padStart(Math.ceil(b.length / 4) * 4, '0'); $('hexBinOut').textContent = b.match(/.{4}/g).map(x => parseInt(x, 2).toString(16)).join('').toUpperCase(); };
 
-        // -------------------- ХЕШИ И ПАРОЛИ --------------------
-        const pwrangeEl = $('pwrange');
-        if (pwrangeEl) pwrangeEl.addEventListener('input', () => { $('pwLenLabel').textContent = pwrangeEl.value; });
-
+        // ---------- ХЕШИ И ПАРОЛИ ----------
+        const pwrangeEl = $('pwrange'); if (pwrangeEl) pwrangeEl.addEventListener('input', () => { $('pwLenLabel').textContent = pwrangeEl.value; });
         window.genPw = function () {
-            let charset = '';
-            if ($('pwUp').checked) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            if ($('pwLow').checked) charset += 'abcdefghijklmnopqrstuvwxyz';
-            if ($('pwNum').checked) charset += '0123456789';
-            if ($('pwSpec').checked) charset += '!@#$%^&*()-_=+[]{};:,.<>?';
-            if (!charset) { $('pwout').textContent = 'Выберите параметры'; return; }
-            const len = parseInt($('pwrange').value, 10);
-            const result = randString(len, charset);
-            $('pwout').textContent = result;
-            let score = 0;
-            if (result.length > 12) score++;
-            if (/[A-Z]/.test(result)) score++;
-            if (/[a-z]/.test(result)) score++;
-            if (/[0-9]/.test(result)) score++;
-            if (/[^A-Za-z0-9]/.test(result)) score++;
-            const str = $('pwStrength');
-            if (score <= 2) str.textContent = '❌ Слабый';
-            else if (score <= 4) str.textContent = '⚠️ Средний';
-            else str.textContent = '✅ Надёжный';
+            let cs = '';
+            if ($('pwUp').checked) cs += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if ($('pwLow').checked) cs += 'abcdefghijklmnopqrstuvwxyz';
+            if ($('pwNum').checked) cs += '0123456789';
+            if ($('pwSpec').checked) cs += '!@#$%^&*()-_=+[]{};:,.<>?';
+            if (!cs) { $('pwout').textContent = 'Выберите параметры'; return; }
+            const len = parseInt($('pwrange').value, 10); const max = 0xFFFFFFFF, limit = max - (max % cs.length); const out = []; const buf = new Uint32Array(1);
+            while (out.length < len) { crypto.getRandomValues(buf); if (buf[0] < limit) out.push(cs[buf[0] % cs.length]); }
+            const res = out.join(''); $('pwout').textContent = res;
+            let sc = 0; if (res.length > 12) sc++; if (/[A-Z]/.test(res)) sc++; if (/[a-z]/.test(res)) sc++; if (/[0-9]/.test(res)) sc++; if (/[^A-Za-z0-9]/.test(res)) sc++;
+            $('pwStrength').textContent = sc <= 2 ? '❌ Слабый' : sc <= 4 ? '⚠️ Средний' : '✅ Надёжный';
         };
-        function randString(len, charset) {
-            const max = 0xFFFFFFFF, limit = max - (max % charset.length), out = [];
-            const buf = new Uint32Array(1);
-            while (out.length < len) {
-                crypto.getRandomValues(buf);
-                if (buf[0] < limit) out.push(charset[buf[0] % charset.length]);
-            }
-            return out.join('');
-        }
         window.makeAllHashes = function () {
-            const text = $('hashin').value;
-            if (!text) { $('hashout').textContent = 'Введите текст'; return; }
+            const t = $('hashin').value; if (!t) { $('hashout').textContent = 'Введите текст'; return; }
             if (typeof CryptoJS === 'undefined') { $('hashout').textContent = 'CryptoJS не загружен'; return; }
-            $('hashout').textContent = [
-                'MD5:    ' + CryptoJS.MD5(text).toString(),
-                'SHA1:   ' + CryptoJS.SHA1(text).toString(),
-                'SHA256: ' + CryptoJS.SHA256(text).toString(),
-                'SHA512: ' + CryptoJS.SHA512(text).toString(),
-                'CRC32:  ' + crc32(text).toString(16).padStart(8, '0').toUpperCase()
-            ].join('\n');
+            $('hashout').textContent = ['MD5:    ' + CryptoJS.MD5(t), 'SHA1:   ' + CryptoJS.SHA1(t), 'SHA256: ' + CryptoJS.SHA256(t), 'SHA512: ' + CryptoJS.SHA512(t), 'CRC32:  ' + crc32(t).toString(16).padStart(8, '0').toUpperCase()].join('\n');
         };
-        function crc32(str) {
-            let crc = 0xFFFFFFFF;
-            for (let i = 0; i < str.length; i++) {
-                crc ^= str.charCodeAt(i);
-                for (let j = 0; j < 8; j++) crc = (crc >>> 1) ^ (crc & 1 ? 0xEDB88320 : 0);
-            }
-            return (crc ^ 0xFFFFFFFF) >>> 0;
-        }
-        const bcryptRoundsEl = $('bcryptRounds');
-        if (bcryptRoundsEl) bcryptRoundsEl.addEventListener('input', () => { $('bcryptRoundsLabel').textContent = bcryptRoundsEl.value; });
-        window.bcryptHash = function () {
-            if (typeof bcrypt === 'undefined') { $('bcryptOut').textContent = 'bcryptjs не загружен'; return; }
-            const pwd = $('bcryptIn').value;
-            if (!pwd) { $('bcryptOut').textContent = 'Введите пароль'; return; }
-            try { $('bcryptOut').textContent = bcrypt.hashSync(pwd, parseInt($('bcryptRounds').value, 10)); }
-            catch (e) { $('bcryptOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.bcryptVerify = function () {
-            if (typeof bcrypt === 'undefined') { $('bcryptVerifyOut').textContent = 'bcryptjs не загружен'; return; }
-            try {
-                const ok = bcrypt.compareSync($('bcryptIn').value, $('bcryptVerifyHash').value.trim());
-                $('bcryptVerifyOut').textContent = ok ? '✅ Совпадает' : '❌ Не совпадает';
-            } catch (e) { $('bcryptVerifyOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.genHmac = async function () {
-            try {
-                const enc = new TextEncoder();
-                const key = await crypto.subtle.importKey('raw', enc.encode($('hmacKey').value), { name: 'HMAC', hash: $('hmacAlgo').value }, false, ['sign']);
-                const sig = await crypto.subtle.sign('HMAC', key, enc.encode($('hmacText').value));
-                $('hmacOut').textContent = [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, '0')).join('');
-            } catch (e) { $('hmacOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.aesEncrypt = async function () {
-            try {
-                const text = $('aesIn').value, pw = $('aesKey').value;
-                if (!text || !pw) { $('aesOut').textContent = 'Введите текст и пароль'; return; }
-                const enc = new TextEncoder();
-                const km = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
-                const salt = crypto.getRandomValues(new Uint8Array(16));
-                const iv = crypto.getRandomValues(new Uint8Array(12));
-                const key = await crypto.subtle.deriveKey(
-                    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
-                    km, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
-                const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(text));
-                const combined = new Uint8Array(salt.length + iv.length + ct.byteLength);
-                combined.set(salt, 0); combined.set(iv, salt.length);
-                combined.set(new Uint8Array(ct), salt.length + iv.length);
-                let bin = ''; combined.forEach(b => bin += String.fromCharCode(b));
-                $('aesOut').textContent = btoa(bin);
-            } catch (e) { $('aesOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.aesDecrypt = async function () {
-            try {
-                const input = $('aesIn').value.trim(), pw = $('aesKey').value;
-                if (!input || !pw) { $('aesOut').textContent = 'Введите зашифрованный текст и пароль'; return; }
-                const bin = atob(input);
-                const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-                const salt = bytes.slice(0, 16), iv = bytes.slice(16, 28), ct = bytes.slice(28);
-                const enc = new TextEncoder();
-                const km = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
-                const key = await crypto.subtle.deriveKey(
-                    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
-                    km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
-                const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
-                $('aesOut').textContent = new TextDecoder().decode(pt);
-            } catch (e) { $('aesOut').textContent = 'Ошибка (неверный пароль или повреждённый текст)'; }
-        };
-        window.genBasicAuth = function () {
-            const u = $('basicUser').value, p = $('basicPass').value;
-            if (!u || !p) { $('basicOut').textContent = 'Введите логин и пароль'; return; }
-            $('basicOut').textContent = 'Authorization: Basic ' + btoa(u + ':' + p);
-        };
+        function crc32(s) { let c = 0xFFFFFFFF; for (let i = 0; i < s.length; i++) { c ^= s.charCodeAt(i); for (let j = 0; j < 8; j++) c = (c >>> 1) ^ (c & 1 ? 0xEDB88320 : 0); } return (c ^ 0xFFFFFFFF) >>> 0; }
+        const bcryptRoundsEl = $('bcryptRounds'); if (bcryptRoundsEl) bcryptRoundsEl.addEventListener('input', () => { $('bcryptRoundsLabel').textContent = bcryptRoundsEl.value; });
+        window.bcryptHash = function () { if (typeof bcrypt === 'undefined') { $('bcryptOut').textContent = 'bcryptjs не загружен'; return; } try { $('bcryptOut').textContent = bcrypt.hashSync($('bcryptIn').value, parseInt($('bcryptRounds').value, 10)); } catch (e) { $('bcryptOut').textContent = 'Ошибка'; } };
+        window.bcryptVerify = function () { if (typeof bcrypt === 'undefined') { $('bcryptVerifyOut').textContent = 'bcryptjs не загружен'; return; } try { $('bcryptVerifyOut').textContent = bcrypt.compareSync($('bcryptIn').value, $('bcryptVerifyHash').value.trim()) ? '✅ Совпадает' : '❌ Не совпадает'; } catch (e) { $('bcryptVerifyOut').textContent = 'Ошибка'; } };
+        window.genHmac = async function () { try { const enc = new TextEncoder(); const k = await crypto.subtle.importKey('raw', enc.encode($('hmacKey').value), { name: 'HMAC', hash: $('hmacAlgo').value }, false, ['sign']); const s = await crypto.subtle.sign('HMAC', k, enc.encode($('hmacText').value)); $('hmacOut').textContent = [...new Uint8Array(s)].map(b => b.toString(16).padStart(2, '0')).join(''); } catch (e) { $('hmacOut').textContent = 'Ошибка'; } };
+        window.aesEncrypt = async function () { try { const t = $('aesIn').value, p = $('aesKey').value; if (!t || !p) { $('aesOut').textContent = 'Введите текст и пароль'; return; } const enc = new TextEncoder(); const km = await crypto.subtle.importKey('raw', enc.encode(p), 'PBKDF2', false, ['deriveKey']); const salt = crypto.getRandomValues(new Uint8Array(16)); const iv = crypto.getRandomValues(new Uint8Array(12)); const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['encrypt']); const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(t)); const combined = new Uint8Array(salt.length + iv.length + ct.byteLength); combined.set(salt, 0); combined.set(iv, salt.length); combined.set(new Uint8Array(ct), salt.length + iv.length); let bin = ''; combined.forEach(b => bin += String.fromCharCode(b)); $('aesOut').textContent = btoa(bin); } catch (e) { $('aesOut').textContent = 'Ошибка'; } };
+        window.aesDecrypt = async function () { try { const inp = $('aesIn').value.trim(), p = $('aesKey').value; if (!inp || !p) { $('aesOut').textContent = 'Введите текст и пароль'; return; } const bin = atob(inp); const bytes = Uint8Array.from(bin, c => c.charCodeAt(0)); const salt = bytes.slice(0, 16), iv = bytes.slice(16, 28), ct = bytes.slice(28); const enc = new TextEncoder(); const km = await crypto.subtle.importKey('raw', enc.encode(p), 'PBKDF2', false, ['deriveKey']); const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']); const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct); $('aesOut').textContent = new TextDecoder().decode(pt); } catch (e) { $('aesOut').textContent = 'Ошибка (неверный пароль)'; } };
+        window.genBasicAuth = function () { const u = $('basicUser').value, p = $('basicPass').value; if (!u || !p) { $('basicOut').textContent = 'Введите логин и пароль'; return; } $('basicOut').textContent = 'Authorization: Basic ' + btoa(u + ':' + p); };
         window.analyzePassword = function () {
-            const p = $('pwaIn').value;
-            if (!p) { $('pwaOut').textContent = '—'; return; }
-            const hasLower = /[a-z]/.test(p), hasUpper = /[A-Z]/.test(p);
-            const hasDigit = /[0-9]/.test(p), hasSpec = /[^A-Za-z0-9]/.test(p);
-            let pool = 0;
-            if (hasLower) pool += 26;
-            if (hasUpper) pool += 26;
-            if (hasDigit) pool += 10;
-            if (hasSpec) pool += 32;
-            const entropy = p.length * Math.log2(pool || 1);
-            let verdict = '❌ Очень слабый';
-            if (entropy >= 80) verdict = '✅ Очень надёжный';
-            else if (entropy >= 60) verdict = '✅ Надёжный';
-            else if (entropy >= 40) verdict = '⚠️ Средний';
-            else if (entropy >= 28) verdict = '⚠️ Слабый';
-            $('pwaOut').textContent =
-                'Длина: ' + p.length + '\n' +
-                'Строчные: ' + (hasLower ? 'да' : 'нет') + '\n' +
-                'Заглавные: ' + (hasUpper ? 'да' : 'нет') + '\n' +
-                'Цифры: ' + (hasDigit ? 'да' : 'нет') + '\n' +
-                'Спецсимволы: ' + (hasSpec ? 'да' : 'нет') + '\n' +
-                'Энтропия: ' + entropy.toFixed(1) + ' бит\n' +
-                'Оценка: ' + verdict;
+            const p = $('pwaIn').value; if (!p) { $('pwaOut').textContent = '—'; return; }
+            const lo = /[a-z]/.test(p), up = /[A-Z]/.test(p), di = /[0-9]/.test(p), sp = /[^A-Za-z0-9]/.test(p);
+            let pool = 0; if (lo) pool += 26; if (up) pool += 26; if (di) pool += 10; if (sp) pool += 32;
+            const ent = p.length * Math.log2(pool || 1);
+            let v = '❌ Очень слабый'; if (ent >= 80) v = '✅ Очень надёжный'; else if (ent >= 60) v = '✅ Надёжный'; else if (ent >= 40) v = '⚠️ Средний'; else if (ent >= 28) v = '⚠️ Слабый';
+            $('pwaOut').textContent = `Длина: ${p.length}\nСтрочные: ${lo?'да':'нет'}\nЗаглавные: ${up?'да':'нет'}\nЦифры: ${di?'да':'нет'}\nСпецсимволы: ${sp?'да':'нет'}\nЭнтропия: ${ent.toFixed(1)} бит\nОценка: ${v}`;
         };
 
-        // -------------------- РАЗРАБОТЧИК --------------------
-        window.decodeJwt = function () {
-            try {
-                const parts = $('jwtIn').value.trim().split('.');
-                if (parts.length !== 3) throw new Error('JWT должен состоять из 3 частей');
-                const dec = s => JSON.parse(atob(s.replace(/-/g, '+').replace(/_/g, '/')));
-                $('jwtOut').textContent = 'Header:\n' + JSON.stringify(dec(parts[0]), null, 2) +
-                    '\n\nPayload:\n' + JSON.stringify(dec(parts[1]), null, 2);
-            } catch (e) { $('jwtOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.testRegex = function () {
-            try {
-                const re = new RegExp($('regexPattern').value, $('regexFlags').value);
-                const matches = [...$('regexText').value.matchAll(re)];
-                if (!matches.length) { $('regexOut').textContent = 'Совпадений нет'; return; }
-                $('regexOut').textContent = matches.map((m, i) => '#' + (i + 1) + ': "' + m[0] + '" (позиция ' + m.index + ')').join('\n');
-            } catch (e) { $('regexOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.beautifyJs = function () {
-            let code = $('jsIn').value, out = '', indent = 0;
-            for (const ch of code) {
-                if (ch === '{') { out += ' {\n' + '  '.repeat(++indent); }
-                else if (ch === '}') { out += '\n' + '  '.repeat(--indent) + '}'; }
-                else if (ch === ';') { out += ';\n' + '  '.repeat(indent); }
-                else out += ch;
-            }
-            $('jsOut').textContent = out.replace(/\n\s*\n/g, '\n').trim();
-        };
-        window.minifyJs = function () {
-            let code = $('jsIn').value;
-            code = code.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '')
-                .replace(/\s+/g, ' ').replace(/\s*([{};:,=+\-*/<>!&|?])\s*/g, '$1');
-            $('jsOut').textContent = code.trim();
-        };
-        window.convertData = function (type) {
-            const input = $('dataConv').value;
-            if (!input) { $('dataConvOut').textContent = '—'; return; }
-            try {
-                if (type === 'jsonToCsv') {
-                    const obj = JSON.parse(input);
-                    const arr = Array.isArray(obj) ? obj : [obj];
-                    const headers = Object.keys(arr[0]);
-                    const lines = [headers.join(',')];
-                    arr.forEach(row => lines.push(headers.map(h => '"' + String(row[h]).replace(/"/g, '""') + '"').join(',')));
-                    $('dataConvOut').textContent = lines.join('\n');
-                } else {
-                    const lines = input.trim().split('\n');
-                    const headers = lines[0].split(',');
-                    const result = lines.slice(1).map(line => {
-                        const values = line.split(',');
-                        const obj = {};
-                        headers.forEach((h, i) => obj[h.trim()] = (values[i] || '').trim().replace(/^"|"$/g, ''));
-                        return obj;
-                    });
-                    $('dataConvOut').textContent = JSON.stringify(result, null, 2);
-                }
-            } catch (e) { $('dataConvOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.fmtSql = function () {
-            if (typeof sqlFormatter === 'undefined') { $('sqlOut').textContent = 'SQL formatter не загружен'; return; }
-            try { $('sqlOut').textContent = sqlFormatter.format($('sqlIn').value, { language: 'sql' }); }
-            catch (e) { $('sqlOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.fmtXml = function () {
-            try {
-                const doc = new DOMParser().parseFromString($('xmlIn').value, 'text/xml');
-                const err = doc.querySelector('parsererror');
-                if (err) { $('xmlOut').textContent = 'Ошибка XML: ' + err.textContent; return; }
-                let str = new XMLSerializer().serializeToString(doc);
-                let out = '', indent = 0;
-                str = str.replace(/>\s*</g, '><').replace(/(<\/)/g, '\n$1').replace(/(<[^/!])/g, '\n$1');
-                str.split('\n').forEach(line => {
-                    if (!line.trim()) return;
-                    if (line.startsWith('</')) indent--;
-                    out += '  '.repeat(Math.max(0, indent)) + line + '\n';
-                    if (line.startsWith('<') && !line.startsWith('</') && !line.endsWith('/>') && !line.includes('</')) indent++;
-                });
-                $('xmlOut').textContent = out.trim();
-            } catch (e) { $('xmlOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.yamlToJson = function () {
-            if (typeof jsyaml === 'undefined') { $('yamlOut').textContent = 'YAML не загружен'; return; }
-            try { $('yamlOut').textContent = JSON.stringify(jsyaml.load($('yamlIn').value), null, 2); }
-            catch (e) { $('yamlOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.jsonToYaml = function () {
-            if (typeof jsyaml === 'undefined') { $('yamlOut').textContent = 'YAML не загружен'; return; }
-            try { $('yamlOut').textContent = jsyaml.dump(JSON.parse($('yamlIn').value)); }
-            catch (e) { $('yamlOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.listToJson = function () {
-            $('listOut').textContent = JSON.stringify($('listIn').value.split('\n').map(s => s.trim()).filter(Boolean), null, 2);
-        };
-        window.listToCsv = function () {
-            $('listOut').textContent = $('listIn').value.split('\n').map(s => s.trim()).filter(Boolean)
-                .map(s => '"' + s.replace(/"/g, '""') + '"').join('\n');
-        };
-        window.listToLines = function () {
-            const v = $('listIn').value.trim();
-            try {
-                const arr = JSON.parse(v);
-                if (Array.isArray(arr)) { $('listOut').textContent = arr.join('\n'); return; }
-            } catch (e) {}
-            $('listOut').textContent = v.split(/[,\n]+/).map(s => s.trim()).filter(Boolean).join('\n');
-        };
+        // ---------- РАЗРАБОТЧИК ----------
+        window.decodeJwt = function () { try { const p = $('jwtIn').value.trim().split('.'); if (p.length !== 3) throw 0; const d = s => JSON.parse(atob(s.replace(/-/g, '+').replace(/_/g, '/'))); $('jwtOut').textContent = 'Header:\n' + JSON.stringify(d(p[0]), null, 2) + '\n\nPayload:\n' + JSON.stringify(d(p[1]), null, 2); } catch (e) { $('jwtOut').textContent = 'Ошибка: неверный JWT'; } };
+        window.testRegex = function () { try { const re = new RegExp($('regexPattern').value, $('regexFlags').value); const m = [...$('regexText').value.matchAll(re)]; $('regexOut').textContent = m.length ? m.map((x, i) => `#${i+1}: "${x[0]}" (позиция ${x.index})`).join('\n') : 'Совпадений нет'; } catch (e) { $('regexOut').textContent = 'Ошибка: ' + e.message; } };
+        window.beautifyJs = function () { let code = $('jsIn').value, out = '', ind = 0; for (const ch of code) { if (ch === '{') out += ' {\n' + '  '.repeat(++ind); else if (ch === '}') out += '\n' + '  '.repeat(--ind) + '}'; else if (ch === ';') out += ';\n' + '  '.repeat(ind); else out += ch; } $('jsOut').textContent = out.replace(/\n\s*\n/g, '\n').trim(); };
+        window.minifyJs = function () { let c = $('jsIn').value; c = c.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*([{};:,=+\-*/<>!&|?])\s*/g, '$1'); $('jsOut').textContent = c.trim(); };
+        window.convertData = function (type) { const inp = $('dataConv').value; if (!inp) { $('dataConvOut').textContent = '—'; return; } try { if (type === 'jsonToCsv') { const o = JSON.parse(inp); const a = Array.isArray(o) ? o : [o]; const h = Object.keys(a[0]); $('dataConvOut').textContent = [h.join(',')].concat(a.map(r => h.map(x => `"${String(r[x]).replace(/"/g, '""')}"`).join(','))).join('\n'); } else { const l = inp.trim().split('\n'); const h = l[0].split(','); $('dataConvOut').textContent = JSON.stringify(l.slice(1).map(x => { const v = x.split(','); const o = {}; h.forEach((k, i) => o[k.trim()] = (v[i]||'').trim().replace(/^"|"$/g, '')); return o; }), null, 2); } } catch (e) { $('dataConvOut').textContent = 'Ошибка'; } };
+        window.fmtSql = function () { if (typeof sqlFormatter === 'undefined') { $('sqlOut').textContent = 'SQL formatter не загружен'; return; } try { $('sqlOut').textContent = sqlFormatter.format($('sqlIn').value, { language: 'sql' }); } catch (e) { $('sqlOut').textContent = 'Ошибка'; } };
+        window.fmtXml = function () { try { const d = new DOMParser().parseFromString($('xmlIn').value, 'text/xml'); if (d.querySelector('parsererror')) { $('xmlOut').textContent = 'Ошибка XML'; return; } let s = new XMLSerializer().serializeToString(d), out = '', ind = 0; s = s.replace(/>\s*</g, '><').replace(/(<\/)/g, '\n$1').replace(/(<[^/!])/g, '\n$1'); s.split('\n').forEach(l => { if (!l.trim()) return; if (l.startsWith('</')) ind--; out += '  '.repeat(Math.max(0, ind)) + l + '\n'; if (l.startsWith('<') && !l.startsWith('</') && !l.endsWith('/>') && !l.includes('</')) ind++; }); $('xmlOut').textContent = out.trim(); } catch (e) { $('xmlOut').textContent = 'Ошибка'; } };
+        window.yamlToJson = function () { if (typeof jsyaml === 'undefined') { $('yamlOut').textContent = 'YAML не загружен'; return; } try { $('yamlOut').textContent = JSON.stringify(jsyaml.load($('yamlIn').value), null, 2); } catch (e) { $('yamlOut').textContent = 'Ошибка'; } };
+        window.jsonToYaml = function () { if (typeof jsyaml === 'undefined') { $('yamlOut').textContent = 'YAML не загружен'; return; } try { $('yamlOut').textContent = jsyaml.dump(JSON.parse($('yamlIn').value)); } catch (e) { $('yamlOut').textContent = 'Ошибка'; } };
+        window.listToJson = function () { $('listOut').textContent = JSON.stringify($('listIn').value.split('\n').map(s => s.trim()).filter(Boolean), null, 2); };
+        window.listToCsv = function () { $('listOut').textContent = $('listIn').value.split('\n').map(s => s.trim()).filter(Boolean).map(s => `"${s.replace(/"/g, '""')}"`).join('\n'); };
+        window.listToLines = function () { const v = $('listIn').value.trim(); try { const a = JSON.parse(v); if (Array.isArray(a)) { $('listOut').textContent = a.join('\n'); return; } } catch (e) {} $('listOut').textContent = v.split(/[,\n]+/).map(s => s.trim()).filter(Boolean).join('\n'); };
+        window.validateJson = function () { try { JSON.parse($('jsonValidateIn').value); $('jsonValidateOut').textContent = '✅ Валидный JSON'; } catch (e) { $('jsonValidateOut').textContent = '❌ Ошибка: ' + e.message; } };
+        window.genUuid = function () { $('uuidOut').textContent = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); }); };
+        window.hexToRgb = function () { let h = $('hexRgbIn').value.trim().replace('#', ''); if (!/^[0-9a-f]{3,6}$/i.test(h)) { $('hexRgbOut').textContent = 'Ошибка: неверный HEX'; return; } if (h.length === 3) h = h.split('').map(c => c + c).join(''); const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16); $('hexRgbOut').textContent = `rgb(${r}, ${g}, ${b})`; $('hexRgbPreview').style.background = `rgb(${r},${g},${b})`; };
+        window.convertBase = function () { try { const v = $('baseConvertIn').value.trim(); const f = parseInt($('baseConvertFrom').value, 10), t = parseInt($('baseConvertTo').value, 10); $('baseConvertOut').textContent = parseInt(v, f).toString(t).toUpperCase(); } catch (e) { $('baseConvertOut').textContent = 'Ошибка'; } };
+        window.parseUrl = function () { try { const u = new URL($('urlParseIn').value); $('urlParseOut').textContent = `Protocol: ${u.protocol}\nHost: ${u.host}\nPath: ${u.pathname}\nQuery: ${u.search}\nHash: ${u.hash}`; } catch (e) { $('urlParseOut').textContent = 'Ошибка: неверный URL'; } };
+        window.parseQueryString = function () { const p = new URLSearchParams($('queryStringIn').value); const o = {}; p.forEach((v, k) => o[k] = v); $('queryStringOut').textContent = JSON.stringify(o, null, 2); };
+        window.genCronDev = function () { $('cronDevOut').textContent = ['cronMinDev', 'cronHourDev', 'cronDayDev', 'cronMonthDev', 'cronDowDev'].map(id => $(id).value.trim() || '*').join(' '); };
+        window.checkContrast = function () { const f = $('contrastFg').value, b = $('contrastBg').value; $('contrastOut').textContent = `Контраст: ${f} на ${b} — проверьте визуально (соотношение рассчитывается по формуле WCAG)`; };
+        window.textToJson = function () { const lines = $('textToJsonIn').value.split('\n').filter(l => l.trim()); const o = {}; lines.forEach(l => { const [k, ...v] = l.split(':'); if (k) o[k.trim()] = v.join(':').trim(); }); $('textToJsonOut').textContent = JSON.stringify(o, null, 2); };
+        window.genHtmlTable = function () { const rows = $('htmlTableIn').value.trim().split('\n').map(r => r.split(',')); $('htmlTableOut').textContent = '<table>\n' + rows.map(r => '  <tr>' + r.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>').join('\n') + '\n</table>'; };
+        window.genBoxShadow = function () { $('boxShadowOut').textContent = `box-shadow: ${$('shadowX').value}px ${$('shadowY').value}px ${$('shadowBlur').value}px ${$('shadowColor').value};`; };
+        window.genGradient = function () { $('gradientOut').textContent = `background: linear-gradient(${$('gradientDir').value}, ${$('gradientColor1').value}, ${$('gradientColor2').value});`; };
 
-        // -------------------- КОНВЕРТЕРЫ --------------------
-        window.hexToRgb = function () {
-            let hex = $('colorHex').value.trim().replace('#', '');
-            if (!/^[0-9a-f]{3,6}$/i.test(hex)) { $('colorOut').textContent = 'Ошибка: неверный HEX'; return; }
-            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-            const r = parseInt(hex.slice(0, 2), 16), g = parseInt(hex.slice(2, 4), 16), b = parseInt(hex.slice(4, 6), 16);
-            $('colorOut').textContent = 'rgb(' + r + ', ' + g + ', ' + b + ')';
-            $('colorPreview').style.background = 'rgb(' + r + ',' + g + ',' + b + ')';
-        };
-        window.convertLength = function () {
-            const f = { m: 1, km: 1000, cm: 0.01, mm: 0.001, in: 0.0254, ft: 0.3048, mi: 1609.344 };
-            const v = parseFloat($('unitLengthIn').value);
-            if (isNaN(v)) { $('unitLengthOut').textContent = 'Введите число'; return; }
-            $('unitLengthOut').textContent = (v * f[$('unitLengthFrom').value] / f[$('unitLengthTo').value]).toPrecision(6);
-        };
-        window.convertTemp = function () {
-            const v = parseFloat($('tempIn').value);
-            if (isNaN(v)) { $('tempOut').textContent = 'Введите число'; return; }
-            const from = $('tempFrom').value, to = $('tempTo').value;
-            let c = from === 'C' ? v : from === 'F' ? (v - 32) * 5 / 9 : v - 273.15;
-            const res = to === 'C' ? c : to === 'F' ? c * 9 / 5 + 32 : c + 273.15;
-            $('tempOut').textContent = res.toFixed(2);
-        };
-        window.tsToDate = function () {
-            const v = $('tsIn').value.trim(), n = Number(v);
-            if (!isNaN(n) && v !== '') { $('tsOut').textContent = new Date(n * 1000).toISOString(); return; }
-            const d = new Date(v);
-            if (isNaN(d)) { $('tsOut').textContent = 'Неверный формат'; return; }
-            $('tsOut').textContent = Math.floor(d.getTime() / 1000);
-        };
-        window.dateToTs = function () {
-            const d = new Date($('tsIn').value);
-            if (isNaN(d)) { $('tsOut').textContent = 'Неверная дата'; return; }
-            $('tsOut').textContent = Math.floor(d.getTime() / 1000);
-        };
-        window.toRoman = function () {
-            let n = parseInt($('romanIn').value, 10);
-            if (isNaN(n) || n < 1 || n > 3999) { $('romanOut').textContent = 'Число от 1 до 3999'; return; }
-            const map = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
-            let res = '';
-            for (const k in map) while (n >= map[k]) { res += k; n -= map[k]; }
-            $('romanOut').textContent = res;
-        };
-        window.fromRoman = function () {
-            const s = $('romanIn').value.trim().toUpperCase();
-            const map = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
-            let res = 0;
-            for (let i = 0; i < s.length; i++) {
-                const cur = map[s[i]], nxt = map[s[i + 1]];
-                if (!cur) { $('romanOut').textContent = 'Неверная запись'; return; }
-                res += (nxt && nxt > cur) ? -cur : cur;
-            }
-            $('romanOut').textContent = res;
-        };
+        // ---------- КОНВЕРТЕРЫ (дополнительные) ----------
+        window.convertWeight = function () { const f = { kg: 1, g: 0.001, lb: 0.453592, oz: 0.0283495 }; $('weightOut').textContent = (parseFloat($('weightIn').value) * f[$('weightFrom').value] / f[$('weightTo').value]).toPrecision(6); };
+        window.convertArea = function () { const f = { m2: 1, km2: 1e6, cm2: 0.0001, ha: 10000, acre: 4046.86 }; $('areaOut').textContent = (parseFloat($('areaIn').value) * f[$('areaFrom').value] / f[$('areaTo').value]).toPrecision(6); };
+        window.convertVolume = function () { const f = { l: 1, ml: 0.001, m3: 1000, gal: 3.78541 }; $('volumeOut').textContent = (parseFloat($('volumeIn').value) * f[$('volumeFrom').value] / f[$('volumeTo').value]).toPrecision(6); };
+        window.convertSpeed = function () { const f = { kmh: 1, ms: 3.6, mph: 1.60934 }; $('speedOut').textContent = (parseFloat($('speedIn').value) * f[$('speedFrom').value] / f[$('speedTo').value]).toPrecision(6); };
+        window.convertTime = function () { const f = { s: 1, min: 60, h: 3600, d: 86400 }; $('timeOut').textContent = (parseFloat($('timeIn').value) * f[$('timeFrom').value] / f[$('timeTo').value]).toPrecision(6); };
+        window.convertDataSize = function () { const f = { b: 1, kb: 1024, mb: 1048576, gb: 1073741824 }; $('dataOut').textContent = (parseFloat($('dataIn').value) * f[$('dataFrom').value] / f[$('dataTo').value]).toPrecision(6); };
+        window.convertPressure = function () { const f = { pa: 1, kpa: 1000, bar: 100000, atm: 101325 }; $('pressureOut').textContent = (parseFloat($('pressureIn').value) * f[$('pressureFrom').value] / f[$('pressureTo').value]).toPrecision(6); };
+        window.convertEnergy = function () { const f = { j: 1, kj: 1000, cal: 4.184, kcal: 4184 }; $('energyOut').textContent = (parseFloat($('energyIn').value) * f[$('energyFrom').value] / f[$('energyTo').value]).toPrecision(6); };
+        window.convertPower = function () { const f = { w: 1, kw: 1000, hp: 735.5 }; $('powerOut').textContent = (parseFloat($('powerIn').value) * f[$('powerFrom').value] / f[$('powerTo').value]).toPrecision(6); };
+        window.minutesToHours = function () { $('minHoursOut').textContent = (parseFloat($('minHoursIn').value) / 60).toFixed(2) + ' ч'; };
+        window.hoursToMinutes = function () { $('minHoursOut').textContent = (parseFloat($('minHoursIn').value) * 60).toFixed(0) + ' мин'; };
+        window.secondsToTime = function () { const s = parseInt($('secTimeIn').value, 10); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60; $('secTimeOut').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; };
+        window.timeToSeconds = function () { const p = $('secTimeIn').value.split(':'); $('secTimeOut').textContent = (parseInt(p[0], 10) * 3600 + parseInt(p[1] || 0, 10) * 60 + parseInt(p[2] || 0, 10)).toString(); };
+        window.bytesToBits = function () { $('bytesBitsOut').textContent = (parseFloat($('bytesBitsIn').value) * 8).toString(); };
+        window.bitsToBytes = function () { $('bytesBitsOut').textContent = (parseFloat($('bytesBitsIn').value) / 8).toString(); };
+        window.decimalToPercent = function () { $('decPctOut').textContent = (parseFloat($('decPctIn').value) * 100).toFixed(2) + '%'; };
+        window.percentToDecimal = function () { $('decPctOut').textContent = (parseFloat($('decPctIn').value) / 100).toFixed(4); };
+        window.fractionToDecimal = function () { const p = $('fracDecIn').value.split('/'); $('fracDecOut').textContent = (parseFloat(p[0]) / parseFloat(p[1])).toFixed(4); };
+        window.decimalToFraction = function () { const v = parseFloat($('fracDecIn').value); const prec = 10000; const gcd = (a, b) => b ? gcd(b, a % b) : a; const d = gcd(Math.round(v * prec), prec); $('fracDecOut').textContent = `${Math.round(v * prec) / d}/${prec / d}`; };
 
-        // -------------------- ВЕБ --------------------
-        window.genQr = function () {
-            const el = $('qrcode'); el.innerHTML = '';
-            if (typeof QRCode === 'undefined') { $('qrOut').textContent = 'QR не загружен'; return; }
-            try { new QRCode(el, { text: $('qrText').value || ' ', width: 200, height: 200 }); $('qrOut').textContent = 'Готово'; }
-            catch (e) { $('qrOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.genWifiQr = function () {
-            const el = $('wifiQr'); el.innerHTML = '';
-            if (typeof QRCode === 'undefined') { $('wifiQrOut').textContent = 'QR не загружен'; return; }
-            const ssid = $('wifiSsid').value, pass = $('wifiPass').value, enc = $('wifiEnc').value;
-            if (!ssid) { $('wifiQrOut').textContent = 'Введите SSID'; return; }
-            const esc = s => s.replace(/([\\;,":])/g, '\\$1');
-            const data = 'WIFI:T:' + enc + ';S:' + esc(ssid) + ';' + (enc !== 'nopass' ? 'P:' + esc(pass) + ';' : '') + ';';
-            try { new QRCode(el, { text: data, width: 200, height: 200 }); $('wifiQrOut').textContent = 'Готово'; }
-            catch (e) { $('wifiQrOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.lookupHttp = function () {
-            const codes = {
-                200: 'OK', 201: 'Created', 204: 'No Content', 301: 'Moved Permanently', 302: 'Found',
-                304: 'Not Modified', 307: 'Temporary Redirect', 308: 'Permanent Redirect',
-                400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden', 404: 'Not Found',
-                405: 'Method Not Allowed', 409: 'Conflict', 422: 'Unprocessable Entity', 429: 'Too Many Requests',
-                500: 'Internal Server Error', 502: 'Bad Gateway', 503: 'Service Unavailable', 504: 'Gateway Timeout'
-            };
-            const c = $('httpCode').value.trim();
-            $('httpOut').textContent = codes[c] ? c + ': ' + codes[c] : 'Код не найден (популярные: 200, 301, 400, 404, 500)';
-        };
-        window.escapeStr = function () {
-            $('escapeOut').textContent = [...$('escapeIn').value].map(c => {
-                const code = c.charCodeAt(0);
-                return code < 128 ? c : '\\u' + code.toString(16).padStart(4, '0');
-            }).join('');
-        };
-        window.unescapeStr = function () {
-            $('escapeOut').textContent = $('escapeIn').value.replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
-        };
-        window.lookupMime = function () {
-            const map = {
-                '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript',
-                '.json': 'application/json', '.xml': 'application/xml', '.pdf': 'application/pdf',
-                '.zip': 'application/zip', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-                '.png': 'image/png', '.gif': 'image/gif', '.svg': 'image/svg+xml',
-                '.webp': 'image/webp', '.mp3': 'audio/mpeg', '.mp4': 'video/mp4',
-                '.txt': 'text/plain', '.csv': 'text/csv', '.woff': 'font/woff', '.woff2': 'font/woff2'
-            };
-            const v = $('mimeIn').value.trim().toLowerCase();
-            if (v.startsWith('.')) { $('mimeOut').textContent = map[v] || 'Неизвестный MIME'; return; }
-            const ext = Object.keys(map).find(k => map[k] === v);
-            $('mimeOut').textContent = ext ? 'Расширение: ' + ext : 'Неизвестный MIME';
-        };
+        // ---------- КАЛЬКУЛЯТОРЫ ----------
+        window.calcPercent = function () { $('percentOut').textContent = (parseFloat($('percentA').value) * parseFloat($('percentB').value) / 100).toFixed(2); };
+        window.calcLoan = function () { const P = parseFloat($('loanAmount').value), r = parseFloat($('loanRate').value) / 100 / 12, n = parseInt($('loanTerm').value, 10); if (!P || !r || !n) { $('loanOut').textContent = 'Заполните все поля'; return; } const pay = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1); $('loanOut').textContent = `Ежемесячный платёж: ${pay.toFixed(2)}\nОбщая выплата: ${(pay * n).toFixed(2)}`; };
+        window.calcBmi = function () { const w = parseFloat($('bmiWeight').value), h = parseFloat($('bmiHeight').value) / 100; if (!w || !h) { $('bmiOut').textContent = 'Введите вес и рост'; return; } const bmi = w / (h * h); let cat = 'Норма'; if (bmi < 18.5) cat = 'Недостаточный вес'; else if (bmi < 25) cat = 'Норма'; else if (bmi < 30) cat = 'Избыточный вес'; else cat = 'Ожирение'; $('bmiOut').textContent = `BMI: ${bmi.toFixed(1)} (${cat})`; };
+        window.calcAge = function () { const b = new Date($('ageBirth').value), n = new Date(); let a = n.getFullYear() - b.getFullYear(); if (n.getMonth() < b.getMonth() || (n.getMonth() === b.getMonth() && n.getDate() < b.getDate())) a--; $('ageOut').textContent = `Возраст: ${a} лет`; };
+        window.calcArea = function () { $('areaCalcOut').textContent = (parseFloat($('areaCalcW').value) * parseFloat($('areaCalcH').value)).toFixed(2); };
+        window.calcVolume = function () { $('volCalcOut').textContent = (parseFloat($('volCalcL').value) * parseFloat($('volCalcW').value) * parseFloat($('volCalcH').value)).toFixed(2); };
+        window.calcAverage = function () { const a = $('avgIn').value.split(',').map(Number); $('avgOut').textContent = (a.reduce((x, y) => x + y, 0) / a.length).toFixed(2); };
+        window.calcSum = function () { $('sumOut').textContent = $('sumIn').value.split(',').map(Number).reduce((x, y) => x + y, 0).toFixed(2); };
+        window.calcRatio = function () { const A = parseFloat($('ratioA').value), B = parseFloat($('ratioB').value), C = parseFloat($('ratioC').value); $('ratioOut').textContent = 'D = ' + (B * C / A).toFixed(4); };
+        window.calcFraction = function () { const a = parseInt($('fracA').value), b = parseInt($('fracB').value), c = parseInt($('fracC').value), d = parseInt($('fracD').value); $('fracOut').textContent = `${a * d + c * b}/${b * d} (можно сократить)`; };
+        window.calcGcdLcm = function () { const a = parseInt($('gcdA').value), b = parseInt($('gcdB').value); const gcd = (x, y) => y ? gcd(y, x % y) : x; const g = gcd(a, b); $('gcdOut').textContent = `НОД: ${g}\nНОК: ${a * b / g}`; };
+        window.calcPower = function () { $('powerOut').textContent = Math.pow(parseFloat($('powerBase').value), parseFloat($('powerExp').value)).toFixed(4); };
+        window.calcRoot = function () { $('powerOut').textContent = Math.pow(parseFloat($('powerBase').value), 1 / parseFloat($('powerExp').value)).toFixed(4); };
+        window.calcTip = function () { const b = parseFloat($('tipBill').value), p = parseFloat($('tipPercent').value); $('tipOut').textContent = `Чаевые: ${(b * p / 100).toFixed(2)}\nИтого: ${(b + b * p / 100).toFixed(2)}`; };
+        window.calcSplit = function () { const t = parseFloat($('splitTotal').value), n = parseInt($('splitPeople').value, 10); $('splitOut').textContent = 'Каждый платит: ' + (t / n).toFixed(2); };
+        window.calcCompound = function () { const P = parseFloat($('compoundPrincipal').value), r = parseFloat($('compoundRate').value) / 100, n = parseFloat($('compoundYears').value); $('compoundOut').textContent = 'Итог: ' + (P * Math.pow(1 + r, n)).toFixed(2); };
+        window.calcSimpleInterest = function () { const P = parseFloat($('simplePrincipal').value), r = parseFloat($('simpleRate').value) / 100, n = parseFloat($('simpleYears').value); $('simpleInterestOut').textContent = 'Проценты: ' + (P * r * n).toFixed(2) + '\nИтог: ' + (P + P * r * n).toFixed(2); };
 
-        // -------------------- СЕТЬ --------------------
-        window.calcSubnet = function () {
-            try {
-                const parts = $('ipCidr').value.split('/');
-                const ip = parts[0], cidr = parseInt(parts[1], 10);
-                if (isNaN(cidr) || cidr < 0 || cidr > 32) throw new Error('CIDR 0-32');
-                const octets = ip.split('.').map(Number);
-                if (octets.length !== 4 || octets.some(o => o < 0 || o > 255)) throw new Error('Неверный IP');
-                const ipNum = ((octets[0] << 24) | (octets[1] << 16) | (octets[2] << 8) | octets[3]) >>> 0;
-                const mask = cidr === 0 ? 0 : (~0 << (32 - cidr)) >>> 0;
-                const network = (ipNum & mask) >>> 0;
-                const broadcast = (network | ~mask) >>> 0;
-                const toStr = n => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
-                $('ipOut').textContent = 'Сеть: ' + toStr(network) + '\nМаска: ' + toStr(mask) +
-                    '\nBroadcast: ' + toStr(broadcast) + '\nХостов: ' + Math.max(0, broadcast - network - 1);
-            } catch (e) { $('ipOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.genCron = function () {
-            $('cronOut').textContent = ['cronMin', 'cronHour', 'cronDay', 'cronMonth', 'cronDow']
-                .map(id => $(id).value.trim() || '*').join(' ');
-        };
-        window.calcChmod = function () {
-            const v = $('chmodIn').value.trim();
-            if (/^[0-7]{3,4}$/.test(v)) {
-                const digits = v.slice(-3).split('').map(Number);
-                $('chmodOut').textContent = v + ' = ' + digits.map(d => (d & 4 ? 'r' : '-') + (d & 2 ? 'w' : '-') + (d & 1 ? 'x' : '-')).join('');
-            } else if (/^[r-][w-][x-][r-][w-][x-][r-][w-][x-]$/.test(v)) {
-                let octal = '';
-                for (let i = 0; i < 9; i += 3) octal += (v[i] === 'r' ? 4 : 0) + (v[i + 1] === 'w' ? 2 : 0) + (v[i + 2] === 'x' ? 1 : 0);
-                $('chmodOut').textContent = v + ' = ' + octal;
-            } else { $('chmodOut').textContent = 'Введите 755 или rwxr-xr-x'; }
-        };
-        window.genRandomPort = function () { $('portOut').textContent = Math.floor(Math.random() * 55536) + 10000; };
+        // ---------- SEO ----------
+        window.genMeta = function () { $('metaOut').textContent = `<title>${$('metaTitle').value}</title>\n<meta name="description" content="${$('metaDescription').value}">`; };
+        window.genRobots = function () { $('robotsOut').textContent = $('robotsIn').value; };
+        window.genSitemap = function () { const urls = $('sitemapIn').value.split('\n').filter(u => u.trim()); $('sitemapOut').textContent = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls.map(u => `  <url><loc>${u.trim()}</loc></url>`).join('\n') + '\n</urlset>'; };
+        window.genSeoSlug = function () { $('seoSlugOut').textContent = $('seoSlugIn').value.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''); };
+        window.countTitle = function () { const l = $('titleCounterIn').value.length; $('titleCounterOut').textContent = `Длина: ${l} символов (рекомендуется 50-60)`; };
+        window.countDescription = function () { const l = $('descCounterIn').value.length; $('descCounterOut').textContent = `Длина: ${l} символов (рекомендуется 150-160)`; };
+        window.calcKeywordDensity = function () { const t = $('keywordDensityIn').value.toLowerCase(); const w = t.match(/\S+/g) || []; const m = {}; w.forEach(x => m[x] = (m[x] || 0) + 1); $('keywordDensityOut').textContent = Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([k, v]) => `${k}: ${(v / w.length * 100).toFixed(2)}%`).join('\n'); };
+        window.genCanonical = function () { $('canonicalOut').textContent = `<link rel="canonical" href="${$('canonicalIn').value}">`; };
+        window.genSchema = function () { $('schemaOut').textContent = `<script type="application/ld+json">\n{\n  "@context": "https://schema.org",\n  "@type": "${$('schemaType').value}"\n}\n<\/script>`; };
+        window.genOpenGraph = function () { $('ogOut').textContent = `<meta property="og:title" content="${$('ogTitle').value}">\n<meta property="og:description" content="${$('ogDesc').value}">\n<meta property="og:url" content="${$('ogUrl').value}">`; };
+        window.genTwitterCard = function () { $('twitterOut').textContent = `<meta name="twitter:title" content="${$('twitterTitle').value}">\n<meta name="twitter:description" content="${$('twitterDesc').value}">`; };
+        window.genHreflang = function () { $('hreflangOut').textContent = `<link rel="alternate" hreflang="x-default" href="${$('hreflangUrl').value}">`; };
+        window.checkUrl = function () { $('urlCheckOut').textContent = 'Проверьте URL вручную: ' + $('urlCheckIn').value; };
 
-        // -------------------- МАТЕМАТИКА --------------------
-        window.evalMath = function () {
-            try {
-                const expr = $('mathExpr').value.replace(/[^0-9+\-*/().%\s]/g, '');
-                if (!expr.trim()) { $('mathOut').textContent = 'Введите выражение'; return; }
-                $('mathOut').textContent = Function('"use strict";return (' + expr + ')')();
-            } catch (e) { $('mathOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.genRandom = function () {
-            const min = parseInt($('randMin').value, 10) || 0, max = parseInt($('randMax').value, 10) || 100;
-            if (min > max) { $('randOut').textContent = 'Мин > Макс'; return; }
-            $('randOut').textContent = Math.floor(Math.random() * (max - min + 1)) + min;
-        };
+        // ---------- ФИНАНСЫ ----------
+        window.usdToUzs = function () { const a = parseFloat($('usdAmount').value), r = parseFloat($('usdRate').value); $('usdUzsOut').textContent = (a * r).toFixed(2) + ' UZS'; };
+        window.calcRoi = function () { const i = parseFloat($('roiInvest').value), r = parseFloat($('roiReturn').value); $('roiOut').textContent = 'ROI: ' + ((r - i) / i * 100).toFixed(2) + '%'; };
+        window.calcProfit = function () { const r = parseFloat($('profitRevenue').value), c = parseFloat($('profitCost').value); $('profitOut').textContent = `Прибыль: ${(r - c).toFixed(2)}\nМаржа: ${((r - c) / r * 100).toFixed(2)}%`; };
+        window.calcCommission = function () { const p = parseFloat($('commPrice').value), c = parseFloat($('commPercent').value); $('commOut').textContent = `Комиссия: ${(p * c / 100).toFixed(2)}\nК получению: ${(p - p * c / 100).toFixed(2)}`; };
+        window.calcInstallment = function () { const t = parseFloat($('installmentTotal').value), m = parseInt($('installmentMonths').value, 10); $('installmentOut').textContent = 'Ежемесячно: ' + (t / m).toFixed(2); };
+        window.calcBudget = function () { const i = parseFloat($('budgetIncome').value), e = parseFloat($('budgetExpenses').value); $('budgetOut').textContent = `Остаток: ${(i - e).toFixed(2)}\nНакопления: ${((i - e) / i * 100).toFixed(1)}%`; };
 
-        // -------------------- СЖАТИЕ --------------------
-        window.createZip = async function () {
-            const files = $('zipFiles').files;
-            if (!files.length) { $('zipOut').textContent = 'Выберите файлы'; return; }
-            if (typeof JSZip === 'undefined') { $('zipOut').textContent = 'JSZip не загружен'; return; }
-            try {
-                const zip = new JSZip();
-                for (let i = 0; i < files.length; i++) zip.file(files[i].name, await files[i].arrayBuffer());
-                const blob = await zip.generateAsync({ type: 'blob' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob); a.download = 'archive.zip'; a.click();
-                $('zipOut').textContent = 'ZIP создан (' + files.length + ' файлов)';
-            } catch (e) { $('zipOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.unzipFile = async function () {
-            const file = $('unzipFile').files[0];
-            if (!file) { $('unzipOut').textContent = 'Выберите ZIP'; return; }
-            if (typeof JSZip === 'undefined') { $('unzipOut').textContent = 'JSZip не загружен'; return; }
-            try {
-                const zip = await JSZip.loadAsync(file);
-                $('unzipOut').textContent = 'Содержимое:\n' + Object.keys(zip.files).join('\n');
-            } catch (e) { $('unzipOut').textContent = 'Ошибка: ' + e.message; }
-        };
+        // ---------- ДАТА И ВРЕМЯ ----------
+        window.calcDateDiff = function () { const s = new Date($('dateCalcStart').value), e = new Date($('dateCalcEnd').value); const d = Math.round((e - s) / 86400000); $('dateCalcOut').textContent = `Разница: ${d} дней`; };
+        window.startTimer = function () { let s = parseInt($('timerSeconds').value, 10); if (isNaN(s) || s <= 0) { $('timerOut').textContent = 'Введите секунды'; return; } const iv = setInterval(() => { s--; $('timerOut').textContent = `Осталось: ${s} с`; if (s <= 0) { clearInterval(iv); $('timerOut').textContent = 'Время вышло!'; } }, 1000); };
+        let swInterval = null, swSeconds = 0;
+        window.startStopwatch = function () { if (swInterval) { clearInterval(swInterval); swInterval = null; } else { swInterval = setInterval(() => { swSeconds++; const h = Math.floor(swSeconds / 3600), m = Math.floor((swSeconds % 3600) / 60), s = swSeconds % 60; $('stopwatchOut').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }, 1000); } };
+        window.showWorldClock = function () { const now = new Date(); $('worldClockOut').textContent = `UTC: ${now.toISOString().slice(11, 19)}\nЛокальное: ${now.toLocaleTimeString()}`; };
+        window.getWeekNumber = function () { const d = new Date($('weekNumDate').value); const start = new Date(d.getFullYear(), 0, 1); const w = Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7); $('weekNumOut').textContent = `Неделя: ${w}`; };
+        window.getDayOfWeek = function () { const d = new Date($('dayOfWeekDate').value); $('dayOfWeekOut').textContent = d.toLocaleDateString('ru-RU', { weekday: 'long' }); };
+        window.showUnixNow = function () { $('unixNowOut').textContent = Math.floor(Date.now() / 1000); };
+        window.calcDetailedAge = function () { const b = new Date($('detailAgeBirth').value), n = new Date(); let y = n.getFullYear() - b.getFullYear(); let m = n.getMonth() - b.getMonth(); let d = n.getDate() - b.getDate(); if (d < 0) { m--; d += 30; } if (m < 0) { y--; m += 12; } $('detailAgeOut').textContent = `${y} лет, ${m} мес., ${d} дн.`; };
 
-        // -------------------- PDF --------------------
-        window.imagesToPdf = async function () {
-            const files = $('pdfImages').files;
-            if (!files.length) { $('pdfOut').textContent = 'Выберите изображения'; return; }
-            if (typeof PDFLib === 'undefined') { $('pdfOut').textContent = 'PDF-lib не загружен'; return; }
-            try {
-                const { PDFDocument } = PDFLib;
-                const pdfDoc = await PDFDocument.create();
-                for (let i = 0; i < files.length; i++) {
-                    const bytes = await files[i].arrayBuffer();
-                    const img = files[i].type === 'image/png' ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
-                    const page = pdfDoc.addPage([img.width, img.height]);
-                    page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
-                }
-                const pdfBytes = await pdfDoc.save();
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
-                a.download = 'images.pdf'; a.click();
-                $('pdfOut').textContent = 'PDF создан';
-            } catch (e) { $('pdfOut').textContent = 'Ошибка: ' + e.message; }
-        };
-        window.mergePdfs = async function () {
-            const files = $('mergePdfs').files;
-            if (files.length < 2) { $('mergeOut').textContent = 'Выберите минимум 2 PDF'; return; }
-            if (typeof PDFLib === 'undefined') { $('mergeOut').textContent = 'PDF-lib не загружен'; return; }
-            try {
-                const { PDFDocument } = PDFLib;
-                const merged = await PDFDocument.create();
-                for (let i = 0; i < files.length; i++) {
-                    const doc = await PDFDocument.load(await files[i].arrayBuffer());
-                    const pages = await merged.copyPages(doc, doc.getPageIndices());
-                    pages.forEach(p => merged.addPage(p));
-                }
-                const mergedBytes = await merged.save();
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob([mergedBytes], { type: 'application/pdf' }));
-                a.download = 'merged.pdf'; a.click();
-                $('mergeOut').textContent = 'PDF объединён';
-            } catch (e) { $('mergeOut').textContent = 'Ошибка: ' + e.message; }
-        };
+        // ---------- СЖАТИЕ / PDF / ИЗОБРАЖЕНИЯ (существующие) ----------
+        window.createZip = async function () { const f = $('zipFiles').files; if (!f.length) { $('zipOut').textContent = 'Выберите файлы'; return; } if (typeof JSZip === 'undefined') { $('zipOut').textContent = 'JSZip не загружен'; return; } const z = new JSZip(); for (let x of f) z.file(x.name, await x.arrayBuffer()); const b = await z.generateAsync({ type: 'blob' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'archive.zip'; a.click(); $('zipOut').textContent = 'ZIP создан'; };
+        window.unzipFile = async function () { const f = $('unzipFile').files[0]; if (!f) { $('unzipOut').textContent = 'Выберите ZIP'; return; } if (typeof JSZip === 'undefined') { $('unzipOut').textContent = 'JSZip не загружен'; return; } const z = await JSZip.loadAsync(f); $('unzipOut').textContent = Object.keys(z.files).join('\n'); };
+        window.imagesToPdf = async function () { const f = $('pdfImages').files; if (!f.length) { $('pdfOut').textContent = 'Выберите изображения'; return; } if (typeof PDFLib === 'undefined') { $('pdfOut').textContent = 'PDF-lib не загружен'; return; } const { PDFDocument } = PDFLib; const doc = await PDFDocument.create(); for (let x of f) { const b = await x.arrayBuffer(); const i = x.type === 'image/png' ? await doc.embedPng(b) : await doc.embedJpg(b); const p = doc.addPage([i.width, i.height]); p.drawImage(i, { x: 0, y: 0, width: i.width, height: i.height }); } const bytes = await doc.save(); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' })); a.download = 'images.pdf'; a.click(); $('pdfOut').textContent = 'PDF создан'; };
+        window.mergePdfs = async function () { const f = $('mergePdfs').files; if (f.length < 2) { $('mergeOut').textContent = 'Выберите минимум 2 PDF'; return; } if (typeof PDFLib === 'undefined') { $('mergeOut').textContent = 'PDF-lib не загружен'; return; } const { PDFDocument } = PDFLib; const m = await PDFDocument.create(); for (let x of f) { const d = await PDFDocument.load(await x.arrayBuffer()); (await m.copyPages(d, d.getPageIndices())).forEach(p => m.addPage(p)); } const bytes = await m.save(); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' })); a.download = 'merged.pdf'; a.click(); $('mergeOut').textContent = 'PDF объединён'; };
+        window.convertImage = function () { const f = $('imgConvertFile').files[0]; if (!f) { $('imgConvertOut').textContent = 'Выберите изображение'; return; } const fmt = $('imgFormat').value; const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); c.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'converted.' + fmt.split('/')[1]; a.click(); $('imgConvertOut').textContent = 'Готово'; }, fmt); }; img.src = URL.createObjectURL(f); };
+        window.compressImage = function () { const f = $('imgCompressFile').files[0]; if (!f) { $('imgCompressOut').textContent = 'Выберите изображение'; return; } const q = parseFloat($('imgQuality').value); const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); c.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'compressed.jpg'; a.click(); $('imgCompressOut').textContent = 'Сжато'; }, 'image/jpeg', q); }; img.src = URL.createObjectURL(f); };
+        const imgQualityEl = $('imgQuality'); if (imgQualityEl) imgQualityEl.addEventListener('input', () => { $('qualityLabel').textContent = imgQualityEl.value; });
 
-        // -------------------- ИЗОБРАЖЕНИЯ --------------------
-        window.convertImage = function () {
-            const file = $('imgConvertFile').files[0];
-            if (!file) { $('imgConvertOut').textContent = 'Выберите изображение'; return; }
-            const format = $('imgFormat').value;
-            const img = new Image();
-            img.onload = () => {
-                const c = document.createElement('canvas');
-                c.width = img.width; c.height = img.height;
-                c.getContext('2d').drawImage(img, 0, 0);
-                c.toBlob(blob => {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'converted.' + format.split('/')[1];
-                    a.click();
-                    $('imgConvertOut').textContent = 'Готово';
-                }, format);
-            };
-            img.src = URL.createObjectURL(file);
-        };
-        window.compressImage = function () {
-            const file = $('imgCompressFile').files[0];
-            if (!file) { $('imgCompressOut').textContent = 'Выберите изображение'; return; }
-            const q = parseFloat($('imgQuality').value);
-            const img = new Image();
-            img.onload = () => {
-                const c = document.createElement('canvas');
-                c.width = img.width; c.height = img.height;
-                c.getContext('2d').drawImage(img, 0, 0);
-                c.toBlob(blob => {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'compressed.jpg'; a.click();
-                    $('imgCompressOut').textContent = 'Сжато (качество ' + q + ')';
-                }, 'image/jpeg', q);
-            };
-            img.src = URL.createObjectURL(file);
-        };
-        const imgQualityEl = $('imgQuality');
-        if (imgQualityEl) imgQualityEl.addEventListener('input', () => { $('qualityLabel').textContent = imgQualityEl.value; });
-
-        // -------------------- РЕКЛАМА --------------------
-        window.closeStickyAd = function () {
-            const el = $('adSticky');
-            if (el) el.classList.add('hidden');
-            document.body.classList.remove('ad-open');
-            try { sessionStorage.setItem('adStickyClosed', '1'); } catch (e) {}
-        };
-
-        try {
-            const closed = sessionStorage.getItem('adStickyClosed') === '1';
-            if (!closed) {
-                document.body.classList.add('ad-open');
-                window.yaContextCb.push(() => {
-                    if (window.Ya && Ya.Context && Ya.Context.AdvManager) {
-                        Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-20456192-1', blockId: 'R-A-20456192-1' });
-                    }
-                });
-                setTimeout(() => {
-                    const c = document.getElementById('yandex_rtb_R-A-20456192-1');
-                    if (!c || c.children.length === 0) {
-                        $('adSticky').classList.add('hidden');
-                        document.body.classList.remove('ad-open');
-                    }
-                }, 8000);
-            }
-        } catch (e) {}
-
-        try {
-            const wrapper = document.getElementById('adInline');
-            const container = document.getElementById('yandex_rtb_R-A-20456192-2');
-            if (wrapper && container) {
-                let rendered = false;
-                const render = () => {
-                    if (rendered) return; rendered = true;
-                    window.yaContextCb.push(() => {
-                        if (window.Ya && Ya.Context && Ya.Context.AdvManager) {
-                            Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-20456192-2', blockId: 'R-A-20456192-2' });
-                            setTimeout(() => { if (container.children.length === 0) wrapper.classList.add('hidden'); }, 6000);
-                        } else { wrapper.classList.add('hidden'); }
-                    });
-                };
-                if ('IntersectionObserver' in window) {
-                    const io = new IntersectionObserver(entries => {
-                        entries.forEach(en => { if (en.isIntersecting) { io.disconnect(); render(); } });
-                    }, { rootMargin: '200px 0px' });
-                    io.observe(wrapper);
-                } else render();
-            }
-        } catch (e) {}
+        // ---------- РЕКЛАМА ----------
+        window.closeStickyAd = function () { const el = $('adSticky'); if (el) el.classList.add('hidden'); document.body.classList.remove('ad-open'); try { sessionStorage.setItem('adStickyClosed', '1'); } catch (e) {} };
+        try { if (sessionStorage.getItem('adStickyClosed') !== '1') { document.body.classList.add('ad-open'); window.yaContextCb.push(() => { if (window.Ya && Ya.Context && Ya.Context.AdvManager) Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-20456192-1', blockId: 'R-A-20456192-1' }); }); setTimeout(() => { const c = document.getElementById('yandex_rtb_R-A-20456192-1'); if (!c || c.children.length === 0) { $('adSticky').classList.add('hidden'); document.body.classList.remove('ad-open'); } }, 8000); } } catch (e) {}
+        try { const w = document.getElementById('adInline'), c = document.getElementById('yandex_rtb_R-A-20456192-2'); if (w && c) { let r = false; const render = () => { if (r) return; r = true; window.yaContextCb.push(() => { if (window.Ya && Ya.Context && Ya.Context.AdvManager) { Ya.Context.AdvManager.render({ renderTo: 'yandex_rtb_R-A-20456192-2', blockId: 'R-A-20456192-2' }); setTimeout(() => { if (c.children.length === 0) w.classList.add('hidden'); }, 6000); } else w.classList.add('hidden'); }); }; if ('IntersectionObserver' in window) { const io = new IntersectionObserver(en => { en.forEach(e => { if (e.isIntersecting) { io.disconnect(); render(); } }); }, { rootMargin: '200px 0px' }); io.observe(w); } else render(); } } catch (e) {}
 
         try { if (typeof genPw === 'function') genPw(); } catch (e) {}
     })();
