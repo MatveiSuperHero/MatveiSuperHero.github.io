@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://free-tools.ru/sitemap.xml
